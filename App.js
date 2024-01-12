@@ -18,7 +18,7 @@ export default function App() {
       <NavigationContainer>
         <BottomTabs.Navigator
           screenOptions={{
-            headerStyle: { backgroundColor: "white" },
+            // headerStyle: { backgroundColor: "white" },
             headerTintColor: "black",
             headerTitleStyle: {
               fontWeight: "bold",
@@ -30,9 +30,21 @@ export default function App() {
             name="HomeScreen"
             component={HomeScreen}
             options={{
-              // title: "Home",
-              headerTitle: () => <LogoTitle />,
-              headerTitleStyle: { flex: 1, textAlign: "left" },
+              title: "",
+              // headerTitle: () => <LogoTitle />,
+              // headerTitleStyle: { flex: 1, textAlign: "left" },
+              headerLeft: () => <LogoTitle />,
+              headerRight: ({ color, size }) => (
+                <>
+                  <Ionicons
+                    name="cart-outline"
+                    color={color}
+                    size={size}
+                    style={{ marginHorizontal: 20 }}
+                  />
+                  <Ionicons name="notifications" color={color} size={size} />
+                </>
+              ),
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="home" color={color} size={size} />
               ),

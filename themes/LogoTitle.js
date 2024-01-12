@@ -15,7 +15,7 @@ export default LogoTitle;
 
 const styles = StyleSheet.create({
   image: {
-    width: 400,
+    width: 200,
     height: 40,
   },
 });
