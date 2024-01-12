@@ -35,7 +35,7 @@ export default function App() {
               // headerTitleStyle: { flex: 1, textAlign: "left" },
               headerLeft: () => <LogoTitle />,
               headerRight: ({ color, size }) => (
-                <>
+                <View>
                   <Ionicons
                     name="cart-outline"
                     color={color}
@@ -43,7 +43,7 @@ export default function App() {
                     style={{ marginHorizontal: 20 }}
                   />
                   <Ionicons name="notifications" color={color} size={size} />
-                </>
+                </View>
               ),
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="home" color={color} size={size} />
