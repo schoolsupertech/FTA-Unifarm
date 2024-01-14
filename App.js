@@ -35,7 +35,7 @@ export default function App() {
               // headerTitleStyle: { flex: 1, textAlign: "left" },
               headerLeft: () => <LogoTitle />,
               headerRight: ({ color, size }) => (
-                <View>
+                <View style={{ flexDirection: "row" }}>
                   <Ionicons
                     name="cart-outline"
                     color={color}
