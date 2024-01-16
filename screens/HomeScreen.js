@@ -3,30 +3,30 @@ import {
   View,
   Text,
   TextInput,
-  Image,
   StyleSheet,
   ScrollView,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 import { Avatar, Card } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
+import Carousel from "react-native-snap-carousel";
+
+import { windowWidth } from "../utils/Dimensions";
+import { sliderNewsLetters } from "../themes/sliderNewsLetters";
+import BannerNewsLettersSlider from "../components/BannerNewsLettersSlider";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
 function HomeScreen() {
+  const renderNewsLettersBanner = ({ item, index }) => {
+    return <BannerNewsLettersSlider() data={item} />;
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "fff" }}>
-      <ScrollView style={styles.baseContainer}>
-        <View
-          style={{
-            flexDirection: "row",
-            borderColor: "#C6C6C6",
-            borderWidth: 1,
-            borderRadius: 8,
-            paddingHorizontal: 10,
-            paddingVertical: 8,
-          }}
-        >
+    <SafeAreaView style={styles.safeAreaView}>
+      <ScrollView style={styles.scrollContainer}>
+        <View style={styles.searchBar}>
           <Ionicons
             name="search"
             size={20}
@@ -35,16 +35,34 @@ function HomeScreen() {
           />
           <TextInput placeholder="Search" />
         </View>
-        <Image
-          style={styles.image}
-          source={require("../assets/images/banner-big.png")}
-          resizeMode="cover"
+
+        <Carousel
+          ref={(c) => {
+            this._carousel = c;
+          }}
+          data={sliderNewsLetters}
+          renderItem={renderNewsLettersBanner}
+          sliderWidth={windowWidth - 40}
+          itemWidth={370}
+          loop={true}
         />
-        {/* Main View */}
+
         <View style={{ marginVertical: 10 }}>
-          {/* Tiêu đề mục */}
-          <View>
+          <View
+            style={{
+              marginVertical: 15,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
             <Text style={styles.categoryTitle}>Danh mục phổ biến</Text>
+            <TouchableOpacity onPress={() => {}}>
+              <Text
+                style={{ color: "#0aada8", textDecorationLine: "underline" }}
+              >
+                Xem tất cả <Ionicons name="arrow-forward" />
+              </Text>
+            </TouchableOpacity>
           </View>
           {/* Danh mục */}
           <ScrollView horizontal={true}>
@@ -66,9 +84,6 @@ function HomeScreen() {
               />
             </Card>
           </ScrollView>
-          <View>
-            <Text>Xem tất cả</Text>
-          </View>
         </View>
 
         <View>
@@ -144,9 +159,6 @@ function HomeScreen() {
               />
             </Card>
           </View>
-          <View>
-            <Text>Cac san pham</Text>
-          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -156,17 +168,20 @@ function HomeScreen() {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  baseContainer: {
+  safeAreaView: {
     flex: 1,
+  },
+  scrollContainer: {
     marginVertical: 10,
     marginHorizontal: 20,
   },
-  image: {
-    marginTop: 20,
-    backgroundColor: "transparent",
-    borderRadius: 10,
-    width: "100%",
-    height: 200,
+  searchBar: {
+    flexDirection: "row",
+    borderColor: "#C6C6C6",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
   },
   categoryTitle: {
     fontSize: 18,

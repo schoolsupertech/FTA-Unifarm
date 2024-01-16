@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Color } from "./constants/colors";
@@ -12,6 +12,14 @@ import LogoTitle from "./themes/LogoTitle";
 const BottomTabs = createBottomTabNavigator();
 
 export default function App() {
+  // if (isLoading) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  //       <ActivityIndicator size={"large"} />
+  //     </View>
+  //   );
+  // }
+
   return (
     <>
       <StatusBar style="auto" />
@@ -30,10 +38,10 @@ export default function App() {
             name="HomeScreen"
             component={HomeScreen}
             options={{
-              title: "",
-              // headerTitle: () => <LogoTitle />,
+              title: "Home",
+              headerTitle: () => <LogoTitle />,
               // headerTitleStyle: { flex: 1, textAlign: "left" },
-              headerLeft: () => <LogoTitle />,
+              // headerLeft: () => <LogoTitle />,
               headerRight: ({ color, size }) => (
                 <View style={{ flexDirection: "row" }}>
                   <Ionicons
