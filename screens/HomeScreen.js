@@ -20,7 +20,7 @@ const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
 function HomeScreen() {
   const renderNewsLettersBanner = ({ item, index }) => {
-    return <BannerNewsLettersSlider() data={item} />;
+    return <BannerNewsLettersSlider data={item} />;
   };
 
   return (
@@ -43,7 +43,7 @@ function HomeScreen() {
           data={sliderNewsLetters}
           renderItem={renderNewsLettersBanner}
           sliderWidth={windowWidth - 40}
-          itemWidth={370}
+          itemWidth={320}
           loop={true}
         />
 
@@ -67,22 +67,24 @@ function HomeScreen() {
           {/* Danh mục */}
           <ScrollView horizontal={true}>
             {/* Add FlatList */}
-            <Card style={{ margin: 10 }}>
-              <Card.Cover
-                style={{
-                  width: 150,
-                  height: 150,
-                  alignSelf: "center",
-                  marginTop: 10,
-                }}
-                source={{ uri: "https://picsum.photos/700" }}
-              />
-              <Card.Title
-                title="Card Title"
-                subtitle="Card Subtitle"
-                left={LeftContent}
-              />
-            </Card>
+            <TouchableOpacity onPress={() => {}}>
+              <Card style={{ margin: 10 }}>
+                <Card.Cover
+                  style={{
+                    width: 150,
+                    height: 150,
+                    alignSelf: "center",
+                    marginTop: 10,
+                  }}
+                  source={{ uri: "https://picsum.photos/700" }}
+                />
+                <Card.Title
+                  title="Card Title"
+                  subtitle="Card Subtitle"
+                  left={LeftContent}
+                />
+              </Card>
+            </TouchableOpacity>
           </ScrollView>
         </View>
 

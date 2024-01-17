@@ -10,9 +10,9 @@ export default function BannerNewsLettersSlider({ data }) {
 
 const styles = StyleSheet.create({
   image: {
-    marginTop: 10,
-    height: 200,
-    width: 370,
+    marginTop: 20,
+    height: 170,
+    width: 320,
     borderRadius: 10,
   },
 });
