@@ -16,6 +16,7 @@ import {
   Snackbar,
   Text as PaperText,
   ProgressBar,
+  Badge,
 } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -98,10 +99,13 @@ function HomeScreen() {
             </TouchableOpacity>
             <TouchableOpacity style={{ marginEnd: 10 }} onPress={() => {}}>
               <Ionicons
-                name="cloudy-night-outline"
+                name="notifications"
                 color={Color.primaryGreen700}
                 size={24}
               />
+              <Badge style={{ position: "absolute", top: -6, right: -12 }}>
+                3
+              </Badge>
             </TouchableOpacity>
           </View>
         </View>

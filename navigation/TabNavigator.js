@@ -16,8 +16,9 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const getTabBarVisibility = (route) => {
+  console.log("Route: " + route);
   const routeName = getFocusedRouteNameFromRoute(route) ?? "Default";
-  console.log(routeName);
+  console.log("Name of route: " + routeName);
 
   if (routeName === "ProductDetail") {
     return "none";
@@ -49,26 +50,21 @@ function TabNavigator() {
         component={AppStackNav}
         options={({ route }) => ({
           title: "Trang chủ",
-          // tabBarStyle: {
-          //   display: getTabBarVisibility(route),
-          // },
+          tabBarStyle: {
+            display: getTabBarVisibility(route),
+          },
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
           ),
         })}
       />
       <Tab.Screen
-        name="Notification"
-        component={AppStackNav}
+        name="Category"
+        component={CategoryStack}
         options={{
-          title: "Thông báo",
+          title: "Danh mục",
           tabBarIcon: ({ color, size }) => (
-            <View>
-              <Ionicons name="notifications" color={color} size={size} />
-              <Badge style={{ position: "absolute", top: -4, right: -12 }}>
-                3
-              </Badge>
-            </View>
+            <Ionicons name="logo-buffer" color={color} size={size} />
           ),
         }}
       />
@@ -85,12 +81,12 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="StackCategory"
-        component={CategoryStack}
+        name="Cart"
+        component={AppStackNav}
         options={{
-          title: "Danh mục",
+          title: "Giỏ hàng",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cart-sharp" color={color} size={size} />
+            <Ionicons name="cart" color={color} size={size} />
           ),
         }}
       />
