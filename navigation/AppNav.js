@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { StatusBar } from "expo-status-bar";
 import { View, ActivityIndicator } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -18,9 +19,12 @@ function AppNav() {
   }
 
   return (
-    <NavigationContainer>
-      {userToken !== null ? <TabNavigator /> : <AuthStackNav />}
-    </NavigationContainer>
+    <>
+      <StatusBar style="auto" />
+      <NavigationContainer>
+        {userToken !== null ? <TabNavigator /> : <AuthStackNav />}
+      </NavigationContainer>
+    </>
   );
 }
 

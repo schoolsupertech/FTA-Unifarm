@@ -56,11 +56,17 @@ function HomeScreen() {
   }
 
   function selectedCategoryDetail() {
-    navigation.navigate("Home", { screen: "CategoryDetail" });
+    navigation.navigate("Home", {
+      screen: "CategoryDetail",
+      params: { title: "Rau, củ, quả" },
+    });
   }
 
   function selectedProductDetail() {
-    navigation.navigate("Home", { screen: "ProductDetail" });
+    navigation.navigate("Home", {
+      screen: "ProductDetail",
+      params: { title: "Chi tiết sản phẩm" },
+    });
   }
 
   const onToggleSnackBar = () => {
@@ -230,7 +236,10 @@ function HomeScreen() {
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {/* Add FlatList */}
             <TouchableOpacity onPress={selectedCategoryDetail}>
-              <Card style={{ margin: 8, width: 170 }}>
+              <Card
+                style={{ margin: 8, width: 170 }}
+                theme={{ colors: { surfaceVariant: Color.primaryGreen50 } }}
+              >
                 <Card.Cover
                   style={{
                     width: 150,
@@ -268,7 +277,10 @@ function HomeScreen() {
             style={{ width: "100%" }}
             onPress={selectedProductDetail}
           >
-            <Card style={{ marginHorizontal: 8 }}>
+            <Card
+              style={{ marginHorizontal: 8 }}
+              theme={{ colors: { surfaceVariant: Color.primaryGreen50 } }}
+            >
               <Card.Content
                 style={{
                   flexDirection: "row",
@@ -278,8 +290,8 @@ function HomeScreen() {
               >
                 <Card.Cover
                   style={{
-                    width: 150,
-                    height: 150,
+                    width: 100,
+                    height: 100,
                     alignSelf: "center",
                   }}
                   source={{

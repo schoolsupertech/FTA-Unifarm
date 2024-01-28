@@ -1,3 +1,4 @@
+import React, { useLayoutEffect } from "react";
 import {
   View,
   Text,
@@ -6,7 +7,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import { Avatar, Card, Searchbar } from "react-native-paper";
+import { Card, Searchbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { Color } from "../constants/colors";
@@ -15,17 +16,31 @@ function CategoriesScreen() {
   const navigation = useNavigation();
   const [searchPrd, setSearchPrd] = useState("");
 
-  function selectedCategoryDetail() {
-    navigation.navigate("StackCategory", { screen: "CategoryDetail" });
-  }
-
   function displaySearchPrdText(prdSearch) {
     setSearchPrd(prdSearch);
     console.log(searchPrd);
   }
 
+  function selectedCategoryDetail() {
+    navigation.navigate("Categories", {
+      screen: "CategoryDetail",
+      params: { title: "Rau, củ, quả" },
+    });
+  }
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        onChangeText: (event) => console.log(event.nativeEvent.text),
+        onSearchButtonPress: (event) =>
+          console.log("Search", event.nativeEvent),
+      },
+    });
+  }, [navigation]);
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      {/*
       <Searchbar
         style={{ marginTop: 10, marginHorizontal: 20 }}
         placeholder="Tìm kiếm"
@@ -39,7 +54,8 @@ function CategoriesScreen() {
         value={searchPrd}
         onChangeText={displaySearchPrdText}
       />
-      <ScrollView style={{ marginVertical: 10, marginHorizontal: 20 }}>
+      */}
+      <ScrollView style={{ marginHorizontal: 20 }}>
         <View style={{ flex: 1 }}>
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity onPress={selectedCategoryDetail}>
@@ -51,7 +67,9 @@ function CategoriesScreen() {
                     alignSelf: "center",
                     marginTop: 10,
                   }}
-                  source={{ uri: "https://picsum.photos/700" }}
+                  source={{
+                    uri: "https://media.istockphoto.com/id/1457113212/vi/anh/rau-h%E1%BB%AFu-c%C6%A1-xanh-v%C3%A0-n%E1%BB%81n-th%E1%BB%B1c-ph%E1%BA%A9m-l%C3%A1-s%E1%BA%ABm-m%C3%A0u-nh%C6%B0-m%E1%BB%99t-kh%C3%A1i-ni%E1%BB%87m-%C4%83n-u%E1%BB%91ng-l%C3%A0nh-m%E1%BA%A1nh.jpg?s=1024x1024&w=is&k=20&c=--eEOkZpG3Kx0SmYtH35v3fOAvYeZ2jNDnKPvvS3WEU=",
+                  }}
                 />
                 <Card.Content style={{ marginTop: 10 }}>
                   <Text style={{ fontWeight: "bold", alignSelf: "center" }}>
