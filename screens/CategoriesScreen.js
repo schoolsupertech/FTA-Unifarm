@@ -6,20 +6,43 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import { Avatar, Card } from "react-native-paper";
-
-const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
+import { Avatar, Card, Searchbar } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
+import { Color } from "../constants/colors";
 
 function CategoriesScreen() {
+  const navigation = useNavigation();
+  const [searchPrd, setSearchPrd] = useState("");
+
+  function selectedCategoryDetail() {
+    navigation.navigate("StackCategory", { screen: "CategoryDetail" });
+  }
+
+  function displaySearchPrdText(prdSearch) {
+    setSearchPrd(prdSearch);
+    console.log(searchPrd);
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <Searchbar
+        style={{ marginTop: 10, marginHorizontal: 20 }}
+        placeholder="Tìm kiếm"
+        elevation={3}
+        theme={{
+          colors: {
+            elevation: { level3: Color.primaryGreen50 },
+            primary: Color.primaryGreen800,
+          },
+        }}
+        value={searchPrd}
+        onChangeText={displaySearchPrdText}
+      />
       <ScrollView style={{ marginVertical: 10, marginHorizontal: 20 }}>
-        <View>
-          <Text>Tất cả danh mục</Text>
-        </View>
         <View style={{ flex: 1 }}>
           <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={selectedCategoryDetail}>
               <Card style={{ margin: 10, width: 170 }}>
                 <Card.Cover
                   style={{
@@ -50,7 +73,7 @@ function CategoriesScreen() {
                 />
                 <Card.Content style={{ marginTop: 10 }}>
                   <Text style={{ fontWeight: "bold", alignSelf: "center" }}>
-                    Rau, củ, quả
+                    Thịt, trứng, cá
                   </Text>
                 </Card.Content>
               </Card>
@@ -70,7 +93,7 @@ function CategoriesScreen() {
                 />
                 <Card.Content style={{ marginTop: 10 }}>
                   <Text style={{ fontWeight: "bold", alignSelf: "center" }}>
-                    Rau, củ, quả
+                    Trái cây tươi
                   </Text>
                 </Card.Content>
               </Card>
@@ -88,7 +111,7 @@ function CategoriesScreen() {
                 />
                 <Card.Content style={{ marginTop: 10 }}>
                   <Text style={{ fontWeight: "bold", alignSelf: "center" }}>
-                    Rau, củ, quả
+                    Bột bánh
                   </Text>
                 </Card.Content>
               </Card>

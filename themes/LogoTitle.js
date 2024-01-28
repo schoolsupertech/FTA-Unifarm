@@ -5,8 +5,7 @@ function LogoTitle() {
     <Image
       style={styles.image}
       source={require("../assets/images/Title_Plant_Logo.png")}
-      // resizeMode="stretch"
-      resizeMode="center"
+      resizeMode="cover"
     />
   );
 }
@@ -15,7 +14,7 @@ export default LogoTitle;
 
 const styles = StyleSheet.create({
   image: {
-    width: 200,
-    height: 40,
+    width: "50%",
+    height: "100%",
   },
 });
