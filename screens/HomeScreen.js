@@ -55,8 +55,14 @@ function HomeScreen() {
     console.log(searchPrd);
   }
 
+  function selectedCategoriesStack() {
+    navigation.navigate("Categories", {
+      screen: "CategoriesStack",
+    });
+  }
+
   function selectedCategoryDetail() {
-    navigation.navigate("Home", {
+    navigation.navigate("Categories", {
       screen: "CategoryDetail",
       params: { title: "Rau, củ, quả" },
     });
@@ -96,14 +102,7 @@ function HomeScreen() {
         >
           <LogoTitle />
           <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity style={{ marginEnd: 10 }} onPress={() => {}}>
-              <Ionicons
-                name="cart-outline"
-                color={Color.primaryGreen700}
-                size={24}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={{ marginEnd: 10 }} onPress={() => {}}>
+            <TouchableOpacity style={{ marginEnd: 20 }} onPress={() => {}}>
               <Ionicons
                 name="notifications"
                 color={Color.primaryGreen700}
@@ -112,6 +111,13 @@ function HomeScreen() {
               <Badge style={{ position: "absolute", top: -6, right: -12 }}>
                 3
               </Badge>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginEnd: 4 }} onPress={() => {}}>
+              <Ionicons
+                name="cart-outline"
+                color={Color.primaryGreen700}
+                size={24}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -224,7 +230,7 @@ function HomeScreen() {
             }}
           >
             <Text style={styles.categoryTitle}>Danh mục phổ biến</Text>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={selectedCategoriesStack}>
               <Text
                 style={{ color: "#0aada8", textDecorationLine: "underline" }}
               >

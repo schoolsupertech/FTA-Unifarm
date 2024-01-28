@@ -49,9 +49,9 @@ function TabNavigator() {
         component={CategoryStackNav}
         options={({ route }) => ({
           title: "Danh mục",
-          // tabBarStyle: {
-          //   display: getTabBarVisibility(route),
-          // },
+          tabBarStyle: {
+            display: getTabBarVisibility(route),
+          },
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="logo-buffer" color={color} size={size} />
           ),
