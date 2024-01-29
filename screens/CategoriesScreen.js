@@ -23,13 +23,14 @@ function CategoriesScreen() {
 
   function selectedCategoryDetail() {
     navigation.navigate("Categories", {
-      screen: "CategoryDetail",
+      screen: "ProductsOverview",
       params: { title: "Rau, củ, quả" },
     });
   }
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerLeft: null,
       headerSearchBarOptions: {
         onChangeText: (event) => console.log(event.nativeEvent.text),
         onSearchButtonPress: (event) =>

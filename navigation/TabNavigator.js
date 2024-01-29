@@ -16,7 +16,7 @@ const getTabBarVisibility = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
   // console.log("Name of route: " + routeName);
 
-  if (routeName === "ProductDetail" || routeName === "CategoryDetail") {
+  if (routeName === "ProductDetail" || routeName === "ProductsOverview") {
     return "none";
   }
 
@@ -43,6 +43,12 @@ function TabNavigator() {
             <Ionicons name="home" color={color} size={size} />
           ),
         })}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("Home");
+          },
+        })}
       />
       <Tab.Screen
         name="Categories"
@@ -55,6 +61,12 @@ function TabNavigator() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="logo-buffer" color={color} size={size} />
           ),
+        })}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("CategoriesStack");
+          },
         })}
       />
       <Tab.Screen

@@ -5,5 +5,6 @@ Farm To Apartment - Mobile app
 - [x] Project_Base created.
 - [x] HomeScreen added.
 - [x] CategoryScreen added.
-- [ ] CategoryDetailScreen added.
-- [ ] ProductDetailScreen added.
+- [x] CategoryDetailScreen added.
+- [x] ProductDetailScreen added.
+- [x] CartScreen added.

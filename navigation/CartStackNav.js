@@ -2,8 +2,8 @@ import React from "react";
 import { IconButton } from "react-native-paper";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { Color } from "../constants/colors";
 import CartScreen from "../screens/CartScreen";
+import { DefaultTheme } from "../themes/DefaultTheme";
 
 const Stack = createNativeStackNavigator();
 
@@ -12,7 +12,7 @@ function CartStackNav() {
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
         headerBackTitleVisible: false,
-        headerStyle: { backgroundColor: Color.primaryGreen50 },
+        headerStyle: { backgroundColor: DefaultTheme.headerBgColor },
         headerLeft: () => (
           <IconButton
             style={{ margin: 0, padding: 0 }}

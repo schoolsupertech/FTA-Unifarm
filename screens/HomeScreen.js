@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  Image,
-  TextInput,
+  FlatList,
   StyleSheet,
   ScrollView,
   SafeAreaView,
@@ -11,23 +10,26 @@ import {
 } from "react-native";
 import {
   Card,
+  Badge,
+  Text as PaperText,
   IconButton,
   Searchbar,
   Snackbar,
-  Text as PaperText,
   ProgressBar,
-  Badge,
 } from "react-native-paper";
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
 import Carousel from "react-native-snap-carousel";
 
 import BannerNewsLettersSlider from "../components/BannerNewsLettersSlider";
+import PopularCategories from "../components/list/PopularCategories";
 import LogoTitle from "../themes/LogoTitle";
-import { windowWidth } from "../utils/Dimensions";
-import { SLIDERNEWSLETTERS } from "../constants/sliderNewsLetters";
+import { DefaultTheme } from "../themes/DefaultTheme";
 import { Color } from "../constants/colors";
+import { windowWidth } from "../utils/Dimensions";
+import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
+import { CATEGORIES } from "../data/Data-Template";
 
 const RightContent = ({ onCartAdded, onToggleSnackBar }) => {
   return (
@@ -46,9 +48,28 @@ function HomeScreen() {
   const [searchPrd, setSearchPrd] = useState("");
   const [onCartAdded, setOnCartAdded] = useState(false);
 
-  const renderNewsLettersBanner = ({ item, index }) => {
-    return <BannerNewsLettersSlider data={item} />;
-  };
+  const renderNewsLettersBanner = ({ item, index }) => (
+    <BannerNewsLettersSlider data={item} />
+  );
+
+  function renderPopularCategories(itemData) {
+    function selectedCategoryHandler() {
+      navigation.navigate("Categories", {
+        screen: "ProductsOverview",
+        params: {
+          categoryId: itemData.item.id,
+        },
+      });
+    }
+
+    return (
+      <PopularCategories
+        title={itemData.item.title}
+        image={itemData.item.image}
+        onPress={selectedCategoryHandler}
+      />
+    );
+  }
 
   function displaySearchPrdText(prdSearch) {
     setSearchPrd(prdSearch);
@@ -58,13 +79,6 @@ function HomeScreen() {
   function selectedCategoriesStack() {
     navigation.navigate("Categories", {
       screen: "CategoriesStack",
-    });
-  }
-
-  function selectedCategoryDetail() {
-    navigation.navigate("Categories", {
-      screen: "CategoryDetail",
-      params: { title: "Rau, củ, quả" },
     });
   }
 
@@ -222,56 +236,23 @@ function HomeScreen() {
           />
         </View>
 
-        <View style={{ marginVertical: 8 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
+        {/* Danh mục */}
+        <View style={styles.categoryContainer}>
+          <View style={styles.categoryContent}>
             <Text style={styles.categoryTitle}>Danh mục phổ biến</Text>
             <TouchableOpacity onPress={selectedCategoriesStack}>
-              <Text
-                style={{ color: "#0aada8", textDecorationLine: "underline" }}
-              >
+              <Text style={styles.categoryButtonViewAll}>
                 Xem tất cả <Ionicons name="arrow-forward" />
               </Text>
             </TouchableOpacity>
           </View>
-          {/* Danh mục */}
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {/* Add FlatList */}
-            <TouchableOpacity onPress={selectedCategoryDetail}>
-              <Card
-                style={{ margin: 8, width: 170 }}
-                theme={{ colors: { surfaceVariant: Color.primaryGreen50 } }}
-              >
-                <Card.Cover
-                  style={{
-                    width: 150,
-                    height: 150,
-                    alignSelf: "center",
-                    marginTop: 10,
-                  }}
-                  source={{
-                    uri: "https://media.istockphoto.com/id/1457113212/vi/anh/rau-h%E1%BB%AFu-c%C6%A1-xanh-v%C3%A0-n%E1%BB%81n-th%E1%BB%B1c-ph%E1%BA%A9m-l%C3%A1-s%E1%BA%ABm-m%C3%A0u-nh%C6%B0-m%E1%BB%99t-kh%C3%A1i-ni%E1%BB%87m-%C4%83n-u%E1%BB%91ng-l%C3%A0nh-m%E1%BA%A1nh.jpg?s=1024x1024&w=is&k=20&c=--eEOkZpG3Kx0SmYtH35v3fOAvYeZ2jNDnKPvvS3WEU=",
-                  }}
-                />
-                <Card.Content
-                  style={{
-                    marginVertical: 4,
-                    paddingHorizontal: 8,
-                    paddingBottom: 8,
-                    paddingTop: 8,
-                  }}
-                >
-                  <Text style={{ fontWeight: "bold", alignSelf: "center" }}>
-                    Rau, củ, quả
-                  </Text>
-                </Card.Content>
-              </Card>
-            </TouchableOpacity>
-          </ScrollView>
+          <FlatList
+            data={CATEGORIES}
+            keyExtractor={(item) => item.id}
+            renderItem={renderPopularCategories}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
 
         <View>
@@ -284,8 +265,10 @@ function HomeScreen() {
             onPress={selectedProductDetail}
           >
             <Card
-              style={{ marginHorizontal: 8 }}
-              theme={{ colors: { surfaceVariant: Color.primaryGreen50 } }}
+              style={{
+                marginHorizontal: 8,
+                backgroundColor: DefaultTheme.cardBgColor,
+              }}
             >
               <Card.Content
                 style={{
@@ -370,8 +353,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
   },
+  categoryContainer: {
+    marginVertical: 8,
+  },
+  categoryContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   categoryTitle: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  categoryButtonViewAll: {
+    color: "#0aada8",
+    textDecorationLine: "underline",
   },
 });
