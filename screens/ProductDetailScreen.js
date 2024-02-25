@@ -1,27 +1,25 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  FlatList,
-} from "react-native";
+import React, { useLayoutEffect, useState } from "react";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 import { Card, Text as PaperText } from "react-native-paper";
 
-import GrayLine from "../components/GrayLine";
-import Ellipsis from "../components/Ellipsis";
-import Thumbnail from "../components/list/Thumbnail";
+import GrayLine from "../components/common/text/GrayLine";
+import Ellipsis from "../components/common/text/Ellipsis";
+import Thumbnail from "../components/ui/product/Thumbnail";
+import ProdMoreInfo from "../components/common/list/DataTable";
 import { Color } from "../constants/colors";
-import { IMAGEDATA } from "../constants/imageData";
 import { PRODUCTS } from "../data/Data-Template";
 import { DefaultTheme } from "../themes/DefaultTheme";
-import ProdMoreInfo from "../components/DataTable";
 
 function ProductDetailScreen({ route, navigation }) {
   const prodId = route.params.prodId;
   const selectedProd = PRODUCTS.find((prod) => prod.id === prodId);
   const [coverImage, setCoverImage] = useState(selectedProd.gallery[0]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: selectedProd.title,
+    });
+  }, [selectedProd, navigation]);
 
   return (
     <SafeAreaView style={styles.container}>

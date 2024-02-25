@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { Chip } from "react-native-paper";
 
-import { Color } from "../../constants/colors";
+import { Color } from "../../../constants/colors";
 
 function ChipContent({ chipData, chipSelected }) {
   const [chipIsSelected, setChipIsSelected] = useState(false);

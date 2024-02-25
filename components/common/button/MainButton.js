@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Color } from "../../constants/colors";
+import { DefaultTheme } from "../../../themes/DefaultTheme";
 
 function MainButton({ label, onPress }) {
   return (
@@ -14,7 +14,7 @@ export default MainButton;
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: Color.primaryGreen800,
+    backgroundColor: DefaultTheme.btnBgColor800,
     padding: 20,
     borderRadius: 10,
     mafginBottom: 30,

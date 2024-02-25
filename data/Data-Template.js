@@ -61,8 +61,8 @@ export const PRODUCTS = [
   ),
   new Product(
     "p2",
-    ["c1, c3"],
-    "Cam Sấy Đà Lạt Ngon ẤtƠơ",
+    ["c1", "c3"],
+    "Cam Sấy Đà Lạt Ngon ẤtƠơ, ăn vô bơ luôn team dev =))))))",
     41,
     "30/01/2024",
     "Nông trại Khánh Dương, Tp. Đà Lạt, Việt Nam",
@@ -88,7 +88,7 @@ export const PRODUCTS = [
   ),
   new Product(
     "p3",
-    ["c1, c3"],
+    ["c1", "c3"],
     "Chuối xanh",
     41,
     "30/03/2024",
@@ -117,7 +117,7 @@ export const PRODUCTS = [
   ),
   new Product(
     "p4",
-    ["c1, c4, c5"],
+    ["c1", "c4", "c5"],
     "Rau dền",
     76,
     "12/02/2024",

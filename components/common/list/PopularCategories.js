@@ -2,7 +2,7 @@ import React from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Card } from "react-native-paper";
 
-import { DefaultTheme } from "../../themes/DefaultTheme";
+import { DefaultTheme } from "../../../themes/DefaultTheme";
 
 function PopularCategories({ title, image, onPress }) {
   return (

@@ -43,12 +43,6 @@ function TabNavigator() {
             <Ionicons name="home" color={color} size={size} />
           ),
         })}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            e.preventDefault();
-            navigation.navigate("Home");
-          },
-        })}
       />
       <Tab.Screen
         name="Categories"
@@ -62,12 +56,12 @@ function TabNavigator() {
             <Ionicons name="logo-buffer" color={color} size={size} />
           ),
         })}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            e.preventDefault();
-            navigation.navigate("CategoriesStack");
-          },
-        })}
+        // listeners={({ navigation }) => ({
+        //   tabPress: (e) => {
+        //     e.preventDefault();
+        //     navigation.navigate("Categories");
+        //   },
+        // })}
       />
       <Tab.Screen
         name="BusinessDay"

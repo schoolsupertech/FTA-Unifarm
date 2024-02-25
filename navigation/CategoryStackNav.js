@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { IconButton } from "react-native-paper";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import CategoriesScreen from "../screens/CategoriesScreen";
-import ProductsOverviewScreen from "../screens/ProductsOverviewScreen";
+import CatListProdScreen from "../screens/CatListProdScreen";
 import ProductDetailScreen from "../screens/ProductDetailScreen";
-import { DefaultTheme } from "../themes/DefaultTheme";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,8 +13,6 @@ function CategoryStackNav() {
     <Stack.Navigator
       initialRouteName="CategoriesStack"
       screenOptions={({ navigation }) => ({
-        headerBackTitleVisible: false,
-        headerStyle: { backgroundColor: DefaultTheme.headerBgColor },
         headerLeft: () => (
           <IconButton
             style={{ margin: 0, padding: 0 }}
@@ -32,14 +29,10 @@ function CategoryStackNav() {
         name="CategoriesStack"
         component={CategoriesScreen}
         options={{
-          headerLeft: () => null,
-          title: "Danh mục",
+          title: "Tất cả danh mục",
         }}
       />
-      <Stack.Screen
-        name="ProductsOverview"
-        component={ProductsOverviewScreen}
-      />
+      <Stack.Screen name="CatListProdScreen" component={CatListProdScreen} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
     </Stack.Navigator>
   );

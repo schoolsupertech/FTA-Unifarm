@@ -1,15 +1,15 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { View, FlatList, StyleSheet, SafeAreaView } from "react-native";
 import { Searchbar, Snackbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
-import ChipContent from "../components/list/ChipContent";
-import ProdItem from "../components/list/ProdItem";
-import { Color } from "../constants/colors";
+import ChipContent from "../components/ui/categories/ChipContent";
+import CardProdItem from "../components/ui/product/CardProdItem";
 import { CHIPCATEGORYCONTENT } from "../constants/chipCategoryContent";
 import { CATEGORIES, PRODUCTS } from "../data/Data-Template";
+import { DefaultTheme } from "../themes/DefaultTheme";
 
-function ProductsOverviewScreen({ route }) {
+function CatListProdScreen({ route }) {
   const navigation = useNavigation();
   const catId = route.params.categoryId;
   const [isChipSelected, setIsChipSelected] = useState(true);
@@ -26,13 +26,22 @@ function ProductsOverviewScreen({ route }) {
 
     navigation.setOptions({
       title: getCatTitle,
-      headerSearchBarOptions: {
-        onChangeText: (event) => console.log(event.nativeEvent.text),
-        onSearchButtonPress: (event) =>
-          console.log("Search", event.nativeEvent),
-      },
+      // headerSearchBarOptions: {
+      //   onChangeText: (event) => console.log(event.nativeEvent.text),
+      //   onSearchButtonPress: (event) =>
+      //     console.log("Search", event.nativeEvent),
+      // },
     });
   }, [catId, navigation]);
+
+  useEffect(() => {
+    const unsubcribe = navigation.getParent().addListener("tabPress", (e) => {
+      e.preventDefault();
+      navigation.navigate("CategoriesStack");
+    });
+
+    return unsubcribe;
+  }, []);
 
   function renderProdItem(itemData) {
     const item = itemData.item;
@@ -50,7 +59,7 @@ function ProductsOverviewScreen({ route }) {
       gallery: item.gallery,
     };
 
-    return <ProdItem {...prodItemProps} />;
+    return <CardProdItem {...prodItemProps} />;
   }
 
   function onToggleSnackBar() {
@@ -62,26 +71,14 @@ function ProductsOverviewScreen({ route }) {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={DefaultTheme.flex_1}>
       <Searchbar
-        style={{ marginTop: 10, marginHorizontal: 20 }}
+        style={styles.searchbar}
         placeholder="Tìm kiếm sản phẩm trong danh mục"
         elevation={3}
-        theme={{
-          colors: {
-            elevation: { level3: Color.primaryGreen50 },
-            primary: Color.primaryGreen800,
-          },
-        }}
+        theme={DefaultTheme.searchbar}
       />
-      <View
-        style={{
-          marginHorizontal: 10,
-          padding: 8,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <View style={styles.chipContainer}>
         {/* Filter by Product Type */}
         <ChipContent
           chipData={CHIPCATEGORYCONTENT}
@@ -99,7 +96,6 @@ function ProductsOverviewScreen({ route }) {
       <Snackbar
         visible={onCartAdded}
         onDismiss={onDismissSnackBar}
-        style={{ padding: 0 }}
         action={{ label: "Xong", onPress: () => {} }}
       >
         Đã thêm vào giỏ hàng
@@ -108,11 +104,21 @@ function ProductsOverviewScreen({ route }) {
   );
 }
 
-export default ProductsOverviewScreen;
+export default CatListProdScreen;
 
 const styles = StyleSheet.create({
   prodItemContainer: {
     flex: 1,
     marginHorizontal: 10,
+  },
+  searchbar: {
+    marginTop: 10,
+    marginHorizontal: 20,
+  },
+  chipContainer: {
+    marginHorizontal: 10,
+    padding: 8,
+    justifyContent: "center",
+    alignItems: "flex-start",
   },
 });

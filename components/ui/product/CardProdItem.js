@@ -3,13 +3,13 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Card, Text as PaperText, ProgressBar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
-import CartBtn from "../button/CartBtn";
-import { Color } from "../../constants/colors";
-import { DefaultTheme } from "../../themes/DefaultTheme";
+import CartBtn from "../../common/button/CartBtn";
+import { DefaultTheme } from "../../../themes/DefaultTheme";
+import Title from "../../common/text/Title";
 
-function ProdItem(props) {
+function CardProdItem(props) {
   const navigation = useNavigation();
-  const [isCartAdded, setOnCartAdded] = useState(false);
+  const [isCartAdded, setIsCartAdded] = useState(false);
 
   function selectedProductDetailHandler() {
     navigation.navigate("ProductDetail", {
@@ -18,7 +18,8 @@ function ProdItem(props) {
   }
 
   function onToggleSnackBar() {
-    setOnCartAdded(!isCartAdded);
+    setIsCartAdded(!isCartAdded);
+    props.cartAdded(isCartAdded);
   }
 
   return (
@@ -32,23 +33,15 @@ function ProdItem(props) {
             }}
           />
           <Card.Content style={styles.textContent}>
-            <PaperText variant="titleMedium" numberOfLines={2}>
-              {props.title}
-            </PaperText>
-            <Card.Content style={{ marginVertical: 4, paddingHorizontal: 0 }}>
-              <PaperText variant="bodySmall">Đã bán {props.sold}</PaperText>
-              <ProgressBar progress={0.5} color={Color.brandingError} />
-            </Card.Content>
-
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <View>
+            <Title>{props.title}</Title>
+            <View style={styles.titleContent}>
+              <View style={DefaultTheme.flex_1}>
+                <View style={styles.progressBarContent}>
+                  <PaperText variant="bodySmall">Đã bán {props.sold}</PaperText>
+                  <ProgressBar progress={0.5} color={DefaultTheme.pgBarColor} />
+                </View>
                 <PaperText variant="bodyLarge">{props.price} Vnđ</PaperText>
-                <PaperText
-                  variant="bodySmall"
-                  style={{ textDecorationLine: "line-through", color: "gray" }}
-                >
+                <PaperText variant="bodySmall" style={styles.listedPrice}>
                   {props.listedPrice} Vnđ
                 </PaperText>
               </View>
@@ -61,12 +54,13 @@ function ProdItem(props) {
   );
 }
 
-export default ProdItem;
+export default CardProdItem;
 
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 8,
     backgroundColor: DefaultTheme.cardBgColor,
+    marginBottom: 12,
   },
   content: {
     flexDirection: "row",
@@ -83,5 +77,17 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     paddingHorizontal: 4,
     marginStart: 16,
+  },
+  titleContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 12,
+  },
+  progressBarContent: {
+    marginEnd: 32,
+  },
+  listedPrice: {
+    textDecorationLine: "line-through",
+    color: "gray",
   },
 });

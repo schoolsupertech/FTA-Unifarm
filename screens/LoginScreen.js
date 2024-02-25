@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import MainButton from "../components/button/MainButton";
-import InputField from "../components/InputField";
+import MainButton from "../components/common/button/MainButton";
+import InputField from "../components/common/text/InputField";
 import GoogleSVG from "../assets/images/misc/google.svg";
 import FacebookSVG from "../assets/images/misc/facebook.svg";
 import TwitterSVG from "../assets/images/misc/twitter.svg";
