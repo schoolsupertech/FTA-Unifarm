@@ -1,252 +1,209 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  TextInput,
+  FlatList,
   StyleSheet,
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import {
-  Avatar,
-  Card,
-  Icon,
-  IconButton,
-  MD3Colors,
-  Searchbar,
-  Snackbar,
-} from "react-native-paper";
+import { Badge, IconButton, Searchbar, Snackbar } from "react-native-paper";
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import Carousel from "react-native-snap-carousel";
 
-import { windowWidth } from "../utils/Dimensions";
-import { sliderNewsLetters } from "../themes/sliderNewsLetters";
-import BannerNewsLettersSlider from "../components/BannerNewsLettersSlider";
+import BannerNewsLettersSlider from "../components/ui/home/BannerNewsLettersSlider";
+import PopularCategories from "../components/common/list/PopularCategories";
+import HeaderContent from "../components/ui/home/HeaderContent";
+import LogoTitle from "../themes/LogoTitle";
+import { DefaultTheme } from "../themes/DefaultTheme";
 import { Color } from "../constants/colors";
+import { windowWidth } from "../utils/Dimensions";
+import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
+import { CATEGORIES, PRODUCTS } from "../data/Data-Template";
+import CardProdItem from "../components/ui/product/CardProdItem";
 
-const RightContent = ({ onCartAdded, onToggleSnackBar }) => {
-  return (
-    <IconButton
-      icon={onCartAdded ? "cart" : "cart-plus"}
-      mode={onCartAdded ? "contained" : "outlined"}
-      iconColor={Color.brandingSuccess}
-      theme={{ colors: { outline: "green" } }}
-      onPress={onToggleSnackBar}
-    />
-  );
-};
-
-function HomeScreen({ navigation }) {
+function HomeScreen() {
+  const navigation = useNavigation();
   const [searchPrd, setSearchPrd] = useState("");
   const [onCartAdded, setOnCartAdded] = useState(false);
 
-  const renderNewsLettersBanner = ({ item, index }) => {
-    return <BannerNewsLettersSlider data={item} />;
-  };
+  const renderNewsLettersBanner = ({ item, index }) => (
+    <BannerNewsLettersSlider data={item} />
+  );
+
+  function renderPopularCategories(itemData) {
+    function selectedCategoryHandler() {
+      navigation.navigate("CatListProdScreen", {
+        categoryId: itemData.item.id,
+      });
+    }
+
+    return (
+      <PopularCategories
+        title={itemData.item.title}
+        image={itemData.item.image}
+        onPress={selectedCategoryHandler}
+      />
+    );
+  }
+
+  function renderProdItem(itemData) {
+    const item = itemData.item;
+    const prodItemProps = {
+      id: item.id,
+      title: item.title,
+      sold: item.sold,
+      openDate: item.openDate,
+      source: item.source,
+      description: item.description,
+      moreInfo: item.moreInfo,
+      price: item.price,
+      listedPrice: item.listedPrice,
+      unit: item.unit,
+      gallery: item.gallery,
+    };
+
+    function onToggleSnackBar(cartAdded) {
+      setOnCartAdded(cartAdded);
+      console.log(onCartAdded);
+    }
+
+    return <CardProdItem {...prodItemProps} cartAdded={onToggleSnackBar} />;
+  }
 
   function displaySearchPrdText(prdSearch) {
     setSearchPrd(prdSearch);
     console.log(searchPrd);
   }
 
-  const onToggleSnackBar = () => {
-    setOnCartAdded(!onCartAdded);
-  };
+  function selectedCategoriesStack() {
+    navigation.navigate("CategoryTab");
+  }
+
   const onDismissSnackBar = () => {
     setOnCartAdded(false);
   };
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <Searchbar
-        style={{ marginTop: 10, marginHorizontal: 20 }}
-        placeholder="Tìm kiếm sản phẩm"
-        elevation={3}
-        theme={{
-          colors: {
-            elevation: { level3: Color.primaryGreen50 },
-            primary: Color.primaryGreen800,
-          },
-        }}
-        value={searchPrd}
-        onChangeText={displaySearchPrdText}
-      />
-      <ScrollView style={styles.scrollContainer}>
-        {/*
-        <View style={styles.searchBar}>
-          <Ionicons
-            name="search"
-            size={20}
-            color="#C6C6C6"
-            style={{ marginRight: 5 }}
-          />
-          <TextInput placeholder="Search" />
+    <SafeAreaView style={DefaultTheme.root}>
+      <LinearGradient
+        colors={["white", Color.primaryGreen900]}
+        style={styles.linearGradient}
+      >
+        <View style={styles.headerContainer}>
+          <LogoTitle />
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity style={{ marginEnd: 20 }} onPress={() => {}}>
+              <Ionicons
+                name="notifications"
+                color={Color.primaryGreen700}
+                size={24}
+              />
+              <Badge style={{ position: "absolute", top: -6, right: -12 }}>
+                3
+              </Badge>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginEnd: 4 }} onPress={() => {}}>
+              <Ionicons
+                name="cart-outline"
+                color={Color.primaryGreen700}
+                size={24}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-        */}
-
-        <Carousel
-          ref={(c) => {
-            this._carousel = c;
-          }}
-          data={sliderNewsLetters}
-          renderItem={renderNewsLettersBanner}
-          sliderWidth={windowWidth - 40}
-          itemWidth={320}
-          loop={true}
-        />
-
-        <View style={{ marginVertical: 10 }}>
-          <View
-            style={{
-              marginVertical: 15,
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={styles.categoryTitle}>Danh mục phổ biến</Text>
+        <View style={styles.headerLocation}>
+          <View>
+            <Text
+              style={{
+                color: Color.primaryGreen800,
+              }}
+            >
+              Vị trí
+            </Text>
             <TouchableOpacity onPress={() => {}}>
-              <Text
-                style={{ color: "#0aada8", textDecorationLine: "underline" }}
-              >
-                Xem tất cả <Ionicons name="arrow-forward" />
+              <Text style={styles.textLocation}>
+                Thủ Đức, Tp. Hồ Chí Minh <Ionicons name="arrow-down" />
               </Text>
             </TouchableOpacity>
           </View>
-          {/* Danh mục */}
-          <ScrollView horizontal={true}>
-            {/* Add FlatList */}
-            <TouchableOpacity
-              onPress={() => navigation.navigate("CategoryDetail")}
-            >
-              <Card style={{ margin: 10, width: 170 }}>
-                <Card.Cover
-                  style={{
-                    width: 150,
-                    height: 150,
-                    alignSelf: "center",
-                    marginTop: 10,
-                  }}
-                  source={{
-                    uri: "https://media.istockphoto.com/id/1457113212/vi/anh/rau-h%E1%BB%AFu-c%C6%A1-xanh-v%C3%A0-n%E1%BB%81n-th%E1%BB%B1c-ph%E1%BA%A9m-l%C3%A1-s%E1%BA%ABm-m%C3%A0u-nh%C6%B0-m%E1%BB%99t-kh%C3%A1i-ni%E1%BB%87m-%C4%83n-u%E1%BB%91ng-l%C3%A0nh-m%E1%BA%A1nh.jpg?s=1024x1024&w=is&k=20&c=--eEOkZpG3Kx0SmYtH35v3fOAvYeZ2jNDnKPvvS3WEU=",
-                  }}
-                />
-                <Card.Content style={{ marginTop: 10 }}>
-                  <Text style={{ fontWeight: "bold", alignSelf: "center" }}>
-                    Rau, củ, quả
-                  </Text>
-                </Card.Content>
-              </Card>
-            </TouchableOpacity>
-          </ScrollView>
+          <View>
+            <Text>Holder</Text>
+          </View>
+        </View>
+        <Searchbar
+          placeholder="Tìm kiếm sản phẩm"
+          elevation={3}
+          theme={DefaultTheme.searchbar}
+          value={searchPrd}
+          onChangeText={displaySearchPrdText}
+        />
+        <View style={styles.headerMenu}>
+          <View>
+            <Text style={styles.textMenu}>Thực đơn:</Text>
+          </View>
+          <View>
+            <Text style={styles.textMenu}>
+              Hôm nay (ngày 26 tháng 01 năm 2024)
+            </Text>
+          </View>
+        </View>
+      </LinearGradient>
+
+      <ScrollView style={DefaultTheme.scrollContainer}>
+        <View style={styles.contentView}>
+          <HeaderContent>Tin tức mới</HeaderContent>
+          <Carousel
+            ref={(c) => {
+              this._carousel = c;
+            }}
+            data={SLIDERNEWSLETTERS}
+            renderItem={renderNewsLettersBanner}
+            sliderWidth={windowWidth - 40}
+            itemWidth={320}
+            loop={true}
+          />
         </View>
 
-        <View>
+        {/* Danh mục */}
+        <View style={styles.contentView}>
+          <HeaderContent
+            onPress={selectedCategoriesStack}
+            label={"Xem tất cả"}
+            icon={true}
+          >
+            Danh mục phổ biến
+          </HeaderContent>
           <View>
-            <Text style={styles.categoryTitle}>Sản phẩm khuyên dùng</Text>
+            <FlatList
+              data={CATEGORIES}
+              keyExtractor={(item) => item.id}
+              renderItem={renderPopularCategories}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            />
           </View>
-          {/* Add FlatList */}
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("ProductDetail")}
-            >
-              <Card style={{ margin: 10, width: 170 }}>
-                <Card.Cover
-                  style={{
-                    width: 150,
-                    height: 150,
-                    alignSelf: "center",
-                    marginTop: 10,
-                  }}
-                  source={{
-                    uri: "https://media.istockphoto.com/id/1455758897/vi/anh/chanh-qu%C3%BDt-cam-cho-n%C4%83m-m%E1%BB%9Bi-c%E1%BB%A7a-trung-qu%E1%BB%91c.jpg?s=1024x1024&w=is&k=20&c=c-eLqYe80tUCos9x4gwb0oyNZmzjIYCF4TWiJ2Nsesk=",
-                  }}
-                />
-                <Card.Title
-                  title="Cam"
-                  subtitle="Cam sấy Đà Lạt ngon ất ơ..."
-                  right={() => (
-                    <RightContent
-                      onCartAdded={onCartAdded}
-                      onToggleSnackBar={onToggleSnackBar}
-                    />
-                  )}
-                />
-              </Card>
-            </TouchableOpacity>
-            <Card style={{ margin: 10, width: 170 }}>
-              <Card.Cover
-                style={{
-                  width: 150,
-                  height: 150,
-                  alignSelf: "center",
-                  marginTop: 10,
-                }}
-                source={{ uri: "https://picsum.photos/700" }}
-              />
-              <Card.Title
-                title="Card Title"
-                subtitle="Card Subtitle"
-                right={() => (
-                  <RightContent
-                    onCartAdded={onCartAdded}
-                    onToggleSnackBar={onToggleSnackBar}
-                  />
-                )}
-              />
-            </Card>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Card style={{ margin: 10, width: 170 }}>
-              <Card.Cover
-                style={{
-                  width: 150,
-                  height: 150,
-                  alignSelf: "center",
-                  marginTop: 10,
-                }}
-                source={{ uri: "https://picsum.photos/700" }}
-              />
-              <Card.Title
-                title="Card Title"
-                subtitle="Card Subtitle"
-                right={() => (
-                  <RightContent
-                    onCartAdded={onCartAdded}
-                    onToggleSnackBar={onToggleSnackBar}
-                  />
-                )}
-              />
-            </Card>
-            <Card style={{ margin: 10, width: 170 }}>
-              <Card.Cover
-                style={{
-                  width: 150,
-                  height: 150,
-                  alignSelf: "center",
-                  marginTop: 10,
-                }}
-                source={{ uri: "https://picsum.photos/700" }}
-              />
-              <Card.Title
-                title="Card Title"
-                subtitle="Card Subtitle"
-                right={() => (
-                  <RightContent
-                    onCartAdded={onCartAdded}
-                    onToggleSnackBar={onToggleSnackBar}
-                  />
-                )}
-              />
-            </Card>
+        </View>
+
+        {/* Danh sách sản phẩm */}
+        <View style={styles.contentView}>
+          <HeaderContent>Sản phẩm khuyên dùng</HeaderContent>
+          <View>
+            <FlatList
+              data={PRODUCTS}
+              keyExtractor={(item) => item.id}
+              renderItem={renderProdItem}
+            />
           </View>
         </View>
       </ScrollView>
       <Snackbar
         visible={onCartAdded}
         onDismiss={onDismissSnackBar}
-        style={{ padding: 0 }}
-        action={{ label: "Xong", onPress: () => {} }}
+        action={{ label: "Hoàn tác", onPress: () => {} }}
       >
         Đã thêm vào giỏ hàng
       </Snackbar>
@@ -257,13 +214,6 @@ function HomeScreen({ navigation }) {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-  },
-  scrollContainer: {
-    marginVertical: 10,
-    marginHorizontal: 20,
-  },
   searchBar: {
     flexDirection: "row",
     borderColor: "#C6C6C6",
@@ -272,8 +222,48 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
   },
+  linearGradient: {
+    width: "100%",
+    padding: 20,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 4,
+    marginBottom: 8,
+    height: 45,
+  },
+  headerLocation: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  textLocation: {
+    color: Color.primaryGreen700,
+    textDecorationLine: "underline",
+  },
+  headerMenu: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    marginTop: 12,
+  },
+  textMenu: {
+    color: Color.primaryGreen100,
+  },
+  contentView: {
+    marginTop: 8,
+    // marginVertical: 8,
+  },
   categoryTitle: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  categoryButtonViewAll: {
+    color: "#0aada8",
+    textDecorationLine: "underline",
   },
 });

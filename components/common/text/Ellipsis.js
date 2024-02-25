@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { Text } from "react-native-paper";
-
-import { Color } from "../constants/colors";
+import { Color } from "../../../constants/colors";
 
 function Ellipsis({ description, numberOfLines }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
-  const toggleNumberOfLines = () => {
+  function toggleNumberOfLines() {
     setIsCollapsed(!isCollapsed);
-  };
+  }
 
   return (
     <View>

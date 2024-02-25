@@ -1,46 +1,75 @@
-import React from "react";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
-import { Card, Text } from "react-native-paper";
+import React, { useLayoutEffect, useState } from "react";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import { Card, Text as PaperText } from "react-native-paper";
 
-import GrayLine from "../components/GrayLine";
-import Ellipsis from "../components/Ellipsis";
+import GrayLine from "../components/common/text/GrayLine";
+import Ellipsis from "../components/common/text/Ellipsis";
+import Thumbnail from "../components/ui/product/Thumbnail";
+import ProdMoreInfo from "../components/common/list/DataTable";
 import { Color } from "../constants/colors";
+import { PRODUCTS } from "../data/Data-Template";
+import { DefaultTheme } from "../themes/DefaultTheme";
 
-function ProductDetailScreen() {
-  const defaultDescription =
-    "Trái, rau, củ, quả đều có hết ở đây. Bọn bây vào mua ủng hộ cho tao đi... Đừng có ích kỉ như thế, mua giúp tao một tý là giúp tao sống tốt hơn, có tiền làm việc tốt đó mấy ba. Giờ tụi bây không mua thì tao lấy gì giúp ích cho xã hội này phát triển? Mua giúp đi chứ ở nhà tao còn gia đình, vợ con tao nữa huhu.";
+function ProductDetailScreen({ route, navigation }) {
+  const prodId = route.params.prodId;
+  const selectedProd = PRODUCTS.find((prod) => prod.id === prodId);
+  const [coverImage, setCoverImage] = useState(selectedProd.gallery[0]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: selectedProd.title,
+    });
+  }, [selectedProd, navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ flex: 1, marginVertical: 10, marginHorizontal: 20 }}>
-        <Card>
+      <ScrollView style={{ marginHorizontal: 10 }}>
+        <Card
+          style={{ marginTop: 8, backgroundColor: DefaultTheme.cardBgColor }}
+        >
           <Card.Cover
+            style={{ margin: 8 }}
             source={{
-              uri: "https://images.unsplash.com/photo-1511993226957-cd166aba52d8?q=80&w=1898&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              uri: coverImage,
             }}
             resizeMode="cover"
           />
-          <Card.Title
-            title="Spinaches"
-            subtitle="This is subtitle for spinaches"
-          />
+          <View style={styles.thumbnailContainer}>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              <Thumbnail
+                gallery={selectedProd.gallery}
+                onPickedImage={(image) => setCoverImage(image)}
+              />
+            </ScrollView>
+          </View>
+          <Card.Content>
+            <PaperText variant="titleLarge" style={{ fontWeight: "bold" }}>
+              {selectedProd.title}
+            </PaperText>
+            <GrayLine />
+            <PaperText variant="titleSmall">
+              {selectedProd.sold} Người đã mua
+            </PaperText>
+            <PaperText variant="titleSmall">
+              Nguồn gốc: {selectedProd.source}
+            </PaperText>
+            <PaperText variant="titleSmall">
+              Ngày mở bán: {selectedProd.openDate}
+            </PaperText>
+          </Card.Content>
         </Card>
-        <GrayLine />
         {/* Phần mô tả */}
         <View style={styles.descriptionContainer}>
-          <Text variant="headlineMedium">Description</Text>
-          <Ellipsis description={defaultDescription} numberOfLines={3} />
+          <PaperText variant="headlineMedium">Description</PaperText>
+          <Ellipsis description={selectedProd.description} numberOfLines={3} />
         </View>
         {/* Phần thông tin thêm */}
         <View style={styles.descriptionContainer}>
-          <Text variant="headlineMedium">More Information</Text>
-          <Ellipsis description={defaultDescription} numberOfLines={2} />
+          <PaperText variant="headlineMedium">More Information</PaperText>
+          <ProdMoreInfo data={selectedProd.moreInfo} />
         </View>
       </ScrollView>
       <View style={styles.safeAreaView}>
@@ -55,7 +84,7 @@ function ProductDetailScreen() {
             Total Price
           </Text>
           <Text style={{ color: Color.primaryGreen700, fontWeight: "800" }}>
-            100.000 VNĐ
+            {selectedProd.price}
           </Text>
         </View>
         <View style={styles.button}>
@@ -73,16 +102,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  descriptionContainer: {},
-  safeAreaView: {
     backgroundColor: "white",
+  },
+  descriptionContainer: {
+    marginTop: 8,
+  },
+  safeAreaView: {
+    backgroundColor: Color.primaryGreen50,
     position: "absolute",
     bottom: 0,
     width: "100%",
     height: 100,
-    borderTopLeftRadius: 23,
-    borderTopRightRadius: 23,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
     padding: 30,
     borderColor: "#e9f2eb",
     borderWidth: 1,
@@ -99,5 +131,9 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: Color.primaryGreen700,
     borderColor: "#e9f2eb",
+  },
+  thumbnailContainer: {
+    alignItems: "center",
+    margin: 8,
   },
 });

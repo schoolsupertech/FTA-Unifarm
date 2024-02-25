@@ -1,54 +1,25 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/routers";
+import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { View } from "react-native";
+import { Badge } from "react-native-paper";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
-import { Color } from "../constants/colors";
 import HomeScreen from "../screens/HomeScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
-import ProductDetailScreen from "../screens/ProductDetailScreen";
-import CategoryDetailScreen from "../screens/CategoryDetailScreen";
+import { Color } from "../constants/colors";
 
 const Tab = createBottomTabNavigator();
-// const Stack = createNativeStackNavigator();
 
-// const getTabBarVisibility = (route) => {
-//   const routeName = getFocusedRouteNameFromRoute(route) ?? "Feed";
-//   console.log(routeName);
-//
-//   if (routeName === "ProductDetail") {
-//     return "none";
-//   }
-//
-//   return "flex";
-// };
+const getTabBarVisibility = (route) => {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
+  console.log(routeName);
 
-const HomeStack = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="ProductDetail"
-        component={ProductDetailScreen}
-        options={({ route }) => ({
-          title: route.params?.title,
-        })}
-      />
-      <Stack.Screen
-        name="CategoryDetail"
-        component={CategoryDetailScreen}
-        options={({ route }) => ({
-          title: route.params?.title,
-        })}
-      />
-    </Stack.Navigator>
-  );
+  if (routeName === "ProductDetail") {
+    return "none";
+  }
+
+  return "flex";
 };
 
 function TabNavigator() {
@@ -63,10 +34,10 @@ function TabNavigator() {
         name="HomeTab"
         component={HomeScreen}
         options={({ route }) => ({
-          title: "Home",
-          // tabBarStyle: {
-          //   display: getTabBarVisibility(route),
-          // },
+          title: "Trang chủ",
+          tabBarStyle: {
+            display: getTabBarVisibility(route),
+          },
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
           ),
@@ -76,9 +47,46 @@ function TabNavigator() {
         name="CategoryTab"
         component={CategoriesScreen}
         options={{
-          title: "Category",
+          title: "Danh mục",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="cart-sharp" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="BusinessDay"
+        component={HomeScreen}
+        options={{
+          title: "Mặt hàng hôm nay",
+          tabBarIcon: ({ color, size }) => (
+            <View style={{ backgroundColor: "red" }}>
+              <Ionicons name="flash" color="yellow" size={size} />
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Cart"
+        component={HomeScreen}
+        options={{
+          title: "Giỏ hàng",
+          tabBarIcon: ({ color, size }) => (
+            <>
+              <Ionicons name="cart" color={color} size={size} />
+              <Badge style={{ position: "absolute", top: -4, right: 14 }}>
+                6
+              </Badge>
+            </>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={HomeScreen}
+        options={{
+          title: "Cá nhân",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="man" color={color} size={size} />
           ),
         }}
       />

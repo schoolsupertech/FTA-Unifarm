@@ -8,16 +8,13 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import MainButton from "../components/button/MainButton";
-import InputField from "../components/InputField";
+import MainButton from "../components/common/button/MainButton";
+import InputField from "../components/common/text/InputField";
+import GoogleSVG from "../assets/images/misc/google.svg";
+import FacebookSVG from "../assets/images/misc/facebook.svg";
+import TwitterSVG from "../assets/images/misc/twitter.svg";
 import { Color } from "../constants/colors";
 import { AuthContext } from "../context/AuthContext";
-
-// import LoginSVG from '../assets/images/misc/login.svg';
-// import GoogleSVG from '../assets/images/misc/google.svg';
-// import FacebookSVG from '../assets/images/misc/facebook.svg';
-// import TwitterSVG from '../assets/images/misc/twitter.svg';
-//
 
 const LoginScreen = ({ navigation }) => {
   // const [email, setEmail] = useState(null);
@@ -26,28 +23,22 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      <View style={{ paddingHorizontal: 25 }}>
-        <View style={{ alignItems: "center" }}>
-          {/*
-          <LoginSVG
-            height={300}
-            width={300}
-            style={{transform: [{rotate: '-5deg'}]}}
-          />
-          */}
-        </View>
-
-        <Text
-          style={{
-            // fontFamily: 'Roboto-Medium',
-            fontSize: 28,
-            fontWeight: "500",
-            color: "#333",
-            marginBottom: 30,
-          }}
+      <View style={{ flex: 1, paddingHorizontal: 25 }}>
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
-          Login
-        </Text>
+          <Text
+            style={{
+              // fontFamily: 'Roboto-Medium',
+              fontSize: 80,
+              fontWeight: "bold",
+              color: Color.primaryGreen600,
+              textAlign: "center",
+            }}
+          >
+            Login
+          </Text>
+        </View>
 
         <InputField
           label={"Email ID"}
@@ -84,7 +75,9 @@ const LoginScreen = ({ navigation }) => {
           }}
         />
 
-        <Text style={{ textAlign: "center", color: "#666", marginBottom: 30 }}>
+        <Text
+          style={{ textAlign: "center", color: "#666", marginVertical: 30 }}
+        >
           Or, login with ...
         </Text>
 
@@ -105,9 +98,7 @@ const LoginScreen = ({ navigation }) => {
               paddingVertical: 10,
             }}
           >
-            {/*
             <GoogleSVG height={24} width={24} />
-            */}
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {}}
@@ -119,9 +110,7 @@ const LoginScreen = ({ navigation }) => {
               paddingVertical: 10,
             }}
           >
-            {/*
             <FacebookSVG height={24} width={24} />
-            */}
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {}}
@@ -133,9 +122,7 @@ const LoginScreen = ({ navigation }) => {
               paddingVertical: 10,
             }}
           >
-            {/*
             <TwitterSVG height={24} width={24} />
-            */}
           </TouchableOpacity>
         </View>
 
@@ -149,6 +136,7 @@ const LoginScreen = ({ navigation }) => {
           <Text>New to the app?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text style={{ color: Color.primaryGreen800, fontWeight: "700" }}>
+              {" "}
               Register
             </Text>
           </TouchableOpacity>

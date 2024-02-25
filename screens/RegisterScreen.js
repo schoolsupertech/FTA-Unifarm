@@ -10,8 +10,8 @@ import {
 // import DatePicker from 'react-native-date-picker';
 import { Ionicons } from "@expo/vector-icons";
 
-import InputField from "../components/InputField";
-import MainButton from "../components/button/MainButton";
+import InputField from "../components/common/text/InputField";
+import MainButton from "../components/common/button/MainButton";
 import { Color } from "../constants/colors";
 // import RegistrationSVG from "../assets/images/misc/registration.svg";
 // import GoogleSVG from "../assets/images/misc/google.svg";
