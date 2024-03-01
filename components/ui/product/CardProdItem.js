@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Card, Text as PaperText, ProgressBar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
@@ -17,9 +17,14 @@ function CardProdItem(props) {
     });
   }
 
+  useEffect(() => {
+    isCartAdded && props.onAddingCart(isCartAdded);
+    // console.log("ID: " + props.id + "; isCartAdded: " + isCartAdded);
+  }, [isCartAdded]);
+
   function onToggleSnackBar() {
     setIsCartAdded(!isCartAdded);
-    props.cartAdded(isCartAdded);
+    console.log("ID Product: " + props.id + "; isCartAdded: " + isCartAdded);
   }
 
   return (

@@ -10,3 +10,4 @@ Farm To Apartment - Mobile app
 - [x] CategoryDetailScreen added.
 - [x] ProductDetailScreen added.
 - [x] CartScreen added.
+- [x] NotificationScreen added.

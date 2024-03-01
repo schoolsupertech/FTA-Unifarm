@@ -15,24 +15,30 @@ import { useNavigation } from "@react-navigation/native";
 import Carousel from "react-native-snap-carousel";
 
 import BannerNewsLettersSlider from "../components/ui/home/BannerNewsLettersSlider";
+import LocationOptions from "../components/ui/home/LocationOptions";
 import PopularCategories from "../components/common/list/PopularCategories";
 import HeaderContent from "../components/ui/home/HeaderContent";
+import CardProdItem from "../components/ui/product/CardProdItem";
 import LogoTitle from "../themes/LogoTitle";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { Color } from "../constants/colors";
 import { windowWidth } from "../utils/Dimensions";
 import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
 import { CATEGORIES, PRODUCTS } from "../data/Data-Template";
-import CardProdItem from "../components/ui/product/CardProdItem";
 
 function HomeScreen() {
   const navigation = useNavigation();
   const [searchPrd, setSearchPrd] = useState("");
   const [onCartAdded, setOnCartAdded] = useState(false);
+  const [locationModalVisible, setLocationModalVisible] = useState(false);
 
   const renderNewsLettersBanner = ({ item, index }) => (
     <BannerNewsLettersSlider data={item} />
   );
+
+  function updateLocationHandler(data) {
+    setLocationModalVisible(false);
+  }
 
   function renderPopularCategories(itemData) {
     function selectedCategoryHandler() {
@@ -66,12 +72,11 @@ function HomeScreen() {
       gallery: item.gallery,
     };
 
-    function onToggleSnackBar(cartAdded) {
+    function AddingCartHandler(cartAdded) {
       setOnCartAdded(cartAdded);
-      console.log(onCartAdded);
     }
 
-    return <CardProdItem {...prodItemProps} cartAdded={onToggleSnackBar} />;
+    return <CardProdItem {...prodItemProps} onAddingCart={AddingCartHandler} />;
   }
 
   function displaySearchPrdText(prdSearch) {
@@ -83,10 +88,6 @@ function HomeScreen() {
     navigation.navigate("CategoryTab");
   }
 
-  const onDismissSnackBar = () => {
-    setOnCartAdded(false);
-  };
-
   return (
     <SafeAreaView style={DefaultTheme.root}>
       <LinearGradient
@@ -96,7 +97,12 @@ function HomeScreen() {
         <View style={styles.headerContainer}>
           <LogoTitle />
           <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity style={{ marginEnd: 20 }} onPress={() => {}}>
+            <TouchableOpacity
+              style={{ marginEnd: 20 }}
+              onPress={() => {
+                navigation.navigate("Notification");
+              }}
+            >
               <Ionicons
                 name="notifications"
                 color={Color.primaryGreen700}
@@ -106,7 +112,12 @@ function HomeScreen() {
                 3
               </Badge>
             </TouchableOpacity>
-            <TouchableOpacity style={{ marginEnd: 4 }} onPress={() => {}}>
+            <TouchableOpacity
+              style={{ marginEnd: 4 }}
+              onPress={() => {
+                navigation.navigate("CartScreen");
+              }}
+            >
               <Ionicons
                 name="cart-outline"
                 color={Color.primaryGreen700}
@@ -124,11 +135,16 @@ function HomeScreen() {
             >
               Vị trí
             </Text>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => setLocationModalVisible(true)}>
               <Text style={styles.textLocation}>
                 Thủ Đức, Tp. Hồ Chí Minh <Ionicons name="arrow-down" />
               </Text>
             </TouchableOpacity>
+            <LocationOptions
+              visible={locationModalVisible}
+              onPress={updateLocationHandler}
+              onCancel={() => setLocationModalVisible(false)}
+            />
           </View>
           <View>
             <Text>Holder</Text>
@@ -202,8 +218,11 @@ function HomeScreen() {
       </ScrollView>
       <Snackbar
         visible={onCartAdded}
-        onDismiss={onDismissSnackBar}
-        action={{ label: "Hoàn tác", onPress: () => {} }}
+        onDismiss={() => {}}
+        action={{
+          label: "Xong",
+          onPress: () => setOnCartAdded(false),
+        }}
       >
         Đã thêm vào giỏ hàng
       </Snackbar>
@@ -214,14 +233,14 @@ function HomeScreen() {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  searchBar: {
-    flexDirection: "row",
-    borderColor: "#C6C6C6",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-  },
+  // searchBar: {
+  //   flexDirection: "row",
+  //   borderColor: "#C6C6C6",
+  //   borderWidth: 1,
+  //   borderRadius: 8,
+  //   paddingHorizontal: 10,
+  //   paddingVertical: 8,
+  // },
   linearGradient: {
     width: "100%",
     padding: 20,

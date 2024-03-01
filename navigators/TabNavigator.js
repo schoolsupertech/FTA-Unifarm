@@ -35,9 +35,9 @@ function TabNavigator() {
         component={HomeScreen}
         options={({ route }) => ({
           title: "Trang chủ",
-          tabBarStyle: {
-            display: getTabBarVisibility(route),
-          },
+          // tabBarStyle: {
+          //   display: getTabBarVisibility(route),
+          // },
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
           ),

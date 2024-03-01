@@ -6,6 +6,8 @@ import TabNavigator from "./TabNavigator";
 import ProductDetailScreen from "../screens/ProductDetailScreen";
 import CatListProdScreen from "../screens/CatListProdScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
+import NotificationScreen from "../screens/NotificationScreen";
+import CartScreen from "../screens/CartScreen";
 import { DefaultTheme } from "../themes/DefaultTheme";
 
 const Stack = createNativeStackNavigator();
@@ -35,9 +37,11 @@ function AppStackNav() {
           headerShown: false,
         }}
       />
+      <Stack.Screen name="Notification" component={NotificationScreen} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
       <Stack.Screen name="CatListProdScreen" component={CatListProdScreen} />
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
+      <Stack.Screen name="CartScreen" component={CartScreen} />
     </Stack.Navigator>
   );
 }
