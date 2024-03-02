@@ -1,7 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet, Modal, TouchableOpacity } from "react-native";
-import { DefaultTheme } from "../../../themes/DefaultTheme";
+import { Ionicons } from "@expo/vector-icons";
+
 import MainButton from "../../common/button/MainButton";
+import { DefaultTheme } from "../../../themes/DefaultTheme";
 
 function LocationOptions(props) {
   return (
@@ -9,6 +11,10 @@ function LocationOptions(props) {
       <View style={styles.container}>
         <View style={styles.modalView}>
           <Text>This is location screen</Text>
+          <View>
+            <Ionicons name="location" />
+            <Text>Province</Text>
+          </View>
         </View>
         <View style={styles.btnContainer}>
           <View style={styles.btnGroup}>
@@ -32,13 +38,13 @@ const styles = StyleSheet.create({
   },
   modalView: {
     flex: 1,
-    width: "100%",
-    marginTop: 40,
+    marginTop: 60,
     marginHorizontal: 20,
+    paddingLeft: 12,
     borderRadius: 20,
     borderColor: "green",
     borderWidth: 2,
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "space-evenly",
     shadowColor: "#000",
     shadowOffset: {
@@ -60,6 +66,8 @@ const styles = StyleSheet.create({
   },
   btnGroup: {
     flex: 1,
-    margin: 40,
+    marginTop: 12,
+    marginHorizontal: 40,
+    marginBottom: 40,
   },
 });

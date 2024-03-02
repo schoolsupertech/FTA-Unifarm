@@ -4,8 +4,8 @@ import { Card, Text as PaperText } from "react-native-paper";
 
 import GrayLine from "../components/common/text/GrayLine";
 import Ellipsis from "../components/common/text/Ellipsis";
-import Thumbnail from "../components/ui/product/Thumbnail";
 import ProdMoreInfo from "../components/common/list/DataTable";
+import SwiperSlide from "../components/common/list/SwiperSlide";
 import { Color } from "../constants/colors";
 import { PRODUCTS } from "../data/Data-Template";
 import { DefaultTheme } from "../themes/DefaultTheme";
@@ -23,10 +23,8 @@ function ProductDetailScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ marginHorizontal: 10 }}>
-        <Card
-          style={{ marginTop: 8, backgroundColor: DefaultTheme.cardBgColor }}
-        >
+      <ScrollView style={{ marginHorizontal: 10, marginBottom: 72 }}>
+        {/*
           <Card.Cover
             style={{ margin: 8 }}
             source={{
@@ -45,7 +43,10 @@ function ProductDetailScreen({ route, navigation }) {
               />
             </ScrollView>
           </View>
-          <Card.Content>
+          */}
+        <View style={styles.headerContainer}>
+          <SwiperSlide gallery={selectedProd.gallery} />
+          <View style={styles.headerContent}>
             <PaperText variant="titleLarge" style={{ fontWeight: "bold" }}>
               {selectedProd.title}
             </PaperText>
@@ -59,8 +60,8 @@ function ProductDetailScreen({ route, navigation }) {
             <PaperText variant="titleSmall">
               Ngày mở bán: {selectedProd.openDate}
             </PaperText>
-          </Card.Content>
-        </Card>
+          </View>
+        </View>
         {/* Phần mô tả */}
         <View style={styles.descriptionContainer}>
           <PaperText variant="headlineMedium">Description</PaperText>
@@ -104,8 +105,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
   },
+  headerContainer: {},
+  headerContent: {
+    padding: 16,
+    backgroundColor: Color.primaryGreen100,
+    borderRadius: 12,
+  },
   descriptionContainer: {
     marginTop: 8,
+    padding: 16,
+    backgroundColor: Color.primaryGreen100,
+    borderRadius: 12,
   },
   safeAreaView: {
     backgroundColor: Color.primaryGreen50,
