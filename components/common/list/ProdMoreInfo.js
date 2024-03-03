@@ -29,8 +29,8 @@ function ProdMoreInfo({ data }) {
       <LinearGradient
         start={[0, 0.1]}
         end={[1, 0.1]}
-        colors={[Color.primaryGreen900, "white"]}
         locations={[0, 0.15]}
+        colors={[Color.primaryGreen900, Color.primaryGreen100]}
         style={styles.linearGradient}
       >
         {data.map((dataPoint) => (

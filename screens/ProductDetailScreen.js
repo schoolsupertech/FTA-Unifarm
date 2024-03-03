@@ -31,8 +31,13 @@ function ProductDetailScreen({ route, navigation }) {
               {selectedProd.title}
             </PaperText>
             <GrayLine />
-            <PaperText variant="bodySmall">(4.8*)</PaperText>
-            <RatingStar size={32} />
+            <PaperText variant="bodySmall">(4.5*)</PaperText>
+            <RatingStar
+              disabled={true}
+              halfStarEnabled={true}
+              size={24}
+              ratingStar={4.5}
+            />
             <PaperText variant="titleSmall">
               {selectedProd.sold} Người đã mua
             </PaperText>

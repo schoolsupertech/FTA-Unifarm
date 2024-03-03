@@ -1,26 +1,23 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, StyleSheet } from "react-native";
+import StarRating from "react-native-star-rating";
 
 import { Color } from "../../constants/colors";
 
-function RatingStar({ size }) {
-  const starRatingOptions = [1, 2, 3, 4, 5];
-  const [starRating, setStarRating] = useState(null);
+function RatingStar({ disabled, halfStarEnabled, size, ratingStar }) {
+  const [starRating, setStarRating] = useState(ratingStar);
 
   return (
     <View style={styles.stars}>
-      {starRatingOptions.map((option) => (
-        <TouchableOpacity key={option} onPress={() => setStarRating(option)}>
-          <Ionicons
-            name={starRating >= option ? "star-sharp" : "star"}
-            size={size}
-            style={
-              starRating >= option ? styles.starSelected : styles.starUnselected
-            }
-          />
-        </TouchableOpacity>
-      ))}
+      <StarRating
+        disabled={disabled}
+        maxStars={5}
+        starSize={size}
+        rating={starRating}
+        halfStarEnabled={halfStarEnabled}
+        fullStarColor={Color.star}
+        selectedStar={(rating) => setStarRating(rating)}
+      />
     </View>
   );
 }
@@ -31,6 +28,7 @@ const styles = StyleSheet.create({
   stars: {
     display: "flex",
     flexDirection: "row",
+    marginVertical: 4,
   },
   starSelected: {
     color: Color.star,

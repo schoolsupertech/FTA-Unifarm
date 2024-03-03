@@ -15,7 +15,7 @@ function CartScreen(props) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ marginHorizontal: 10, marginBottom: 72 }}>
+      <ScrollView style={{ marginHorizontal: 10, marginBottom: 80 }}>
         <View style={styles.headerContainer}>
           <Text style={{ color: "black", fontSize: 24, paddingVertical: 16 }}>
             Your <Text style={{ fontWeight: "bold" }}>cart</Text>
@@ -27,20 +27,12 @@ function CartScreen(props) {
           </View>
         </View>
       </ScrollView>
-      <View
-        style={{
-          paddingTop: 8,
-          paddingHorizontal: 12,
-          backgroundColor: Color.primaryGreen50,
-          borderTopLeftRadius: 12,
-          borderTopRightRadius: 12,
-        }}
-      >
+      <View style={styles.safeAreaView}>
         <View
           style={{
             flexDirection: "row",
             justifyContent: "flex-end",
-            paddingVertical: 8,
+            paddingBottom: 8,
           }}
         >
           <Text style={{ fontSize: 18 }}>
@@ -100,5 +92,18 @@ const styles = StyleSheet.create({
   headerContainer: {
     flex: 1,
     marginHorizontal: 12,
+  },
+  safeAreaView: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: 100,
+    paddingVertical: 18,
+    paddingHorizontal: 12,
+    backgroundColor: Color.primaryGreen50,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });
