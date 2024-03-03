@@ -26,4 +26,5 @@ export const Color = {
   brandingWarning: "#ff8a00",
   brandingError: "#ea4b48",
   realEstateDark: "#2b395f",
+  star: "#ffb300",
 };

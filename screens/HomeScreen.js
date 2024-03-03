@@ -244,6 +244,8 @@ const styles = StyleSheet.create({
   linearGradient: {
     width: "100%",
     padding: 20,
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
   },
   headerContainer: {
     flexDirection: "row",

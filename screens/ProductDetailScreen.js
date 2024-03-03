@@ -4,11 +4,11 @@ import { Card, Text as PaperText } from "react-native-paper";
 
 import GrayLine from "../components/common/text/GrayLine";
 import Ellipsis from "../components/common/text/Ellipsis";
-import ProdMoreInfo from "../components/common/list/DataTable";
+import ProdMoreInfo from "../components/common/list/ProdMoreInfo";
 import SwiperSlide from "../components/common/list/SwiperSlide";
+import RatingStar from "../components/common/RatingStar";
 import { Color } from "../constants/colors";
 import { PRODUCTS } from "../data/Data-Template";
-import { DefaultTheme } from "../themes/DefaultTheme";
 
 function ProductDetailScreen({ route, navigation }) {
   const prodId = route.params.prodId;
@@ -24,26 +24,6 @@ function ProductDetailScreen({ route, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ marginHorizontal: 10, marginBottom: 72 }}>
-        {/*
-          <Card.Cover
-            style={{ margin: 8 }}
-            source={{
-              uri: coverImage,
-            }}
-            resizeMode="cover"
-          />
-          <View style={styles.thumbnailContainer}>
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            >
-              <Thumbnail
-                gallery={selectedProd.gallery}
-                onPickedImage={(image) => setCoverImage(image)}
-              />
-            </ScrollView>
-          </View>
-          */}
         <View style={styles.headerContainer}>
           <SwiperSlide gallery={selectedProd.gallery} />
           <View style={styles.headerContent}>
@@ -51,9 +31,12 @@ function ProductDetailScreen({ route, navigation }) {
               {selectedProd.title}
             </PaperText>
             <GrayLine />
+            <PaperText variant="bodySmall">(4.8*)</PaperText>
+            <RatingStar size={32} />
             <PaperText variant="titleSmall">
               {selectedProd.sold} Người đã mua
             </PaperText>
+            <GrayLine />
             <PaperText variant="titleSmall">
               Nguồn gốc: {selectedProd.source}
             </PaperText>
@@ -64,12 +47,16 @@ function ProductDetailScreen({ route, navigation }) {
         </View>
         {/* Phần mô tả */}
         <View style={styles.descriptionContainer}>
-          <PaperText variant="headlineMedium">Description</PaperText>
+          <PaperText variant="headlineSmall" style={styles.descriptionHeader}>
+            Mô Tả
+          </PaperText>
           <Ellipsis description={selectedProd.description} numberOfLines={3} />
         </View>
         {/* Phần thông tin thêm */}
         <View style={styles.descriptionContainer}>
-          <PaperText variant="headlineMedium">More Information</PaperText>
+          <PaperText variant="headlineSmall" style={styles.descriptionHeader}>
+            Thông Tin Sản Phẩm
+          </PaperText>
           <ProdMoreInfo data={selectedProd.moreInfo} />
         </View>
       </ScrollView>
@@ -116,6 +103,10 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: Color.primaryGreen100,
     borderRadius: 12,
+  },
+  descriptionHeader: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
   safeAreaView: {
     backgroundColor: Color.primaryGreen50,

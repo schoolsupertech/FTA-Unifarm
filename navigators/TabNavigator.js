@@ -7,6 +7,7 @@ import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 import HomeScreen from "../screens/HomeScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
+import CartScreen from "../screens/CartScreen";
 import { Color } from "../constants/colors";
 
 const Tab = createBottomTabNavigator();
@@ -66,8 +67,8 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Cart"
-        component={HomeScreen}
+        name="CartTab"
+        component={CartScreen}
         options={{
           title: "Giỏ hàng",
           tabBarIcon: ({ color, size }) => (
