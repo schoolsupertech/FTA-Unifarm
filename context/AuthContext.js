@@ -12,12 +12,13 @@ export const AuthProvider = ({ children }) => {
     useState(null);
   const [categoriesInfo, setCategoriesInfo] = useState(null);
   const [productsInfo, setProductsInfo] = useState(null);
+  const [prodsInfo, setProdsInfo] = useState(null);
   const [prodsItemInfo, setProdsItemInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
 
-  const categories = async () => {
+  const categories = () => {
     setIsLoading(true);
-    await axios
+    axios
       .get(BASE_URL + "/categories")
       .then((res) => {
         let categoriesInfo = res.data;
@@ -45,9 +46,9 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
-  const products = async () => {
+  const products = () => {
     setIsLoading(true);
-    await axios
+    axios
       .get(BASE_URL + "/products")
       .then((res) => {
         let productsInfo = res.data;
@@ -60,30 +61,60 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
-  const prodsItem = async (categoriesRecommend) => {
-    setIsLoading(true);
-    const catRecom =
-      categoriesRecommend &&
-      categoriesRecommend.filter((item) => {
-        item.name.toLowerCase().includes("nổi bật");
-      });
+  const catRecomFilter = (catIds) => {
+    return catIds && Array.isArray(catIds)
+      ? catIds
+          .filter((items) => items.name.toLowerCase().includes("nổi bật"))
+          .map((item) => item.id)
+      : [];
+  };
 
-    console.log("catId: " + catRecom.id + "; catName: " + catRecom.name);
-    if (catId != null) {
-      await axios
+  const prods = async () => {
+    categories_recommends();
+    setIsLoading(true);
+
+    const catId = catRecomFilter(categoriesRecommendsInfo);
+    catId &&
+      (await axios
         .get(BASE_URL + "/category/" + catId + "/products")
+        .then((res) => {
+          let prodsInfo = res.data;
+          setProdsInfo(prodsInfo.payload);
+        })
+        .catch((e) => {
+          console.log("An error occurred while loadding API-prods: " + e);
+          console.log("Message: " + e.response.status);
+        }));
+
+    setIsLoading(false);
+  };
+
+  const prodsItemFilter = (prodIds) => {
+    return prodIds && Array.isArray(prodIds)
+      ? prodIds.map((item) => item.id)
+      : [];
+  };
+  const prodsItem = async () => {
+    prods();
+    setIsLoading(true);
+
+    const prodId = prodsItemFilter(prodsInfo);
+    console.log("prodsInfo: " + prodsInfo);
+    console.log("prodId: " + prodId);
+    prodId &&
+      (await axios
+        .get(BASE_URL + "/product/" + prodId + "/product-items")
         .then((res) => {
           let prodsItemInfo = res.data;
           setProdsItemInfo(prodsItemInfo.payload);
           console.log(
-            "Prods Item Info: " + JSON.stringify(prodsItemInfo.payload),
+            "ProdsItem Info: " + JSON.stringify(prodsItemInfo.payload),
           );
         })
         .catch((e) => {
           console.log("An error occurred while loadding API-prodsItem: " + e);
           console.log("Message: " + e.response.status);
-        });
-    }
+        }));
     setIsLoading(false);
   };
 
@@ -143,7 +174,7 @@ export const AuthProvider = ({ children }) => {
     categories();
     categories_recommends();
     products();
-    prodsItem(categoriesRecommendsInfo);
+    prodsItem();
   }, []);
 
   return (

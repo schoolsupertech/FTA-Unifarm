@@ -13,7 +13,7 @@ import { PRODUCTS } from "../data/Data-Template";
 function ProductDetailScreen({ route, navigation }) {
   const prodId = route.params.prodId;
   const selectedProd = PRODUCTS.find((prod) => prod.id === prodId);
-  const [coverImage, setCoverImage] = useState(selectedProd.gallery[0]);
+  // const [coverImage, setCoverImage] = useState(selectedProd.gallery[0]);
 
   useLayoutEffect(() => {
     navigation.setOptions({

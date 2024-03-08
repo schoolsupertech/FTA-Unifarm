@@ -33,7 +33,7 @@ function HomeScreen() {
   const [onCartAdded, setOnCartAdded] = useState(false);
   const [locationModalVisible, setLocationModalVisible] = useState(false);
   const { categoriesRecommendsInfo } = useContext(AuthContext);
-  const { productsInfo } = useContext(AuthContext);
+  const { prodsItemInfo } = useContext(AuthContext);
 
   const renderNewsLettersBanner = ({ item, index }) => (
     <BannerNewsLettersSlider data={item} />
@@ -63,16 +63,17 @@ function HomeScreen() {
     const item = itemData.item;
     const prodItemProps = {
       id: item.id,
-      code: item.code,
-      title: item.name,
+      title: item.title,
       // sold: item.sold,
       // openDate: item.openDate,
-      // source: item.source,
+      source: item.productOrigin,
       description: item.description,
       // moreInfo: item.moreInfo,
-      // price: item.price,
+      price: item.price,
       // listedPrice: item.listedPrice,
-      // unit: item.unit,
+      unit: item.unit,
+      outOfStock: item.outOfStock,
+      quantity: item.quantity,
       // gallery: item.gallery,
     };
 
@@ -213,7 +214,7 @@ function HomeScreen() {
           <HeaderContent>Sản phẩm khuyên dùng</HeaderContent>
           <View>
             <FlatList
-              data={productsInfo}
+              data={prodsItemInfo}
               keyExtractor={(item) => item.id}
               renderItem={renderProdItem}
             />
