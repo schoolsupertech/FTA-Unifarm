@@ -48,9 +48,7 @@ function CardProdItem(props) {
                   </PaperText>
                   <ProgressBar progress={0.5} color={DefaultTheme.pgBarColor} />
                 </View>
-                <PaperText variant="bodyLarge">
-                  {/* props.price */} Vnđ
-                </PaperText>
+                <PaperText variant="bodyLarge">{props.price} Vnđ</PaperText>
                 <PaperText variant="bodySmall" style={styles.listedPrice}>
                   {/* props.listedPrice */} Vnđ
                 </PaperText>
