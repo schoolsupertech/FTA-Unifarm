@@ -7,7 +7,7 @@ import AppStackNav from "./AppStackNav";
 import AuthStack from "./AuthStack";
 
 function AppNav() {
-  const { isLoading, userToken } = useContext(AuthContext);
+  const { isLoading, productInfo } = useContext(AuthContext);
 
   if (isLoading) {
     return (
@@ -19,7 +19,8 @@ function AppNav() {
 
   return (
     <NavigationContainer>
-      {userToken !== null ? <AppStackNav /> : <AuthStack />}
+      {/* userToken !== null ? <AppStackNav /> : <AuthStack /> */}
+      <AppStackNav />
     </NavigationContainer>
   );
 }

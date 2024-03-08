@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -25,12 +25,15 @@ import { Color } from "../constants/colors";
 import { windowWidth } from "../utils/Dimensions";
 import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
 import { CATEGORIES, PRODUCTS } from "../data/Data-Template";
+import { AuthContext } from "../context/AuthContext";
 
 function HomeScreen() {
   const navigation = useNavigation();
   const [searchPrd, setSearchPrd] = useState("");
   const [onCartAdded, setOnCartAdded] = useState(false);
   const [locationModalVisible, setLocationModalVisible] = useState(false);
+  const { categoriesRecommendsInfo } = useContext(AuthContext);
+  const { productsInfo } = useContext(AuthContext);
 
   const renderNewsLettersBanner = ({ item, index }) => (
     <BannerNewsLettersSlider data={item} />
@@ -49,7 +52,7 @@ function HomeScreen() {
 
     return (
       <PopularCategories
-        title={itemData.item.title}
+        title={itemData.item.name}
         image={itemData.item.image}
         onPress={selectedCategoryHandler}
       />
@@ -60,16 +63,17 @@ function HomeScreen() {
     const item = itemData.item;
     const prodItemProps = {
       id: item.id,
-      title: item.title,
-      sold: item.sold,
-      openDate: item.openDate,
-      source: item.source,
+      code: item.code,
+      title: item.name,
+      // sold: item.sold,
+      // openDate: item.openDate,
+      // source: item.source,
       description: item.description,
-      moreInfo: item.moreInfo,
-      price: item.price,
-      listedPrice: item.listedPrice,
-      unit: item.unit,
-      gallery: item.gallery,
+      // moreInfo: item.moreInfo,
+      // price: item.price,
+      // listedPrice: item.listedPrice,
+      // unit: item.unit,
+      // gallery: item.gallery,
     };
 
     function AddingCartHandler(cartAdded) {
@@ -195,7 +199,7 @@ function HomeScreen() {
           </HeaderContent>
           <View>
             <FlatList
-              data={CATEGORIES}
+              data={categoriesRecommendsInfo}
               keyExtractor={(item) => item.id}
               renderItem={renderPopularCategories}
               horizontal={true}
@@ -209,7 +213,7 @@ function HomeScreen() {
           <HeaderContent>Sản phẩm khuyên dùng</HeaderContent>
           <View>
             <FlatList
-              data={PRODUCTS}
+              data={productsInfo}
               keyExtractor={(item) => item.id}
               renderItem={renderProdItem}
             />

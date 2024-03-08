@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useContext, useLayoutEffect, useState } from "react";
 import { View, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
@@ -9,10 +9,12 @@ import { CATEGORIES } from "../data/Data-Template";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { LinearGradient } from "expo-linear-gradient";
 import { Color } from "../constants/colors";
+import { AuthContext } from "../context/AuthContext";
 
 function CategoriesScreen() {
   const navigation = useNavigation();
   const [searchPrd, setSearchPrd] = useState("");
+  const { categoriesInfo } = useContext(AuthContext);
 
   function renderCategories(itemData) {
     function selectedCatListProdHandler() {
@@ -23,7 +25,9 @@ function CategoriesScreen() {
 
     return (
       <CardCatItem
-        title={itemData.item.title}
+        title={itemData.item.name}
+        code={itemData.item.code}
+        description={itemData.item.description}
         image={itemData.item.image}
         onPress={selectedCatListProdHandler}
       />
@@ -53,8 +57,13 @@ function CategoriesScreen() {
           onChangeText={(prodSearch) => setSearchPrd(prodSearch)}
         />
       </LinearGradient>
+      {/*
+        categoriesInfo.forEach((element) => {
+        console.log(element.name);
+      })
+      */}
       <FlatList
-        data={CATEGORIES}
+        data={categoriesInfo}
         keyExtractor={(item) => item.id}
         renderItem={renderCategories}
         numColumns={2}

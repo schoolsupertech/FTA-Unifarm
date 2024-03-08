@@ -34,7 +34,8 @@ function CardProdItem(props) {
           <Card.Cover
             style={styles.cover}
             source={{
-              uri: props.gallery[0],
+              // uri: props.gallery[0],
+              uri: "https://media.istockphoto.com/id/502966066/vi/anh/s%C6%B0%E1%BB%9Dn-c%E1%BB%ABu-t%C6%B0%C6%A1i-v%E1%BB%9Bi-gia-v%E1%BB%8B.jpg?s=2048x2048&w=is&k=20&c=CKoauRZRj7VA098Mzxy8qP0r_X_mRIZ8k-T3xy-2j10=",
             }}
           />
           <Card.Content style={styles.textContent}>
@@ -42,12 +43,16 @@ function CardProdItem(props) {
             <View style={styles.titleContent}>
               <View style={DefaultTheme.flex_1}>
                 <View style={styles.progressBarContent}>
-                  <PaperText variant="bodySmall">Đã bán {props.sold}</PaperText>
+                  <PaperText variant="bodySmall">
+                    Đã bán {/* props.sold */}
+                  </PaperText>
                   <ProgressBar progress={0.5} color={DefaultTheme.pgBarColor} />
                 </View>
-                <PaperText variant="bodyLarge">{props.price} Vnđ</PaperText>
+                <PaperText variant="bodyLarge">
+                  {/* props.price */} Vnđ
+                </PaperText>
                 <PaperText variant="bodySmall" style={styles.listedPrice}>
-                  {props.listedPrice} Vnđ
+                  {/* props.listedPrice */} Vnđ
                 </PaperText>
               </View>
               <CartBtn onCartAdded={isCartAdded} onPress={onToggleSnackBar} />
