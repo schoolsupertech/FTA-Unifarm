@@ -13,6 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Carousel from "react-native-snap-carousel";
+import axios from "axios";
 
 import BannerNewsLettersSlider from "../components/ui/home/BannerNewsLettersSlider";
 import LocationOptions from "../components/ui/home/LocationOptions";
@@ -26,18 +27,66 @@ import { windowWidth } from "../utils/Dimensions";
 import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
 import { CATEGORIES, PRODUCTS } from "../data/Data-Template";
 import { AuthContext } from "../context/AuthContext";
+import { BASE_URL } from "../api/config";
 
 function HomeScreen() {
   const navigation = useNavigation();
   const [searchPrd, setSearchPrd] = useState("");
   const [onCartAdded, setOnCartAdded] = useState(false);
   const [locationModalVisible, setLocationModalVisible] = useState(false);
-  const { categoriesRecommendsInfo } = useContext(AuthContext);
-  const { prodsItemInfo } = useContext(AuthContext);
+  const [categoriesRecommendsInfo, setCategoriesRecommendsInfo] =
+    useState(null);
+  const [prodsItemInfo, setProdsItemInfo] = useState(null);
 
   const renderNewsLettersBanner = ({ item, index }) => (
     <BannerNewsLettersSlider data={item} />
   );
+
+  const fetchData = async () => {
+    await axios
+      .get(BASE_URL + "/categories-recommends")
+      .then((res) => {
+        let categoriesInfo = res.data;
+        setCategoriesRecommendsInfo(categoriesInfo.payload);
+        let categoryRecomId = categoriesInfo.payload
+          .filter((items) => items.name.toLowerCase().includes("nổi bật"))
+          .map((item) => item.id);
+        categoryRecomId &&
+          axios
+            .get(BASE_URL + "/category/" + categoryRecomId + "/products")
+            .then((res) => {
+              let prodsInfo = res.data;
+              let prodRecomId = prodsInfo.payload.map((item) => item.id);
+              prodRecomId &&
+                axios
+                  .get(BASE_URL + "/product/" + prodRecomId + "/product-items")
+                  .then((res) => {
+                    let prodsItemInfo = res.data;
+                    setProdsItemInfo(prodsItemInfo.payload);
+                  })
+                  .catch((e) => {
+                    console.log(
+                      "An error occurred while loading API-prodsItem: " + e,
+                    );
+                    console.log("Message: " + e.response.status);
+                  });
+            })
+            .catch((e) => {
+              console.log("An error occurred while loading API-prods: " + e);
+              console.log("Message: " + e.response.status);
+            });
+      })
+      .catch((e) => {
+        console.log(
+          `An error occurred while loading API-categories_recommends: ${e}`,
+        );
+        console.log(`Message: ${e.response.status}`);
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   function updateLocationHandler(data) {
     setLocationModalVisible(false);

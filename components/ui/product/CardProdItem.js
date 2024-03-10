@@ -1,20 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Card, Text as PaperText, ProgressBar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 import CartBtn from "../../common/button/CartBtn";
-import { DefaultTheme } from "../../../themes/DefaultTheme";
 import Title from "../../common/text/Title";
+import { DefaultTheme } from "../../../themes/DefaultTheme";
+import { AuthContext } from "../../../context/AuthContext";
+import { BASE_URL } from "../../../api/config";
 
 function CardProdItem(props) {
   const navigation = useNavigation();
   const [isCartAdded, setIsCartAdded] = useState(false);
 
   function selectedProductDetailHandler() {
-    navigation.navigate("ProductDetail", {
-      prodId: props.id,
-    });
+    axios
+      .get(BASE_URL + "/product-item/" + props.id)
+      .then((res) => {
+        let prodItemDetailInfo = res.data;
+        navigation.navigate("ProductDetail", {
+          prodItemId: prodItemDetailInfo.payload.id,
+          prodItemTitle: prodItemDetailInfo.payload.title,
+          prodItemDescription: prodItemDetailInfo.payload.description,
+          prodItemSource: prodItemDetailInfo.payload.productOrigin,
+          prodItemOutOfStock: prodItemDetailInfo.payload.outOfStock,
+          prodItemPrice: prodItemDetailInfo.payload.price,
+          prodItemQuantity: prodItemDetailInfo.payload.quantity,
+          prodItemUnit: prodItemDetailInfo.payload.unit,
+        });
+      })
+      .catch((e) => {
+        console.log("An error occurred while loading API-prodItemDetail: " + e);
+        console.log("Message: " + e.response.status);
+      });
   }
 
   useEffect(() => {

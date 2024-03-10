@@ -8,12 +8,13 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  const [categoriesRecommendsInfo, setCategoriesRecommendsInfo] =
-    useState(null);
+  // const [categoriesRecommendsInfo, setCategoriesRecommendsInfo] =
+  //   useState(null);
   const [categoriesInfo, setCategoriesInfo] = useState(null);
   const [productsInfo, setProductsInfo] = useState(null);
   const [prodsInfo, setProdsInfo] = useState(null);
   const [prodsItemInfo, setProdsItemInfo] = useState(null);
+  const [prodItemInfo, setProdItemInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
 
   const categories = () => {
@@ -25,26 +26,26 @@ export const AuthProvider = ({ children }) => {
         setCategoriesInfo(categoriesInfo.payload);
       })
       .catch((e) => {
-        console.log("An error occurred at API-Categories - " + e);
+        console.log("An error occurred while loading API-Categories - " + e);
         console.log("Message: " + e.response.status);
       });
     setIsLoading(false);
   };
 
-  const categories_recommends = async () => {
-    setIsLoading(true);
-    await axios
-      .get(BASE_URL + "/categories-recommends")
-      .then((res) => {
-        let categoriesInfo = res.data;
-        setCategoriesRecommendsInfo(categoriesInfo.payload);
-      })
-      .catch((e) => {
-        console.log(`An error occurred at API-categories_recommends: ${e}`);
-        console.log(`Message: ${e.response.status}`);
-      });
-    setIsLoading(false);
-  };
+  // const categories_recommends = async () => {
+  //   setIsLoading(true);
+  //   await axios
+  //     .get(BASE_URL + "/categories-recommends")
+  //     .then((res) => {
+  //       let categoriesInfo = res.data;
+  //       setCategoriesRecommendsInfo(categoriesInfo.payload);
+  //     })
+  //     .catch((e) => {
+  //       console.log(`An error occurred while loading API-categories_recommends: ${e}`);
+  //       console.log(`Message: ${e.response.status}`);
+  //     });
+  //   setIsLoading(false);
+  // };
 
   const products = () => {
     setIsLoading(true);
@@ -55,110 +56,72 @@ export const AuthProvider = ({ children }) => {
         setProductsInfo(productsInfo.payload);
       })
       .catch((e) => {
-        console.log("An error occurred while loadding API-products: " + e);
+        console.log("An error occurred while loading API-products: " + e);
         console.log("Message: " + e.response.status);
       });
     setIsLoading(false);
   };
 
-  // const catRecomFilter = (catIds) => {
-  //   return catIds && Array.isArray(catIds)
-  //     ? catIds
-  //         .filter((items) => items.name.toLowerCase().includes("nổi bật"))
-  //         .map((item) => item.id)
-  //     : [];
-  // };
-
-  // const prods = async () => {
-  //   categories_recommends();
+  // const prodsItem = async () => {
   //   setIsLoading(true);
   //
-  //   const catId = catRecomFilter(categoriesRecommendsInfo);
-  //   console.log("catId: " + catId);
-  //   catId &&
-  //     (await axios
-  //       .get(BASE_URL + "/category/" + catId + "/products")
-  //       .then((res) => {
-  //         let prodsInfo = res.data;
-  //         setProdsInfo(prodsInfo.payload);
-  //         console.log("prods: " + prodsInfo.payload);
-  //       })
-  //       .catch((e) => {
-  //         console.log("An error occurred while loadding API-prods: " + e);
-  //         console.log("Message: " + e.response.status);
-  //       }));
+  //   await axios
+  //     .get(BASE_URL + "/categories-recommends")
+  //     .then((res) => {
+  //       let categoriesInfo = res.data;
+  //       let categoryRecomId = categoriesInfo.payload
+  //         .filter((items) => items.name.toLowerCase().includes("nổi bật"))
+  //         .map((item) => item.id);
+  //       categoryRecomId &&
+  //         axios
+  //           .get(BASE_URL + "/category/" + categoryRecomId + "/products")
+  //           .then((res) => {
+  //             let prodsInfo = res.data;
+  //             let prodRecomId = prodsInfo.payload.map((item) => item.id);
+  //             prodRecomId &&
+  //               axios
+  //                 .get(BASE_URL + "/product/" + prodRecomId + "/product-items")
+  //                 .then((res) => {
+  //                   let prodsItemInfo = res.data;
+  //                   setProdsItemInfo(prodsItemInfo.payload);
+  //                 })
+  //                 .catch((e) => {
+  //                   console.log(
+  //                     "An error occurred while loading API-prodsItem: " + e,
+  //                   );
+  //                   console.log("Message: " + e.response.status);
+  //                 });
+  //           })
+  //           .catch((e) => {
+  //             console.log("An error occurred while loading API-prods: " + e);
+  //             console.log("Message: " + e.response.status);
+  //           });
+  //     })
+  //     .catch((e) => {
+  //       console.log(
+  //         `An error occurred while loading API-categories_recommends: ${e}`,
+  //       );
+  //       console.log(`Message: ${e.response.status}`);
+  //     });
   //
   //   setIsLoading(false);
   // };
-  //
-  // const prodsItemFilter = (prodIds) => {
-  //   return prodIds && Array.isArray(prodIds)
-  //     ? prodIds.map((item) => item.id)
-  //     : [];
-  // };
 
-  const prodsItem = async () => {
-    // prods();
+  const prodItemDetail = async (prodItemId) => {
     setIsLoading(true);
 
-    // const prodId = prodsItemFilter(prodsInfo);
-    // console.log("prodsInfo: " + prodsInfo);
-    // console.log("prodId: " + prodId);
-    // prodId &&
-    //   (await axios
-    //     .get(BASE_URL + "/product/" + prodId + "/product-items")
-    //     .then((res) => {
-    //       let prodsItemInfo = res.data;
-    //       setProdsItemInfo(prodsItemInfo.payload);
-    //       console.log(
-    //         "ProdsItem Info: " + JSON.stringify(prodsItemInfo.payload),
-    //       );
-    //     })
-    //     .catch((e) => {
-    //       console.log("An error occurred while loadding API-prodsItem: " + e);
-    //       console.log("Message: " + e.response.status);
-    //     }));
-
     await axios
-      .get(BASE_URL + "/categories-recommends")
+      .get(BASE_URL + "/product-item" + prodItemId)
       .then((res) => {
-        let categoriesInfo = res.data;
-        let categoryRecomId = categoriesInfo.payload
-          .filter((items) => items.name.toLowerCase().includes("nổi bật"))
-          .map((item) => item.id);
-        categoryRecomId &&
-          axios
-            .get(BASE_URL + "/category/" + categoryRecomId + "/products")
-            .then((res) => {
-              let prodsInfo = res.data;
-              let prodRecomId = prodsInfo.payload.map((item) => item.id);
-              console.log("prodRecomId: " + prodRecomId);
-              prodRecomId &&
-                axios
-                  .get(BASE_URL + "/product/" + prodRecomId + "/product-items")
-                  .then((res) => {
-                    let prodsItemInfo = res.data;
-                    setProdsItemInfo(prodsItemInfo.payload);
-                    console.log(
-                      "ProdsItem Info: " +
-                        JSON.stringify(prodsItemInfo.payload),
-                    );
-                  })
-                  .catch((e) => {
-                    console.log(
-                      "An error occurred while loadding API-prodsItem: " + e,
-                    );
-                    console.log("Message: " + e.response.status);
-                  });
-            })
-            .catch((e) => {
-              console.log("An error occurred while loadding API-prods: " + e);
-              console.log("Message: " + e.response.status);
-            });
+        let prodItemDetailInfo = res.data;
+        setProdItemInfo(prodItemDetailInfo.payload);
+        console.log(
+          "prodItemDetailInfo: " + JSON.stringify(prodItemDetailInfo.payload),
+        );
       })
       .catch((e) => {
-        console.log(`An error occurred at API-categories_recommends: ${e}`);
-        console.log(`Message: ${e.response.status}`);
+        console.log("An error occurred while loading API-prodItemDetail: " + e);
+        console.log("Message: " + e.response.status);
       });
 
     setIsLoading(false);
@@ -218,9 +181,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     categories();
-    categories_recommends();
+    // categories_recommends();
     products();
-    prodsItem();
+    // prodsItem();
   }, []);
 
   return (
@@ -231,9 +194,11 @@ export const AuthProvider = ({ children }) => {
         isLoading,
         userToken,
         categoriesInfo,
-        categoriesRecommendsInfo,
+        // categoriesRecommendsInfo,
         productsInfo,
-        prodsItemInfo,
+        // prodsItemInfo,
+        // prodItemDetail,
+        // prodItemInfo,
       }}
     >
       {children}
