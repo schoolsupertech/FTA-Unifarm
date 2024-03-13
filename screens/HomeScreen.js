@@ -19,7 +19,7 @@ import BannerNewsLettersSlider from "../components/ui/home/BannerNewsLettersSlid
 import LocationOptions from "../components/ui/home/LocationOptions";
 import PopularCategories from "../components/common/list/PopularCategories";
 import HeaderContent from "../components/ui/home/HeaderContent";
-import CardProdItem from "../components/ui/product/CardProdItem";
+import CardProdItem from "../components/ui/home/CardProdItem";
 import LogoTitle from "../themes/LogoTitle";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { Color } from "../constants/colors";
@@ -36,7 +36,7 @@ function HomeScreen() {
   const [locationModalVisible, setLocationModalVisible] = useState(false);
   const [categoriesRecommendsInfo, setCategoriesRecommendsInfo] =
     useState(null);
-  const [prodsItemInfo, setProdsItemInfo] = useState(null);
+  const [prodsItemInfo, setProdsItemInfo] = useState([]);
 
   const renderNewsLettersBanner = ({ item, index }) => (
     <BannerNewsLettersSlider data={item} />
@@ -56,13 +56,15 @@ function HomeScreen() {
             .get(BASE_URL + "/category/" + categoryRecomId + "/products")
             .then((res) => {
               let prodsInfo = res.data;
-              let prodRecomId = prodsInfo.payload.map((item) => item.id);
-              prodRecomId &&
+              prodsInfo.payload.map((item) => {
                 axios
-                  .get(BASE_URL + "/product/" + prodRecomId + "/product-items")
+                  .get(BASE_URL + "/product/" + item.id + "/product-items")
                   .then((res) => {
                     let prodsItemInfo = res.data;
-                    setProdsItemInfo(prodsItemInfo.payload);
+                    setProdsItemInfo((oldProdsItemInfo) => [
+                      ...oldProdsItemInfo,
+                      ...prodsItemInfo.payload,
+                    ]);
                   })
                   .catch((e) => {
                     console.log(
@@ -70,6 +72,7 @@ function HomeScreen() {
                     );
                     console.log("Message: " + e.response.status);
                   });
+              });
             })
             .catch((e) => {
               console.log("An error occurred while loading API-prods: " + e);
@@ -95,7 +98,7 @@ function HomeScreen() {
   function renderPopularCategories(itemData) {
     function selectedCategoryHandler() {
       navigation.navigate("CatListProdScreen", {
-        categoryId: itemData.item.id,
+        catRecomId: itemData.item.id,
       });
     }
 

@@ -1,27 +1,60 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { Chip } from "react-native-paper";
 
 import { Color } from "../../../constants/colors";
 
-function ChipContent({ chipData, chipSelected }) {
-  const [chipIsSelected, setChipIsSelected] = useState(false);
+function ChipContent({ chipData, onChipSelected }) {
+  const defaultSelected = chipData.find((item) => {
+    return item.id === 1;
+  }).id;
+  const [selectedProds, setSelectedProds] = useState([]);
 
-  const renderChip = ({ item }) => (
-    <Chip
-      mode={chipIsSelected ? "flat" : "outlined"}
-      selected={item.id == 1 && true}
-      selectedColor={Color.primaryGreen800}
-      style={
-        chipIsSelected
-          ? styles.chip
-          : [styles.chip, { backgroundColor: Color.primaryGreen100 }]
+  useEffect(() => {
+    if (selectedProds && selectedProds.length == 0) {
+      setSelectedProds([defaultSelected]);
+    } else {
+      if (
+        selectedProds.includes(defaultSelected) &&
+        selectedProds.find((item) => item !== defaultSelected)
+      ) {
+        setSelectedProds(
+          selectedProds.filter((item) => item !== defaultSelected),
+        );
       }
-      onPress={() => setChipIsSelected(!chipIsSelected)}
-    >
-      {item.title}
-    </Chip>
-  );
+    }
+    onChipSelected(selectedProds);
+  }, [selectedProds]);
+
+  function renderChip(itemData) {
+    const item = itemData.item;
+
+    function onChipToggleHandler() {
+      if (selectedProds.includes(item.id)) {
+        setSelectedProds(
+          selectedProds.filter((selectedItem) => selectedItem !== item.id),
+        );
+      } else {
+        if (item.id === defaultSelected) {
+          setSelectedProds([]);
+        } else {
+          setSelectedProds([...selectedProds, item.id]);
+        }
+      }
+    }
+
+    return (
+      <Chip
+        mode={selectedProds.includes(item.id) ? "outlined" : "flat"}
+        selected={selectedProds.includes(item.id)}
+        selectedColor={Color.primaryGreen800}
+        style={[styles.chip, { backgroundColor: Color.primaryGreen100 }]}
+        onPress={onChipToggleHandler}
+      >
+        {item.name}
+      </Chip>
+    );
+  }
 
   return (
     <FlatList

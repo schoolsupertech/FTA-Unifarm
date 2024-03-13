@@ -1,5 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useLayoutEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { Card, Text as PaperText, ProgressBar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
@@ -7,36 +12,40 @@ import axios from "axios";
 import CartBtn from "../../common/button/CartBtn";
 import Title from "../../common/text/Title";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
-import { AuthContext } from "../../../context/AuthContext";
 import { BASE_URL } from "../../../api/config";
 
 function CardProdItem(props) {
   const navigation = useNavigation();
   const [isCartAdded, setIsCartAdded] = useState(false);
+  const [prodItemImgsInfo, setProdItemImgsInfo] = useState(null);
 
   function selectedProductDetailHandler() {
-    axios
-      .get(BASE_URL + "/product-item/" + props.id)
-      .then((res) => {
-        let prodItemDetailInfo = res.data;
-        navigation.navigate("ProductDetail", {
-          prodItemId: prodItemDetailInfo.payload.id,
-          prodItemTitle: prodItemDetailInfo.payload.title,
-          prodItemDescription: prodItemDetailInfo.payload.description,
-          prodItemSource: prodItemDetailInfo.payload.productOrigin,
-          prodItemOutOfStock: prodItemDetailInfo.payload.outOfStock,
-          prodItemPrice: prodItemDetailInfo.payload.price,
-          prodItemQuantity: prodItemDetailInfo.payload.quantity,
-          prodItemUnit: prodItemDetailInfo.payload.unit,
-        });
-      })
-      .catch((e) => {
-        console.log("An error occurred while loading API-prodItemDetail: " + e);
-        console.log("Message: " + e.response.status);
-      });
+    navigation.navigate("ProductDetail", {
+      prodItemId: props.id,
+    });
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const fetchProdItemImgs = async () => {
+      await axios
+        .get(BASE_URL + "/product-item/" + props.id + "/product-images")
+        .then((res) => {
+          let prodItemImgsInfo = res.data;
+          setProdItemImgsInfo(prodItemImgsInfo.payload);
+        })
+        .catch((e) => {
+          console.log(
+            "An error occurred while loading API-product-item/{id}/product-images" +
+              e,
+          );
+          console.log("Message: " + e.response.status);
+        });
+    };
+
+    fetchProdItemImgs();
+  }, []);
+
+  useLayoutEffect(() => {
     isCartAdded && props.onAddingCart(isCartAdded);
     // console.log("ID: " + props.id + "; isCartAdded: " + isCartAdded);
   }, [isCartAdded]);
@@ -46,17 +55,48 @@ function CardProdItem(props) {
     console.log("ID Product: " + props.id + "; isCartAdded: " + isCartAdded);
   }
 
+  function imgCoverHandler() {
+    const coverImg =
+      prodItemImgsInfo.length > 0
+        ? prodItemImgsInfo.filter((firstIndex) => firstIndex.displayIndex === 1)
+        : null;
+
+    if (coverImg !== null) {
+      return coverImg.map((img) => (
+        <Card.Cover
+          key={img.id}
+          style={styles.cover}
+          source={{
+            uri: img.imageUrl,
+          }}
+        />
+      ));
+    }
+    return (
+      <Card.Cover
+        style={styles.cover}
+        source={require("../../../assets/favicon.png")}
+      />
+    );
+  }
+
   return (
     <TouchableOpacity onPress={selectedProductDetailHandler}>
       <Card style={styles.container}>
         <Card.Content style={styles.content}>
-          <Card.Cover
-            style={styles.cover}
-            source={{
-              // uri: props.gallery[0],
-              uri: "https://media.istockphoto.com/id/502966066/vi/anh/s%C6%B0%E1%BB%9Dn-c%E1%BB%ABu-t%C6%B0%C6%A1i-v%E1%BB%9Bi-gia-v%E1%BB%8B.jpg?s=2048x2048&w=is&k=20&c=CKoauRZRj7VA098Mzxy8qP0r_X_mRIZ8k-T3xy-2j10=",
-            }}
-          />
+          {prodItemImgsInfo ? (
+            imgCoverHandler()
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ActivityIndicator size={"small"} />
+            </View>
+          )}
           <Card.Content style={styles.textContent}>
             <Title>{props.title}</Title>
             <View style={styles.titleContent}>
