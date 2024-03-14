@@ -22,7 +22,7 @@ import HeaderContent from "../components/ui/home/HeaderContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
 import LogoTitle from "../themes/LogoTitle";
 import { DefaultTheme } from "../themes/DefaultTheme";
-import { Color } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 import { windowWidth } from "../utils/Dimensions";
 import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
 import { CATEGORIES, PRODUCTS } from "../data/Data-Template";
@@ -148,7 +148,7 @@ function HomeScreen() {
   return (
     <SafeAreaView style={DefaultTheme.root}>
       <LinearGradient
-        colors={["white", Color.primaryGreen900]}
+        colors={["white", Colors.primaryGreen900]}
         style={styles.linearGradient}
       >
         <View style={styles.headerContainer}>
@@ -162,7 +162,7 @@ function HomeScreen() {
             >
               <Ionicons
                 name="notifications"
-                color={Color.primaryGreen700}
+                color={Colors.primaryGreen700}
                 size={24}
               />
               <Badge style={{ position: "absolute", top: -6, right: -12 }}>
@@ -177,7 +177,7 @@ function HomeScreen() {
             >
               <Ionicons
                 name="cart-outline"
-                color={Color.primaryGreen700}
+                color={Colors.primaryGreen700}
                 size={24}
               />
             </TouchableOpacity>
@@ -187,7 +187,7 @@ function HomeScreen() {
           <View>
             <Text
               style={{
-                color: Color.primaryGreen800,
+                color: Colors.primaryGreen800,
               }}
             >
               Vị trí
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   textLocation: {
-    color: Color.primaryGreen700,
+    color: Colors.primaryGreen700,
     textDecorationLine: "underline",
   },
   headerMenu: {
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   textMenu: {
-    color: Color.primaryGreen100,
+    color: Colors.primaryGreen100,
   },
   contentView: {
     marginTop: 8,

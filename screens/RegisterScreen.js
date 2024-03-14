@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import InputField from "../components/common/text/InputField";
 import MainButton from "../components/common/button/MainButton";
-import { Color } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 // import RegistrationSVG from "../assets/images/misc/registration.svg";
 // import GoogleSVG from "../assets/images/misc/google.svg";
 // import FacebookSVG from "../assets/images/misc/facebook.svg";
@@ -208,7 +208,7 @@ const RegisterScreen = ({ navigation }) => {
         >
           <Text>Already registered?</Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={{ color: Color.primaryGreen800, fontWeight: "700" }}>
+            <Text style={{ color: Colors.primaryGreen800, fontWeight: "700" }}>
               Login
             </Text>
           </TouchableOpacity>

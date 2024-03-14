@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { IconButton, Text as PaperText } from "react-native-paper";
 
 import GrayLine from "../text/GrayLine";
-import { Color } from "../../../constants/colors";
+import { Colors } from "../../../constants/Colors";
 
 function Bars({ viewData }) {
   return (
@@ -12,7 +12,7 @@ function Bars({ viewData }) {
       <View style={styles.textBar}>
         <IconButton
           icon="information-variant"
-          iconColor={Color.primaryGreen100}
+          iconColor={Colors.primaryGreen100}
         />
         <PaperText variant="bodyMedium" style={styles.textInfo}>
           {viewData}
@@ -30,7 +30,7 @@ function ProdMoreInfo({ data }) {
         start={[0, 0.1]}
         end={[1, 0.1]}
         locations={[0, 0.15]}
-        colors={[Color.primaryGreen900, Color.primaryGreen100]}
+        colors={[Colors.primaryGreen900, Colors.primaryGreen100]}
         style={styles.linearGradient}
       >
         {data.map((dataPoint) => (
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   barContainer: {
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: Color.primaryGreen900,
+    borderColor: Colors.primaryGreen900,
   },
   linearGradient: {
     padding: 4,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   textInfo: {
     width: "80%",
-    color: Color.primaryGreen800,
+    color: Colors.primaryGreen800,
   },
   textBar: {
     flexDirection: "row",

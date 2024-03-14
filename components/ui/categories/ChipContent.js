@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { Chip } from "react-native-paper";
 
-import { Color } from "../../../constants/colors";
+import { Colors } from "../../../constants/Colors";
 
 function ChipContent({ chipData, onChipSelected }) {
   const defaultSelected = chipData.find((item) => {
@@ -47,8 +47,8 @@ function ChipContent({ chipData, onChipSelected }) {
       <Chip
         mode={selectedProds.includes(item.id) ? "outlined" : "flat"}
         selected={selectedProds.includes(item.id)}
-        selectedColor={Color.primaryGreen800}
-        style={[styles.chip, { backgroundColor: Color.primaryGreen100 }]}
+        selectedColor={Colors.primaryGreen800}
+        style={[styles.chip, { backgroundColor: Colors.primaryGreen100 }]}
         onPress={onChipToggleHandler}
       >
         {item.name}

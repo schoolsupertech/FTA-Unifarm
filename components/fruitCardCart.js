@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { Color } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 
 export default function FruitCardCart({ fruit }) {
   return (
@@ -52,14 +52,14 @@ export default function FruitCardCart({ fruit }) {
       </View>
       <View style={{ flex: 1 }}>
         <Text style={{ color: "black", fontWeight: "bold" }}>{fruit.name}</Text>
-        <Text style={{ color: Color.primaryGreen500, fontWeight: "900" }}>
+        <Text style={{ color: Colors.primaryGreen500, fontWeight: "900" }}>
           $ {fruit.price}
         </Text>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TouchableOpacity
           style={{
-            backgroundColor: Color.grayScaleGray400,
+            backgroundColor: Colors.grayScaleGray400,
             padding: 4,
             borderRadius: 12,
           }}
@@ -69,7 +69,7 @@ export default function FruitCardCart({ fruit }) {
         <Text>{fruit.qty}</Text>
         <TouchableOpacity
           style={{
-            backgroundColor: Color.grayScaleGray400,
+            backgroundColor: Colors.grayScaleGray400,
             padding: 4,
             borderRadius: 12,
           }}

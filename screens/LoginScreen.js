@@ -13,7 +13,7 @@ import InputField from "../components/common/text/InputField";
 import GoogleSVG from "../assets/images/misc/google.svg";
 import FacebookSVG from "../assets/images/misc/facebook.svg";
 import TwitterSVG from "../assets/images/misc/twitter.svg";
-import { Color } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 import { AuthContext } from "../context/AuthContext";
 
 const LoginScreen = ({ navigation }) => {
@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
               // fontFamily: 'Roboto-Medium',
               fontSize: 80,
               fontWeight: "bold",
-              color: Color.primaryGreen600,
+              color: Colors.primaryGreen600,
               textAlign: "center",
             }}
           >
@@ -135,7 +135,7 @@ const LoginScreen = ({ navigation }) => {
         >
           <Text>New to the app?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={{ color: Color.primaryGreen800, fontWeight: "700" }}>
+            <Text style={{ color: Colors.primaryGreen800, fontWeight: "700" }}>
               {" "}
               Register
             </Text>

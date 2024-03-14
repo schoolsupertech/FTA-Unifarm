@@ -8,7 +8,7 @@ import LogoTitle from "../themes/LogoTitle";
 import { CATEGORIES } from "../data/Data-Template";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { LinearGradient } from "expo-linear-gradient";
-import { Color } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 import { AuthContext } from "../context/AuthContext";
 
 function CategoriesScreen() {
@@ -43,7 +43,7 @@ function CategoriesScreen() {
   return (
     <SafeAreaView style={DefaultTheme.root}>
       <LinearGradient
-        colors={["white", Color.primaryGreen900]}
+        colors={["white", Colors.primaryGreen900]}
         style={styles.linearGradient}
       >
         <View style={styles.headerContainer}>

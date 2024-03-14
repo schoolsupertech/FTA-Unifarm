@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { Avatar, Card, Chip, IconButton, Searchbar } from "react-native-paper";
-import { Color } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
@@ -37,8 +37,8 @@ function CategoryDetailScreen({ route, navigation }) {
         elevation={3}
         theme={{
           colors: {
-            elevation: { level3: Color.primaryGreen50 },
-            primary: Color.primaryGreen800,
+            elevation: { level3: Colors.primaryGreen50 },
+            primary: Colors.primaryGreen800,
           },
         }}
       />
@@ -56,7 +56,7 @@ function CategoryDetailScreen({ route, navigation }) {
             <Chip
               style={{
                 marginRight: 10,
-                backgroundColor: Color.primaryGreen100,
+                backgroundColor: Colors.primaryGreen100,
               }}
               onPress={() => {}}
             >
@@ -65,7 +65,7 @@ function CategoryDetailScreen({ route, navigation }) {
             <Chip
               style={{
                 marginRight: 10,
-                backgroundColor: Color.primaryGreen500,
+                backgroundColor: Colors.primaryGreen500,
               }}
               onPress={() => {}}
             >

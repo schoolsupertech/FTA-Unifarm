@@ -1,4 +1,4 @@
-import { Color } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 
 export const DefaultTheme = {
   flex_1: { flex: 1 },
@@ -9,8 +9,8 @@ export const DefaultTheme = {
 
   // Background
   bgColor: "white",
-  headerBgColor: Color.primaryGreen50,
-  cardBgColor: Color.primaryGreen50,
+  headerBgColor: Colors.primaryGreen50,
+  cardBgColor: Colors.primaryGreen50,
 
   // Text
   txtColor: "black",
@@ -18,15 +18,15 @@ export const DefaultTheme = {
   // Search Bar
   searchbar: {
     colors: {
-      elevation: { level3: Color.primaryGreen50 },
-      primary: Color.primaryGreen800,
+      elevation: { level3: Colors.primaryGreen50 },
+      primary: Colors.primaryGreen800,
     },
   },
 
   // Button
-  btnBgColor800: Color.primaryGreen800,
-  btnColor700: Color.primaryGreen700,
+  btnBgColor800: Colors.primaryGreen800,
+  btnColor700: Colors.primaryGreen700,
 
   // Progress Bar
-  pgBarColor: Color.brandingError,
+  pgBarColor: Colors.brandingError,
 };

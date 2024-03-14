@@ -8,7 +8,7 @@ import Ellipsis from "../components/common/text/Ellipsis";
 import ProdMoreInfo from "../components/common/list/ProdMoreInfo";
 import SwiperSlide from "../components/ui/product/SwiperSlide";
 import RatingStar from "../components/common/RatingStar";
-import { Color } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 import { PRODUCTS } from "../data/Data-Template";
 import { BASE_URL } from "../api/config";
 
@@ -100,14 +100,16 @@ function ProductDetailScreen({ route, navigation }) {
             <View>
               <Text
                 style={{
-                  color: Color.grayScaleGray400,
+                  color: Colors.grayScaleGray400,
                   fontSize: 14,
                   fontWeight: "700",
                 }}
               >
                 Total Price
               </Text>
-              <Text style={{ color: Color.primaryGreen700, fontWeight: "800" }}>
+              <Text
+                style={{ color: Colors.primaryGreen700, fontWeight: "800" }}
+              >
                 {selectedProd.price}
               </Text>
             </View>
@@ -137,13 +139,13 @@ const styles = StyleSheet.create({
   headerContainer: {},
   headerContent: {
     padding: 16,
-    backgroundColor: Color.primaryGreen100,
+    backgroundColor: Colors.primaryGreen100,
     borderRadius: 12,
   },
   descriptionContainer: {
     marginTop: 8,
     padding: 16,
-    backgroundColor: Color.primaryGreen100,
+    backgroundColor: Colors.primaryGreen100,
     borderRadius: 12,
   },
   descriptionHeader: {
@@ -151,7 +153,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   safeAreaView: {
-    backgroundColor: Color.primaryGreen50,
+    backgroundColor: Colors.primaryGreen50,
     position: "absolute",
     bottom: 0,
     width: "100%",
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 30,
-    backgroundColor: Color.primaryGreen700,
+    backgroundColor: Colors.primaryGreen700,
     borderColor: "#e9f2eb",
   },
   thumbnailContainer: {

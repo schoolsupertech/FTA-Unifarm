@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { Color } from "../../../constants/colors";
+import { Colors } from "../../../constants/Colors";
 
 function InputField({
   label,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   btnText: {
-    color: Color.primaryGreen800,
+    color: Colors.primaryGreen800,
     fontWeight: "700",
   },
 });

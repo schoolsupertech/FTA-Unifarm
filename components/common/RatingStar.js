@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import StarRating from "react-native-star-rating";
 
-import { Color } from "../../constants/colors";
+import { Colors } from "../../constants/Colors";
 
 function RatingStar({ disabled, halfStarEnabled, size, ratingStar }) {
   const [starRating, setStarRating] = useState(ratingStar);
@@ -15,7 +15,7 @@ function RatingStar({ disabled, halfStarEnabled, size, ratingStar }) {
         starSize={size}
         rating={starRating}
         halfStarEnabled={halfStarEnabled}
-        fullStarColor={Color.star}
+        fullStarColor={Colors.star}
         selectedStar={(rating) => setStarRating(rating)}
       />
     </View>
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   starSelected: {
-    color: Color.star,
+    color: Colors.star,
   },
   starUnselected: {
     color: "white",

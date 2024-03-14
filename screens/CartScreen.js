@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import FruitCardCart from "../components/fruitCardCart";
 import { cartItems } from "../constants/cartItems";
-import { Color } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 
 function CartScreen(props) {
   const navigation = useNavigation();
@@ -41,7 +41,7 @@ function CartScreen(props) {
         >
           <Text style={{ fontSize: 18 }}>
             Total price:{" "}
-            <Text style={{ fontWeight: "bold", color: Color.primaryGreen500 }}>
+            <Text style={{ fontWeight: "bold", color: Colors.primaryGreen500 }}>
               240.700 VNĐ
             </Text>
           </Text>
@@ -57,7 +57,7 @@ function CartScreen(props) {
           <TouchableOpacity
             style={{
               flex: 1,
-              backgroundColor: Color.primaryGreen700,
+              backgroundColor: Colors.primaryGreen700,
               opacity: 0.8,
               shadowColor: "green",
               shadowRadius: 25,
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     height: 100,
     paddingVertical: 18,
     paddingHorizontal: 12,
-    backgroundColor: Color.primaryGreen50,
+    backgroundColor: Colors.primaryGreen50,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     justifyContent: "space-between",

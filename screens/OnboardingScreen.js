@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
-import { Color } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 
 function OnboardingScreen({ navigation }) {
   return (
@@ -26,7 +26,7 @@ function OnboardingScreen({ navigation }) {
             // fontFamily: "Inter-Bold",
             fontWeight: "bold",
             fontSize: 30,
-            color: Color.primaryGreen600,
+            color: Colors.primaryGreen600,
           }}
         >
           FARM TO APARTMENT
@@ -43,7 +43,7 @@ function OnboardingScreen({ navigation }) {
       </View>
       <TouchableOpacity
         style={{
-          backgroundColor: Color.primaryGreen800,
+          backgroundColor: Colors.primaryGreen800,
           padding: 20,
           width: "90%",
           borderRadius: 10,

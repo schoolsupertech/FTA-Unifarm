@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { Text } from "react-native-paper";
-import { Color } from "../../../constants/colors";
+import { Colors } from "../../../constants/Colors";
 
 function Ellipsis({ description, numberOfLines }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -21,7 +21,7 @@ function Ellipsis({ description, numberOfLines }) {
       </Text>
 
       <TouchableOpacity onPress={toggleNumberOfLines}>
-        <Text style={{ color: Color.primaryGreen700 }}>
+        <Text style={{ color: Colors.primaryGreen700 }}>
           {isCollapsed ? "Đọc tiếp" : "Thu gọn"}
         </Text>
       </TouchableOpacity>
