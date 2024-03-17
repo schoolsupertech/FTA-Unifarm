@@ -30,7 +30,7 @@ import { DefaultTheme } from "../themes/DefaultTheme";
 
 function ProfileScreen() {
   const navigation = useNavigation();
-  const [userDetail, setUserDetail] = useState(true);
+  const [userDetail, setUserDetail] = useState(false);
 
   if (userDetail) {
     return (
@@ -39,7 +39,7 @@ function ProfileScreen() {
           style={styles.linearGradient}
           colors={["white", Colors.primaryGreen900]}
         >
-          <View styles={styles.headerContainer}>
+          <View style={styles.headerContainer}>
             <View style={{ flex: 1 }}>
               <Text style={styles.textHeaderContainer}>Hồ sơ</Text>
             </View>
@@ -203,7 +203,7 @@ function ProfileScreen() {
       </SafeAreaView>
     );
   } else {
-    <AuthStack />;
+    return <AuthStack />;
   }
 }
 
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   },
   textHeaderContainer: {
     marginLeft: 10,
-    fontSize: 18,
+    fontSize: 24,
     color: Colors.primaryGreen700,
     fontWeight: "bold",
   },
