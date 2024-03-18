@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -24,17 +24,17 @@ import { Badge } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 import AuthStack from "../navigators/AuthStack";
-import { AuthContext } from "../context/AuthContext";
-import { Colors } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
+// import createAxios from "../utils/axiosUtility";
 
 function ProfileScreen() {
   const navigation = useNavigation();
-  const { userToken } = useContext(AuthContext);
+  const [userDetail, setUserDetail] = useState(false);
 
-  if (userToken) {
+  if (userDetail) {
     return (
-      <SafeAreaView style={DefaultTheme.root}>
+      <SafeAreaView style={[DefaultTheme.root, styles.container]}>
         <LinearGradient
           style={styles.linearGradient}
           colors={["white", Colors.primaryGreen900]}
@@ -210,6 +210,10 @@ function ProfileScreen() {
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   linearGradient: {
     width: "100%",
     padding: 20,

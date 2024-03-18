@@ -22,7 +22,7 @@ import HeaderContent from "../components/ui/home/HeaderContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
 import LogoTitle from "../themes/LogoTitle";
 import { DefaultTheme } from "../themes/DefaultTheme";
-import { Colors } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 import { windowWidth } from "../utils/Dimensions";
 import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
 import { CATEGORIES, PRODUCTS } from "../data/Data-Template";
@@ -155,6 +155,18 @@ function HomeScreen() {
           <LogoTitle />
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
+              style={{ marginEnd: 4 }}
+              onPress={() => {
+                navigation.navigate("CartScreen");
+              }}
+            >
+              <Ionicons
+                name="cart-outline"
+                color={Colors.primaryGreen700}
+                size={24}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
               style={{ marginEnd: 20 }}
               onPress={() => {
                 navigation.navigate("Notification");
@@ -168,18 +180,6 @@ function HomeScreen() {
               <Badge style={{ position: "absolute", top: -6, right: -12 }}>
                 3
               </Badge>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ marginEnd: 4 }}
-              onPress={() => {
-                navigation.navigate("CartScreen");
-              }}
-            >
-              <Ionicons
-                name="cart-outline"
-                color={Colors.primaryGreen700}
-                size={24}
-              />
             </TouchableOpacity>
           </View>
         </View>

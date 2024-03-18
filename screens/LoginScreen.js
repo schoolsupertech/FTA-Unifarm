@@ -44,6 +44,7 @@ const LoginScreen = ({ navigation }) => {
         "googleUserData",
         JSON.stringify({ userInfo, loggedIn: true }),
       );
+      console.log(JSON.stringify(userInfo, null, 2));
       // switch(account.role) {
       //   case "unknown":
       //     const signUp_Response = API.post("/signup", {

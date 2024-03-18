@@ -12,18 +12,31 @@ import { useNavigation } from "@react-navigation/native";
 
 import FruitCardCart from "../components/fruitCardCart";
 import { cartItems } from "../constants/cartItems";
-import { Colors } from "../constants/colors";
+import { Colors } from "../constants/Colors";
+import { DefaultTheme } from "../themes/DefaultTheme";
 
 function CartScreen(props) {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={{ marginHorizontal: 10, marginBottom: 80 }}>
-        <View style={styles.headerContainer}>
-          <Text style={{ color: "black", fontSize: 24, paddingVertical: 16 }}>
-            Your <Text style={{ fontWeight: "bold" }}>cart</Text>
+    <SafeAreaView style={DefaultTheme.root}>
+      <TouchableOpacity onPress={() => {}}>
+        <Text style={{ color: "black", fontSize: 24, paddingVertical: 16 }}>
+          Station:{" "}
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 16,
+              textDecorationLine: "underline",
+            }}
+          >
+            Trạm nhận hàng số A-01, hầm 01, toà A, Chung cư Vinhomes Royal, Khu nhà giày, Phường Long Thạn Mỹ, Quận Thủ Đức, Thành phố Hồ Chí Minh.
           </Text>
+        </Text>
+      </TouchableOpacity>
+
+      <ScrollView style={DefaultTheme.scrollContainer}>
+        <View style={styles.headerContainer}>
           <View style={{ flex: 1 }}>
             {cartItems.map((item, index) => (
               <FruitCardCart fruit={item} key={index} />
@@ -31,6 +44,7 @@ function CartScreen(props) {
           </View>
         </View>
       </ScrollView>
+
       <View style={styles.safeAreaView}>
         <View
           style={{
@@ -55,6 +69,7 @@ function CartScreen(props) {
           }}
         >
           <TouchableOpacity
+            onPress={() => navigation.navigate("Order")}
             style={{
               flex: 1,
               backgroundColor: Colors.primaryGreen700,
@@ -63,7 +78,7 @@ function CartScreen(props) {
               shadowRadius: 25,
               shadowOffset: { width: 0, height: 15 },
               shadowOpacity: 0.7,
-              padding: 4,
+              padding: 16,
               borderRadius: 16,
             }}
           >
@@ -93,10 +108,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
   },
-  headerContainer: {
-    flex: 1,
-    marginHorizontal: 12,
-  },
+  headerContainer: {},
   safeAreaView: {
     position: "absolute",
     bottom: 0,

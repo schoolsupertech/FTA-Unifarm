@@ -1,6 +1,14 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
-import { Card, Text as PaperText } from "react-native-paper";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
+import { Card, Badge, Text as PaperText } from "react-native-paper";
+import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 
 import GrayLine from "../components/common/text/GrayLine";
@@ -8,9 +16,10 @@ import Ellipsis from "../components/common/text/Ellipsis";
 import ProdMoreInfo from "../components/common/list/ProdMoreInfo";
 import SwiperSlide from "../components/ui/product/SwiperSlide";
 import RatingStar from "../components/common/RatingStar";
-import { Colors } from "../constants/colors";
+import { Colors } from "../constants/Colors";
 import { PRODUCTS } from "../data/Data-Template";
 import { BASE_URL } from "../api/config";
+import { DefaultTheme } from "../themes/DefaultTheme";
 
 function ProductDetailScreen({ route, navigation }) {
   const prodItemId = route.params.prodItemId;
@@ -38,11 +47,44 @@ function ProductDetailScreen({ route, navigation }) {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: selectedProd !== null ? selectedProd.title : "Product Detail",
+      headerRight: () => {
+        return (
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              style={{ marginEnd: 4 }}
+              onPress={() => {
+                navigation.navigate("CartScreen");
+              }}
+            >
+              <Ionicons
+                name="cart-outline"
+                color={Colors.primaryGreen700}
+                size={24}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginEnd: 20 }}
+              onPress={() => {
+                navigation.navigate("Notification");
+              }}
+            >
+              <Ionicons
+                name="notifications"
+                color={Colors.primaryGreen700}
+                size={24}
+              />
+              <Badge style={{ position: "absolute", top: -6, right: -12 }}>
+                3
+              </Badge>
+            </TouchableOpacity>
+          </View>
+        );
+      },
     });
   }, [selectedProd, navigation]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[DefaultTheme.root, styles.container]}>
       {selectedProd ? (
         <>
           <ScrollView style={{ marginHorizontal: 10, marginBottom: 72 }}>
@@ -115,7 +157,7 @@ function ProductDetailScreen({ route, navigation }) {
             </View>
             <View style={styles.button}>
               <Text style={{ fontWeight: "800", color: "white" }}>
-                Mua Ngay
+                Thêm vào giỏ
               </Text>
             </View>
           </View>
@@ -131,10 +173,8 @@ export default ProductDetailScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
   },
   headerContainer: {},
   headerContent: {
