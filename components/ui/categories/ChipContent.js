@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { Chip } from "react-native-paper";
 
-import { Colors } from "../../../constants/Colors";
+import { Colors } from "../../../constants/colors";
 
 function ChipContent({ chipData, onChipSelected }) {
   const defaultSelected = chipData.find((item) => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { IconButton } from "react-native-paper";
-import { Colors } from "../../../constants/Colors";
+import { Colors } from "../../../constants/colors";
 
 function CartBtn({ onCartAdded, onPress }) {
   return (

@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import InputField from "../components/common/text/InputField";
 import MainButton from "../components/common/button/MainButton";
-import { Colors } from "../constants/Colors";
+import { Colors } from "../constants/colors";
 // import RegistrationSVG from "../assets/images/misc/registration.svg";
 // import GoogleSVG from "../assets/images/misc/google.svg";
 // import FacebookSVG from "../assets/images/misc/facebook.svg";

@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import FruitCardCart from "../components/fruitCardCart";
 import { cartItems } from "../constants/cartItems";
-import { Colors } from "../constants/Colors";
+import { Colors } from "../constants/colors";
 
 function CartScreen(props) {
   const navigation = useNavigation();

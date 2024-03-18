@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { Avatar, Card, Chip, IconButton, Searchbar } from "react-native-paper";
-import { Colors } from "../constants/Colors";
+import { Colors } from "../constants/colors";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 

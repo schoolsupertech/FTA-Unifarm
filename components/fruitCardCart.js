@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { Colors } from "../constants/Colors";
+import { Colors } from "../constants/colors";
 
 export default function FruitCardCart({ fruit }) {
   return (

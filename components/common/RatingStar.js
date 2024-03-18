@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import StarRating from "react-native-star-rating";
 
-import { Colors } from "../../constants/Colors";
+import { Colors } from "../../constants/colors";
 
 function RatingStar({ disabled, halfStarEnabled, size, ratingStar }) {
   const [starRating, setStarRating] = useState(ratingStar);

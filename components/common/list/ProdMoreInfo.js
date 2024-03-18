@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { IconButton, Text as PaperText } from "react-native-paper";
 
 import GrayLine from "../text/GrayLine";
-import { Colors } from "../../../constants/Colors";
+import { Colors } from "../../../constants/colors";
 
 function Bars({ viewData }) {
   return (

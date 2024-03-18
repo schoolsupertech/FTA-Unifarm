@@ -22,7 +22,7 @@ import HeaderContent from "../components/ui/home/HeaderContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
 import LogoTitle from "../themes/LogoTitle";
 import { DefaultTheme } from "../themes/DefaultTheme";
-import { Colors } from "../constants/Colors";
+import { Colors } from "../constants/colors";
 import { windowWidth } from "../utils/Dimensions";
 import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
 import { CATEGORIES, PRODUCTS } from "../data/Data-Template";

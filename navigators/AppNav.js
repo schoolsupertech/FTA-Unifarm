@@ -7,7 +7,7 @@ import AppStackNav from "./AppStackNav";
 import AuthStack from "./AuthStack";
 
 function AppNav() {
-  const { isLoading, productInfo } = useContext(AuthContext);
+  const { isLoading, userToken } = useContext(AuthContext);
 
   if (isLoading) {
     return (

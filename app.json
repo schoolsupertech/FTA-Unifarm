@@ -7,19 +7,29 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/istockphoto-1489487052-2048x2048.jpg",
+      "image": "./assets/toppng.com-vegetables-images-png-vegetables-1911x1320.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.611874810536-ea5432vg9er0nb16i4drj14tv5rv6i8v"
+        }
+      ]
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "google.author.FTA"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "google.author.FTA"
     },
     "web": {
       "favicon": "./assets/favicon.png"

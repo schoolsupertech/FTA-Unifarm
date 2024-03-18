@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { Text } from "react-native-paper";
-import { Colors } from "../../../constants/Colors";
+import { Colors } from "../../../constants/colors";
 
 function Ellipsis({ description, numberOfLines }) {
   const [isCollapsed, setIsCollapsed] = useState(true);

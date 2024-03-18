@@ -9,7 +9,7 @@ import HomeScreen from "../screens/HomeScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
 import CartScreen from "../screens/CartScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import { Colors } from "../constants/Colors";
+import { Colors } from "../constants/colors";
 
 const Tab = createBottomTabNavigator();
 

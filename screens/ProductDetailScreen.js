@@ -8,7 +8,7 @@ import Ellipsis from "../components/common/text/Ellipsis";
 import ProdMoreInfo from "../components/common/list/ProdMoreInfo";
 import SwiperSlide from "../components/ui/product/SwiperSlide";
 import RatingStar from "../components/common/RatingStar";
-import { Colors } from "../constants/Colors";
+import { Colors } from "../constants/colors";
 import { PRODUCTS } from "../data/Data-Template";
 import { BASE_URL } from "../api/config";
 

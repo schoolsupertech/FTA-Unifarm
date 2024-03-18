@@ -8,7 +8,7 @@ import LogoTitle from "../themes/LogoTitle";
 import { CATEGORIES } from "../data/Data-Template";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "../constants/Colors";
+import { Colors } from "../constants/colors";
 import { AuthContext } from "../context/AuthContext";
 
 function CategoriesScreen() {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -24,15 +24,15 @@ import { Badge } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 import AuthStack from "../navigators/AuthStack";
-import { Colors } from "../constants/Colors";
+import { AuthContext } from "../context/AuthContext";
+import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
-// import createAxios from "../utils/axiosUtility";
 
 function ProfileScreen() {
   const navigation = useNavigation();
-  const [userDetail, setUserDetail] = useState(false);
+  const { userToken } = useContext(AuthContext);
 
-  if (userDetail) {
+  if (userToken) {
     return (
       <SafeAreaView style={DefaultTheme.root}>
         <LinearGradient
