@@ -14,11 +14,6 @@ import InputField from "../components/common/text/InputField";
 import GoogleSVG from "../assets/images/misc/google.svg";
 import FacebookSVG from "../assets/images/misc/facebook.svg";
 import TwitterSVG from "../assets/images/misc/twitter.svg";
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Colors } from "../constants/colors";
 import { AuthContext } from "../context/AuthContext";
@@ -26,54 +21,7 @@ import { AuthContext } from "../context/AuthContext";
 const LoginScreen = ({ navigation }) => {
   // const [email, setEmail] = useState(null);
   // const [password, setPassword] = useState(null);
-  const { loginWithGoogle } = useContext(AuthContext);
-
-  GoogleSignin.configure({
-    // webClientId: '<FROM DEVELOPER CONSOLE>', // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
-    iosClientId:
-      "611874810536-ea5432vg9er0nb16i4drj14tv5rv6i8v.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
-  });
-
-  async function onBtnGoogleLoginHandler() {
-    try {
-      await GoogleSignin.hasPlayServices({
-        showPlayServicesUpdateDialog: true,
-      });
-      const userInfo = await GoogleSignin.signIn();
-      AsyncStorage.setItem(
-        "googleUserData",
-        JSON.stringify({ userInfo, loggedIn: true }),
-      );
-      console.log(JSON.stringify(userInfo, null, 2));
-      // switch(account.role) {
-      //   case "unknown":
-      //     const signUp_Response = API.post("/signup", {
-      //       role: "customer",
-      //       address: loggedUser?.address || "",
-      //       user: {
-      //         photo: userInfo.user.photo,
-      //         name: userInfo.user.name,
-      //         phone: loggedUser?.phoneNumber || "",
-      //         email: userInfo.user.email,
-      //       },
-      //     });
-      //     await navigation.navigate("Profile");
-      //     break;
-      //   case "customer":
-      //     break;
-      // }
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        // some other error happened
-      }
-    }
-  }
+  const { login, onBtnGoogleLoginHandler } = useContext(AuthContext);
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>

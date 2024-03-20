@@ -12,6 +12,14 @@ export const DefaultTheme = {
   headerBgColor: Colors.primaryGreen50,
   cardBgColor: Colors.primaryGreen50,
 
+  // LinearGradient
+  linearGradient: {
+    width: "100%",
+    padding: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+
   // Text
   txtColor: "black",
 

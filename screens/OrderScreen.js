@@ -16,7 +16,7 @@ function OrderScreen() {
 
   return (
     <SafeAreaView style={DefaultTheme.root}>
-      <View>
+      <View style={styles.headerContainer}>
         <Text>Chốt đơn</Text>
         <View>
           <Text>Thông tin nhận hàng</Text>
@@ -27,8 +27,21 @@ function OrderScreen() {
           </Text>
         </View>
       </View>
+      <View style={styles.bodyContainer}>
+        <View>
+          <Text>San pham 1</Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
 
 export default OrderScreen;
+
+const styles = StyleSheet.create({
+  headerContainer: {},
+  bodyContainer: {},
+  container: {},
+  bodyContent: {},
+  textContent: {},
+});

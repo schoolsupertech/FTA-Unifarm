@@ -1,33 +1,46 @@
-import React, { useContext, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { View, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import { Searchbar } from "react-native-paper";
+import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 
 import CardCatItem from "../components/ui/categories/CardCatItem";
 import LogoTitle from "../themes/LogoTitle";
-import { CATEGORIES } from "../data/Data-Template";
+import createAxios from "../utils/AxiosUtility";
 import { DefaultTheme } from "../themes/DefaultTheme";
-import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../constants/colors";
 import { AuthContext } from "../context/AuthContext";
+
+const API = createAxios();
 
 function CategoriesScreen() {
   const navigation = useNavigation();
   const [searchPrd, setSearchPrd] = useState("");
-  const { categoriesInfo } = useContext(AuthContext);
+  const [categoriesInfo, setCategoriesInfo] = useState(null);
+
+  useEffect(() => {
+    const categoriesDataResponse = async () => {
+      const response = await API.get("/categories");
+      if (response) {
+        setCategoriesInfo(response.payload);
+      }
+    };
+
+    categoriesDataResponse();
+  }, []);
 
   function renderCategories(itemData) {
     function selectedCatListProdHandler() {
       navigation.navigate("CatListProdScreen", {
-        categoryId: itemData.item.id,
+        catRecomId: itemData.item.id,
       });
     }
 
     return (
       <CardCatItem
         title={itemData.item.name}
-        code={itemData.item.code}
-        description={itemData.item.description}
+        // code={itemData.item.code}
+        // description={itemData.item.description}
         image={itemData.item.image}
         onPress={selectedCatListProdHandler}
       />
@@ -44,7 +57,7 @@ function CategoriesScreen() {
     <SafeAreaView style={DefaultTheme.root}>
       <LinearGradient
         colors={["white", Colors.primaryGreen900]}
-        style={styles.linearGradient}
+        style={DefaultTheme.linearGradient}
       >
         <View style={styles.headerContainer}>
           <LogoTitle />
@@ -57,11 +70,6 @@ function CategoriesScreen() {
           onChangeText={(prodSearch) => setSearchPrd(prodSearch)}
         />
       </LinearGradient>
-      {/*
-        categoriesInfo.forEach((element) => {
-        console.log(element.name);
-      })
-      */}
       <FlatList
         data={categoriesInfo}
         keyExtractor={(item) => item.id}

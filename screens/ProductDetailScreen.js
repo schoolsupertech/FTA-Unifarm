@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import { Card, Badge, Text as PaperText } from "react-native-paper";
+import { Card, Badge, Text as PaperText, Snackbar } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 
@@ -16,16 +16,18 @@ import Ellipsis from "../components/common/text/Ellipsis";
 import ProdMoreInfo from "../components/common/list/ProdMoreInfo";
 import SwiperSlide from "../components/ui/product/SwiperSlide";
 import RatingStar from "../components/common/RatingStar";
-import { Colors } from "../constants/Colors";
+import { Colors } from "../constants/colors";
 import { PRODUCTS } from "../data/Data-Template";
 import { BASE_URL } from "../api/config";
 import { DefaultTheme } from "../themes/DefaultTheme";
+import MainButton from "../components/common/button/MainButton";
 
 function ProductDetailScreen({ route, navigation }) {
   const prodItemId = route.params.prodItemId;
   const [selectedProd, setSelectedProd] = useState(null);
-  // const selectedProd = PRODUCTS.find((prod) => prod.id === prodId);
-  // const [coverImage, setCoverImage] = useState(selectedProd.gallery[0]);
+  const [count, setCount] = useState(1);
+  const [visible, setVisible] = useState(false);
+  const [snackbarLabel, setSnackbarLabel] = useState("");
 
   const fetchProdItemData = async () => {
     await axios
@@ -51,7 +53,7 @@ function ProductDetailScreen({ route, navigation }) {
         return (
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
-              style={{ marginEnd: 4 }}
+              style={{ marginEnd: 16 }}
               onPress={() => {
                 navigation.navigate("CartScreen");
               }}
@@ -63,7 +65,7 @@ function ProductDetailScreen({ route, navigation }) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ marginEnd: 20 }}
+              style={{ marginEnd: 4 }}
               onPress={() => {
                 navigation.navigate("Notification");
               }}
@@ -83,6 +85,24 @@ function ProductDetailScreen({ route, navigation }) {
     });
   }, [selectedProd, navigation]);
 
+  function addCountHandler() {
+    if (count < 10) {
+      setCount(count + 1);
+    }
+  }
+  function minusCountHandler() {
+    if (count > 1) {
+      setCount(count - 1);
+    }
+  }
+
+  function addingCartHandler() {
+    // const fetchCartUser = API.get("/check-out-cart");
+
+    setVisible(true);
+    setSnackbarLabel("Đã thêm vào giỏ hàng");
+  }
+
   return (
     <SafeAreaView style={[DefaultTheme.root, styles.container]}>
       {selectedProd ? (
@@ -93,6 +113,9 @@ function ProductDetailScreen({ route, navigation }) {
               <View style={styles.headerContent}>
                 <PaperText variant="titleLarge" style={{ fontWeight: "bold" }}>
                   {selectedProd.title}
+                </PaperText>
+                <PaperText variant="titleMedium" style={{ fontWeight: "700" }}>
+                  {selectedProd.price} vnđ / {selectedProd.unit}
                 </PaperText>
                 <GrayLine />
                 <PaperText variant="bodySmall">(4.5*)</PaperText>
@@ -138,27 +161,42 @@ function ProductDetailScreen({ route, navigation }) {
               {/* <ProdMoreInfo data={prodItem.moreInfo} /> */}
             </View>
           </ScrollView>
+          <Snackbar
+            visible={visible}
+            onDismiss={() => {}}
+            action={{
+              label: "Xong",
+              onPress: () => setVisible(false),
+            }}
+          >
+            {snackbarLabel}
+          </Snackbar>
           <View style={styles.safeAreaView}>
-            <View>
-              <Text
-                style={{
-                  color: Colors.grayScaleGray400,
-                  fontSize: 14,
-                  fontWeight: "700",
-                }}
+            <View style={styles.selectingQuantity}>
+              <TouchableOpacity
+                onPress={addCountHandler}
+                style={styles.selectingBtn}
               >
-                Total Price
-              </Text>
-              <Text
-                style={{ color: Colors.primaryGreen700, fontWeight: "800" }}
+                <Ionicons
+                  name="add-circle"
+                  size={32}
+                  color={Colors.primaryGreen700}
+                />
+              </TouchableOpacity>
+              <Text style={styles.quantity}>{count}</Text>
+              <TouchableOpacity
+                onPress={minusCountHandler}
+                style={styles.selectingBtn}
               >
-                {selectedProd.price}
-              </Text>
+                <Ionicons
+                  name="remove-circle"
+                  size={32}
+                  color={Colors.primaryGreen700}
+                />
+              </TouchableOpacity>
             </View>
-            <View style={styles.button}>
-              <Text style={{ fontWeight: "800", color: "white" }}>
-                Thêm vào giỏ
-              </Text>
+            <View style={styles.buttonView}>
+              <MainButton onPress={addingCartHandler}>Thêm vào giỏ</MainButton>
             </View>
           </View>
         </>
@@ -197,28 +235,47 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: 100,
+    height: 110,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
-    padding: 30,
+    paddingHorizontal: 32,
+    paddingBottom: 12,
     borderColor: "#e9f2eb",
     borderWidth: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignItems: "center",
   },
-  button: {
-    borderWidth: 1,
+  selectingQuantity: {
     height: 50,
-    width: "45%",
-    alignItems: "center",
+    flexDirection: "row",
     justifyContent: "center",
-    borderRadius: 30,
-    backgroundColor: Colors.primaryGreen700,
-    borderColor: "#e9f2eb",
-  },
-  thumbnailContainer: {
     alignItems: "center",
-    margin: 8,
+    backgroundColor: Colors.primaryGreen200,
+    borderWidth: 1,
+    borderColor: Colors.primaryGreen700,
+    borderRadius: 8,
+  },
+  selectingBtn: {
+    marginHorizontal: 8,
+  },
+  quantity: {
+    color: Colors.primaryGreen700,
+    fontWeight: "700",
+    fontSize: 28,
+  },
+  buttonView: {
+    height: 50,
+    width: "50%",
+    borderRadius: 8,
+    elevation: 4,
+    shadowColor: "black",
+    shadowOpacity: 0.25,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 8,
+    overflow: "visible",
   },
 });

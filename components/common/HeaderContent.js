@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Text as PaperText } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 
-import { DefaultTheme } from "../../../themes/DefaultTheme";
+import { DefaultTheme } from "../../themes/DefaultTheme";
 
 function HeaderContent({ children, label, icon, onPress }) {
   return (

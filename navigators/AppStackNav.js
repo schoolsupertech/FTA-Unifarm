@@ -9,6 +9,8 @@ import CategoriesScreen from "../screens/CategoriesScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import CartScreen from "../screens/CartScreen";
 import OrderScreen from "../screens/OrderScreen";
+import SearchScreen from "../screens/SearchScreen";
+import ReceiveInfoScreen from "../screens/ReceiveInfoScreen";
 import { DefaultTheme } from "../themes/DefaultTheme";
 
 const Stack = createNativeStackNavigator();
@@ -44,6 +46,8 @@ function AppStackNav() {
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
       <Stack.Screen name="CartScreen" component={CartScreen} />
       <Stack.Screen name="OrderScreen" component={OrderScreen} />
+      <Stack.Screen name="SearchScreen" component={SearchScreen} />
+      <Stack.Screen name="ReceiveInfoScreen" component={ReceiveInfoScreen} />
     </Stack.Navigator>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import {
   Ionicons,
-  FontAwesome,
   FontAwesome5,
   MaterialCommunityIcons,
   AntDesign,
@@ -23,20 +22,24 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Badge } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
+import GrayLine from "../components/common/text/GrayLine";
+import HeaderContent from "../components/common/HeaderContent";
+import MainButton from "../components/common/button/MainButton";
 import AuthStack from "../navigators/AuthStack";
-import { Colors } from "../constants/Colors";
+import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
+import { AuthContext } from "../context/AuthContext";
 // import createAxios from "../utils/axiosUtility";
 
 function ProfileScreen() {
   const navigation = useNavigation();
-  const [userDetail, setUserDetail] = useState(false);
+  const { userToken, userInfo, logout } = useContext(AuthContext);
 
-  if (userDetail) {
+  if (userToken) {
     return (
       <SafeAreaView style={[DefaultTheme.root, styles.container]}>
         <LinearGradient
-          style={styles.linearGradient}
+          style={DefaultTheme.linearGradient}
           colors={["white", Colors.primaryGreen900]}
         >
           <View style={styles.headerContainer}>
@@ -55,11 +58,7 @@ function ProfileScreen() {
                 style={{ marginEnd: 4 }}
                 onPress={() => navigation.navigate("CartScreen")}
               >
-                <Ionicons
-                  name="cart"
-                  size={24}
-                  color={Colors.primaryGreen700}
-                />
+                <Ionicons name="bag" size={24} color={Colors.primaryGreen700} />
                 <Badge style={{ position: "absolute", top: -8, right: -16 }}>
                   3
                 </Badge>
@@ -68,137 +67,120 @@ function ProfileScreen() {
           </View>
           <View style={{ height: 100 }}>
             <Image
-              source={require("../assets/images/product3.png")}
+              source={{ uri: userInfo.user.photo }}
               style={styles.avatar}
             />
           </View>
           <View style={styles.displayUserName}>
-            <Text style={styles.textDisplay}>Welcome back</Text>
+            <Text style={styles.textDisplay}>{userInfo.user.name}</Text>
+            <Text style={styles.textDisplay}>{userInfo.user.email}</Text>
           </View>
         </LinearGradient>
 
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={DefaultTheme.scrollContainer}
+          style={[
+            DefaultTheme.scrollContainer,
+            DefaultTheme.flex_1,
+            { width: "100%", paddingTop: 12 },
+          ]}
         >
-          <View>
-            <View style={styles.scrollHeader}>
-              <Text style={styles.textScrollHeader}>Đơn hàng của bạn</Text>
-              <Text style={styles.textScrollHeader1}>Xem tất cả</Text>
-            </View>
+          <View style={styles.orderContainer}>
+            <HeaderContent onPress={() => {}} label={"Xem tất cả"} icon={true}>
+              Đơn hàng của bạn
+            </HeaderContent>
+            <GrayLine />
 
-            <View style={{ marginHorizontal: 50, flex: 1 }}>
-              <View style={styles.scrollViewContent}>
-                <View>
-                  <FontAwesome5 name="people-carry" size={30} color="black" />
-                  <Text style={{ fontSize: 11 }}>Chờ vận{"\n"}chuyển</Text>
-                </View>
-                <View>
-                  <FontAwesome5 name="shipping-fast" size={30} color="black" />
-                  <Text style={{ margin: 11 }}>Đang vận{"\n"}chuyển</Text>
-                </View>
-                <View>
+            <View style={styles.orderContent}>
+              <View style={styles.orderViewContent}>
+                <TouchableOpacity style={styles.orderView}>
+                  <FontAwesome5 name="people-carry" size={30} color="gray" />
+                  <Text style={styles.orderTextView}>Chờ vận{"\n"}chuyển</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.orderView}>
+                  <FontAwesome5 name="shipping-fast" size={30} color="gray" />
+                  <Text style={styles.orderTextView}>Đang vận{"\n"}chuyển</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.orderView}>
                   <MaterialCommunityIcons
                     name="book-check-outline"
                     size={30}
-                    color="black"
+                    color="gray"
                   />
-                  <Text style={{ fontSize: 11 }}>Đã nhận{"\n"}hàng</Text>
-                </View>
-                <View>
+                  <Text style={styles.orderTextView}>Đã nhận{"\n"}hàng</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.orderView}>
                   <Fontisto
                     name="spinner-rotate-forward"
                     size={30}
-                    color="black"
+                    color="gray"
                   />
-                  <Text style={{ fontSize: 11 }}>Đổi trả{"\n"}hàng</Text>
-                </View>
+                  <Text style={styles.orderTextView}>Đổi trả{"\n"}hàng</Text>
+                </TouchableOpacity>
               </View>
 
-              <View>
-                <View style={[styles.scrollViewContent, { marginTop: 20 }]}>
-                  <View style={styles.scrollViewDetail}>
-                    <View>
-                      <Entypo name="heart-outlined" size={26} color="black" />
-                    </View>
-                    <View style={{ marginLeft: 5 }}>
+              <GrayLine />
+
+              <View style={[styles.orderView, { width: "100%" }]}>
+                <TouchableOpacity style={styles.orderLineViewContent}>
+                  <View style={styles.orderInnerViewContent}>
+                    <Entypo name="heart-outlined" size={28} color="black" />
+                    <View style={{ marginLeft: 8 }}>
                       <Text>Yêu Thích</Text>
                     </View>
                   </View>
-                  <View style={{ opacity: 0.5 }}>
-                    <AntDesign name="right" size={24} color="black" />
-                  </View>
-                </View>
+                  <AntDesign name="right" size={24} color="gray" />
+                </TouchableOpacity>
 
-                <View style={[styles.scrollViewContent, { marginTop: 20 }]}>
-                  <View style={styles.scrollViewDetail}>
-                    <View>
-                      <AntDesign name="book" size={24} color="black" />
-                    </View>
-                    <View style={{ marginLeft: 5 }}>
+                <TouchableOpacity style={styles.orderLineViewContent}>
+                  <View style={styles.orderInnerViewContent}>
+                    <AntDesign name="book" size={28} color="black" />
+                    <View style={{ marginLeft: 8 }}>
                       <Text>Đơn mua</Text>
                     </View>
                   </View>
-                  <View style={{ opacity: 0.5 }}>
-                    <AntDesign name="right" size={24} color="black" />
-                  </View>
-                </View>
+                  <AntDesign name="right" size={24} color="gray" />
+                </TouchableOpacity>
 
-                <View style={[styles.scrollViewContent, { marginTop: 20 }]}>
-                  <View style={styles.scrollViewDetail}>
-                    <View>
-                      <Feather name="star" size={24} color="black" />
-                    </View>
-                    <View style={{ marginLeft: 0.5 }}>
+                <TouchableOpacity style={styles.orderLineViewContent}>
+                  <View style={styles.orderInnerViewContent}>
+                    <Feather name="star" size={28} color="black" />
+                    <View style={{ marginLeft: 8 }}>
                       <Text>Đánh giá</Text>
                     </View>
                   </View>
-                  <View style={{ opacity: 0.5 }}>
-                    <AntDesign name="right" size={24} color="black" />
-                  </View>
-                </View>
+                  <AntDesign name="right" size={24} color="gray" />
+                </TouchableOpacity>
 
-                <View style={[styles.scrollViewContent, { marginTop: 20 }]}>
-                  <View style={styles.scrollViewDetail}>
-                    <View>
-                      <MaterialCommunityIcons
-                        name="history"
-                        size={24}
-                        color="black"
-                      />
-                    </View>
-                    <View style={{ marginLeft: 5 }}>
+                <TouchableOpacity style={styles.orderLineViewContent}>
+                  <View style={styles.orderInnerViewContent}>
+                    <MaterialCommunityIcons
+                      name="history"
+                      size={28}
+                      color="black"
+                    />
+                    <View style={{ marginLeft: 8 }}>
                       <Text>Lịch sử mua hàng</Text>
                     </View>
                   </View>
-                  <View style={{ opacity: 0.5 }}>
-                    <AntDesign name="right" size={24} color="black" />
-                  </View>
-                </View>
+                  <AntDesign name="right" size={24} color="gray" />
+                </TouchableOpacity>
 
-                <View style={[styles.scrollViewContent, { marginTop: 20 }]}>
-                  <View style={styles.scrollViewDetail}>
-                    <View>
-                      <Ionicons
-                        name="bookmark-outline"
-                        size={24}
-                        color="black"
-                      />
-                    </View>
-                    <View style={{ marginLeft: 5 }}>
+                <TouchableOpacity style={styles.orderLineViewContent}>
+                  <View style={styles.orderInnerViewContent}>
+                    <Ionicons name="bookmark-outline" size={28} color="black" />
+                    <View style={{ marginLeft: 8 }}>
                       <Text>Voucher</Text>
                     </View>
                   </View>
-                  <View style={{ opacity: 0.5 }}>
-                    <AntDesign name="right" size={24} color="black" />
-                  </View>
-                </View>
+                  <AntDesign name="right" size={24} color="gray" />
+                </TouchableOpacity>
               </View>
             </View>
           </View>
-          <Pressable onPress={() => {}} style={styles.logoutBtn}>
-            <Text style={styles.textDisplay}>Đăng xuất</Text>
-          </Pressable>
+          <View style={styles.gridItem}>
+            <MainButton onPress={logout}>Đăng xuất</MainButton>
+          </View>
         </ScrollView>
       </SafeAreaView>
     );
@@ -211,14 +193,14 @@ export default ProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   linearGradient: {
     width: "100%",
     padding: 20,
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 4,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
   },
   headerContainer: {
     flexDirection: "row",
@@ -243,47 +225,71 @@ const styles = StyleSheet.create({
     borderRadius: 70,
   },
   displayUserName: {
-    flexDirection: "row",
+    alignItems: "center",
     justifyContent: "center",
-    marginTop: 20,
+    marginTop: 28,
   },
   textDisplay: {
-    color: Colors.primaryGreen100,
+    color: Colors.primaryGreen200,
     fontWeight: "bold",
     fontSize: 18,
   },
-  logoutBtn: {
-    backgroundColor: Colors.primaryGreen700,
+  orderContainer: {
+    backgroundColor: Colors.primaryGreen50,
+    width: "100%",
+    flex: 1,
     padding: 20,
-    width: "50%",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
+    borderRadius: 12,
   },
-  scrollHeader: {
+  orderHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: 60,
     marginBottom: 4,
+  },
+  orderContent: {
+    flex: 1,
+    width: "100%",
   },
   textScrollHeader: {
     fontSize: 16,
     fontWeight: "bold",
   },
   textScrollHeader1: {
-    fontSize: 16,
-    fontWeight: 300,
+    fontSize: 14,
+    fontWeight: 200,
     fontStyle: "italic",
+    color: "gray",
+    textDecorationLine: "underline",
   },
-  scrollViewContent: {
+  orderViewContent: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  scrollViewDetail: {
+  orderLineViewContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "75%",
+    padding: 8,
+    marginBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "gray",
+  },
+  orderView: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 4,
+  },
+  orderTextView: {
+    fontSize: 12,
+    marginTop: 4,
+  },
+  orderInnerViewContent: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-start",
   },
   scrollViewDetail1: {
     flexDirection: "row",
@@ -312,5 +318,44 @@ const styles = StyleSheet.create({
   textProductName: {
     fontSize: 16,
     fontWeight: 500,
+  },
+  gridItem: {
+    width: "50%",
+    marginTop: 12,
+    marginBottom: 28,
+    alignSelf: "center",
+    backgroundColor: "white",
+    // -- Shadow for android --
+    borderRadius: 8,
+    elevation: 4,
+    // -- Shadow for iOS --
+    shadowColor: "black",
+    shadowOpacity: 0.25,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 8,
+    // -- This hidden overflow is using for android_ripple --
+    overflow: "visible",
+  },
+  button: {
+    flex: 1,
+  },
+  buttonPressed: {
+    opacity: 0.5,
+  },
+  innerContainer: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.primaryGreen700,
+  },
+  btnText: {
+    fontWeight: "bold",
+    fontSize: 18,
+    color: Colors.primaryGreen50,
   },
 });

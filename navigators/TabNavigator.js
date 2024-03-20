@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { View } from "react-native";
 import { Badge } from "react-native-paper";
@@ -10,6 +10,7 @@ import CategoriesScreen from "../screens/CategoriesScreen";
 import CartScreen from "../screens/CartScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { Colors } from "../constants/colors";
+import { AuthContext } from "../context/AuthContext";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,6 +26,8 @@ const getTabBarVisibility = (route) => {
 };
 
 function TabNavigator() {
+  const { userToken } = useContext(AuthContext);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -69,7 +72,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="Cart"
-        component={CartScreen}
+        component={userToken ? CartScreen : ProfileScreen}
         options={{
           title: "Giỏ hàng",
           tabBarIcon: ({ color, size }) => (

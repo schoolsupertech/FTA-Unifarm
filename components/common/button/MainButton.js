@@ -1,12 +1,22 @@
 import React from "react";
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
-import { DefaultTheme } from "../../../themes/DefaultTheme";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 
-function MainButton({ label, onPress }) {
+import { Colors } from "../../../constants/colors";
+
+function MainButton({ children, onPress }) {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Text style={styles.label}>{label}</Text>
-    </TouchableOpacity>
+    <Pressable
+      android_ripple={{ color: "#ccc" }}
+      style={({ pressed }) => [
+        styles.button,
+        pressed ? styles.buttonPressed : null,
+      ]}
+      onPress={onPress}
+    >
+      <View style={styles.innerContainer}>
+        <Text style={styles.btnText}>{children}</Text>
+      </View>
+    </Pressable>
   );
 }
 
@@ -14,15 +24,22 @@ export default MainButton;
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: DefaultTheme.btnBgColor800,
-    padding: 20,
-    borderRadius: 10,
-    mafginBottom: 30,
+    flex: 1,
   },
-  label: {
-    textAlign: "center",
+  buttonPressed: {
+    opacity: 0.5,
+  },
+  innerContainer: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.primaryGreen700,
+  },
+  btnText: {
     fontWeight: "bold",
-    fontSize: 16,
-    color: "#FFF",
+    fontSize: 18,
+    color: Colors.primaryGreen50,
   },
 });

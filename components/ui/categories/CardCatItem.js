@@ -1,20 +1,39 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { Card, Text as PaperText } from "react-native-paper";
+import React from "react";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import { Card } from "react-native-paper";
 
-import { DefaultTheme } from "../../../themes/DefaultTheme";
 import Title from "../../common/text/Title";
+import { DefaultTheme } from "../../../themes/DefaultTheme";
 
 function CardCatItem({ title, image, onPress }) {
   return (
     <View style={styles.outterContainer}>
       <TouchableOpacity style={DefaultTheme.flex_1} onPress={onPress}>
         <Card style={styles.innerContainer}>
-          <Card.Cover
-            style={styles.cover}
-            resizeMode="cover"
-            source={{ uri: image }}
-          />
+          {image.includes("https://") ? (
+            <Card.Cover
+              style={styles.cover}
+              resizeMode="cover"
+              source={{ uri: image }}
+            />
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                width: 180,
+                height: 180,
+              }}
+            >
+              <ActivityIndicator size={"small"} />
+            </View>
+          )}
           <Card.Content style={styles.content}>
             <Title>{title}</Title>
           </Card.Content>

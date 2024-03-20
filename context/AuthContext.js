@@ -1,55 +1,30 @@
 import React, { createContext, useState, useEffect } from "react";
+import {
+  GoogleSignin,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-import createAxios from "../utils/AxiosUtility";
+// import createAxios from "../utils/AxiosUtility";
 import { BASE_URL } from "../api/config";
 
-const API = createAxios();
+// const API = createAxios();
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  // const [categoriesRecommendsInfo, setCategoriesRecommendsInfo] =
-  //   useState(null);
-  const [categoriesInfo, setCategoriesInfo] = useState(null);
   const [productsInfo, setProductsInfo] = useState(null);
-  const [prodsInfo, setProdsInfo] = useState(null);
-  const [prodsItemInfo, setProdsItemInfo] = useState(null);
   const [prodItemInfo, setProdItemInfo] = useState(null);
   const [userToken, setUserToken] = useState(null);
 
-  const categories = () => {
-    setIsLoading(true);
-    axios
-      .get(BASE_URL + "/categories")
-      .then((res) => {
-        let categoriesInfo = res.data;
-        setCategoriesInfo(categoriesInfo.payload);
-      })
-      .catch((e) => {
-        console.log("An error occurred while loading API-Categories - " + e);
-        console.log("Message: " + e.response.status);
-      });
-    setIsLoading(false);
-  };
-
-  // const categories_recommends = async () => {
-  //   setIsLoading(true);
-  //   await axios
-  //     .get(BASE_URL + "/categories-recommends")
-  //     .then((res) => {
-  //       let categoriesInfo = res.data;
-  //       setCategoriesRecommendsInfo(categoriesInfo.payload);
-  //     })
-  //     .catch((e) => {
-  //       console.log(`An error occurred while loading API-categories_recommends: ${e}`);
-  //       console.log(`Message: ${e.response.status}`);
-  //     });
-  //   setIsLoading(false);
-  // };
+  GoogleSignin.configure({
+    // webClientId: '<FROM DEVELOPER CONSOLE>', // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
+    iosClientId:
+      "611874810536-ea5432vg9er0nb16i4drj14tv5rv6i8v.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+  });
 
   const products = () => {
     setIsLoading(true);
@@ -111,25 +86,25 @@ export const AuthProvider = ({ children }) => {
   //   setIsLoading(false);
   // };
 
-  const prodItemDetail = async (prodItemId) => {
-    setIsLoading(true);
-
-    await axios
-      .get(BASE_URL + "/product-item" + prodItemId)
-      .then((res) => {
-        let prodItemDetailInfo = res.data;
-        setProdItemInfo(prodItemDetailInfo.payload);
-        console.log(
-          "prodItemDetailInfo: " + JSON.stringify(prodItemDetailInfo.payload),
-        );
-      })
-      .catch((e) => {
-        console.log("An error occurred while loading API-prodItemDetail: " + e);
-        console.log("Message: " + e.response.status);
-      });
-
-    setIsLoading(false);
-  };
+  // const prodItemDetail = async (prodItemId) => {
+  //   setIsLoading(true);
+  //
+  //   await axios
+  //     .get(BASE_URL + "/product-item" + prodItemId)
+  //     .then((res) => {
+  //       let prodItemDetailInfo = res.data;
+  //       setProdItemInfo(prodItemDetailInfo.payload);
+  //       console.log(
+  //         "prodItemDetailInfo: " + JSON.stringify(prodItemDetailInfo.payload),
+  //       );
+  //     })
+  //     .catch((e) => {
+  //       console.log("An error occurred while loading API-prodItemDetail: " + e);
+  //       console.log("Message: " + e.response.status);
+  //     });
+  //
+  //   setIsLoading(false);
+  // };
 
   const login = () => {
     // setIsLoading(true);
@@ -157,15 +132,48 @@ export const AuthProvider = ({ children }) => {
     // setIsLoading(false);
   };
 
-  const loginWithGoogle = async ({ idToken }) => {
+  const onBtnGoogleLoginHandler = async () => {
     setIsLoading(true);
-    // const response = API.post("/login", { idToken: idToken });
-    setUserToken(idToken);
-    // AsyncStorage.setItem(
-    //   "googleUserData",
-    //   JSON.stringify({ idToken, loggedIn: true }),
-    // );
-    console.log("loginWithGoogle: " + JSON.stringify(idToken));
+    try {
+      await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
+      const userInfo = await GoogleSignin.signIn();
+      AsyncStorage.setItem(
+        "googleUserData",
+        JSON.stringify({ userInfo, loggedIn: true }),
+      );
+      console.log(JSON.stringify(userInfo, null, 2));
+      setUserInfo(userInfo);
+      setUserToken(userInfo.idToken);
+      // switch(account.role) {
+      //   case "unknown":
+      //     const signUp_Response = API.post("/signup", {
+      //       role: "customer",
+      //       address: loggedUser?.address || "",
+      //       user: {
+      //         photo: userInfo.user.photo,
+      //         name: userInfo.user.name,
+      //         phone: loggedUser?.phoneNumber || "",
+      //         email: userInfo.user.email,
+      //       },
+      //     });
+      //     await navigation.navigate("Profile");
+      //     break;
+      //   case "customer":
+      //     break;
+      // }
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
     setIsLoading(false);
   };
 
@@ -176,41 +184,37 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
-  // const isLoggedIn = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     let userInfo = await AsyncStorage.getItem("GoogleUserData");
-  //
-  //     userInfo = JSON.parse(userInfo);
-  //
-  //     if (userInfo) {
-  //       setUserToken(userInfo.idToken);
-  //     }
-  //     setIsLoading(false);
-  //   } catch (e) {
-  //     console.log(`Error occurred at: isLoggedIn error: ${e}`);
-  //   }
-  // };
+  const isLoggedIn = async () => {
+    setIsLoading(true);
+    try {
+      const userStorage = await AsyncStorage.getItem("googleUserData");
+
+      if (userStorage !== null) {
+        const data = JSON.parse(userStorage);
+        setUserToken(data.userInfo.idToken);
+        setUserInfo(data.userInfo);
+      }
+    } catch (e) {
+      console.log(`Error occurred at: isLoggedIn error: ${e}`);
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    // isLoggedIn();
-    categories();
+    isLoggedIn();
     products();
   }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        loginWithGoogle,
+        onBtnGoogleLoginHandler,
+        login,
         logout,
         isLoading,
         userToken,
-        categoriesInfo,
-        // categoriesRecommendsInfo,
+        userInfo,
         productsInfo,
-        // prodsItemInfo,
-        // prodItemDetail,
-        // prodItemInfo,
       }}
     >
       {children}

@@ -18,25 +18,27 @@ import axios from "axios";
 import BannerNewsLettersSlider from "../components/ui/home/BannerNewsLettersSlider";
 import LocationOptions from "../components/ui/home/LocationOptions";
 import PopularCategories from "../components/common/list/PopularCategories";
-import HeaderContent from "../components/ui/home/HeaderContent";
+import HeaderContent from "../components/common/HeaderContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
 import LogoTitle from "../themes/LogoTitle";
 import { DefaultTheme } from "../themes/DefaultTheme";
-import { Colors } from "../constants/Colors";
+import { Colors } from "../constants/colors";
 import { windowWidth } from "../utils/Dimensions";
 import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
-import { CATEGORIES, PRODUCTS } from "../data/Data-Template";
 import { AuthContext } from "../context/AuthContext";
 import { BASE_URL } from "../api/config";
 
 function HomeScreen() {
   const navigation = useNavigation();
   const [searchPrd, setSearchPrd] = useState("");
+  const [visible, setVisible] = useState(false);
+  const [snackbarLabel, setSnackbarLabel] = useState("");
   const [onCartAdded, setOnCartAdded] = useState(false);
   const [locationModalVisible, setLocationModalVisible] = useState(false);
   const [categoriesRecommendsInfo, setCategoriesRecommendsInfo] =
     useState(null);
   const [prodsItemInfo, setProdsItemInfo] = useState([]);
+  const { userToken } = useContext(AuthContext);
 
   const renderNewsLettersBanner = ({ item, index }) => (
     <BannerNewsLettersSlider data={item} />
@@ -130,7 +132,16 @@ function HomeScreen() {
     };
 
     function AddingCartHandler(cartAdded) {
-      setOnCartAdded(cartAdded);
+      if (userToken) {
+        setVisible(true);
+        if (cartAdded) {
+          setOnCartAdded(cartAdded);
+          setSnackbarLabel("Đã thêm vào giỏ hàng");
+        }
+      } else {
+        setVisible(true);
+        setSnackbarLabel("Bạn cần phải đăng nhập trước");
+      }
     }
 
     return <CardProdItem {...prodItemProps} onAddingCart={AddingCartHandler} />;
@@ -155,19 +166,21 @@ function HomeScreen() {
           <LogoTitle />
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
-              style={{ marginEnd: 4 }}
+              style={{ marginEnd: 16 }}
               onPress={() => {
-                navigation.navigate("CartScreen");
+                userToken
+                  ? navigation.navigate("CartScreen")
+                  : navigation.navigate("Profile");
               }}
             >
               <Ionicons
-                name="cart-outline"
+                name="bag-outline"
                 color={Colors.primaryGreen700}
                 size={24}
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ marginEnd: 20 }}
+              style={{ marginEnd: 4 }}
               onPress={() => {
                 navigation.navigate("Notification");
               }}
@@ -213,6 +226,9 @@ function HomeScreen() {
           theme={DefaultTheme.searchbar}
           value={searchPrd}
           onChangeText={displaySearchPrdText}
+          // onIconPress={() =>
+          //   navigation.navigate("SearchScreen", { searchItem: searchPrd })
+          // }
         />
         <View style={styles.headerMenu}>
           <View>
@@ -274,14 +290,14 @@ function HomeScreen() {
         </View>
       </ScrollView>
       <Snackbar
-        visible={onCartAdded}
+        visible={visible}
         onDismiss={() => {}}
         action={{
           label: "Xong",
-          onPress: () => setOnCartAdded(false),
+          onPress: () => setVisible(false),
         }}
       >
-        Đã thêm vào giỏ hàng
+        {snackbarLabel}
       </Snackbar>
     </SafeAreaView>
   );
