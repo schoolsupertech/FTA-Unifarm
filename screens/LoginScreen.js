@@ -5,22 +5,23 @@ import {
   View,
   Text,
   TextInput,
+  StyleSheet,
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import MainButton from "../components/common/button/MainButton";
-import InputField from "../components/common/text/InputField";
 import GoogleSVG from "../assets/images/misc/google.svg";
 import FacebookSVG from "../assets/images/misc/facebook.svg";
 import TwitterSVG from "../assets/images/misc/twitter.svg";
-
+import InputField from "../components/common/text/InputField";
+import MainButton from "../components/common/button/MainButton";
 import { Colors } from "../constants/colors";
+import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
 
 const LoginScreen = ({ navigation }) => {
-  // const [email, setEmail] = useState(null);
-  // const [password, setPassword] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { login, onBtnGoogleLoginHandler } = useContext(AuthContext);
 
   return (
@@ -40,6 +41,7 @@ const LoginScreen = ({ navigation }) => {
           />
           <Text
             style={{
+              marginTop: 8,
               // fontFamily: 'Roboto-Medium',
               fontSize: 48,
               fontWeight: "bold",
@@ -47,7 +49,7 @@ const LoginScreen = ({ navigation }) => {
               textAlign: "center",
             }}
           >
-            Login
+            ĐĂNG NHẬP
           </Text>
         </View>
 
@@ -62,6 +64,10 @@ const LoginScreen = ({ navigation }) => {
             />
           }
           keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={email}
+          onChangeText={(value) => setEmail(value)}
         />
 
         <InputField
@@ -75,21 +81,28 @@ const LoginScreen = ({ navigation }) => {
             />
           }
           inputType="password"
-          fieldButtonLabel={"Forgot?"}
-          fieldButtonFunction={() => {}}
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={password}
+          onChangeText={(value) => setPassword(value)}
         />
 
-        <MainButton
-          label={"Login"}
-          onPress={() => {
-            login();
-          }}
-        />
+        <View style={styles.buttonView}>
+          <MainButton
+            onPress={() => {
+              login(email, password).then(() =>
+                console.log("Signed in with email, password"),
+              );
+            }}
+          >
+            Đăng nhập
+          </MainButton>
+        </View>
 
         <Text
-          style={{ textAlign: "center", color: "#666", marginVertical: 30 }}
+          style={{ textAlign: "center", color: "#666", marginVertical: 20 }}
         >
-          Or, login with ...
+          Hoặc, đăng nhập với ...
         </Text>
 
         <View
@@ -148,11 +161,11 @@ const LoginScreen = ({ navigation }) => {
             marginBottom: 30,
           }}
         >
-          <Text>New to the app?</Text>
+          <Text>Bạn là khách hàng mới?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text style={{ color: Colors.primaryGreen800, fontWeight: "700" }}>
               {" "}
-              Register
+              Đăng ký ngay
             </Text>
           </TouchableOpacity>
         </View>
@@ -162,3 +175,12 @@ const LoginScreen = ({ navigation }) => {
 };
 
 export default LoginScreen;
+
+const styles = StyleSheet.create({
+  buttonView: {
+    ...DefaultTheme.btnView,
+    width: "100%",
+    alignItems: "center",
+    borderRadius: 20,
+  },
+});

@@ -1,15 +1,18 @@
 import React, { createContext, useState, useEffect } from "react";
+import { Alert } from "react-native";
 import {
   GoogleSignin,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
+import { jwtDecode } from "jwt-decode";
+import "core-js/stable/atob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-// import createAxios from "../utils/AxiosUtility";
+import createAxios from "../utils/AxiosUtility";
 import { BASE_URL } from "../api/config";
 
-// const API = createAxios();
+const API = createAxios();
 
 export const AuthContext = createContext();
 
@@ -106,30 +109,36 @@ export const AuthProvider = ({ children }) => {
   //   setIsLoading(false);
   // };
 
-  const login = () => {
-    // setIsLoading(true);
-    // axios
-    //   .post(`${BASE_OAUTH_URL}`, {
-    //     username,
-    //     password,
-    //   })
-    //   .then((res) => {
-    //     let userInfo = res.data;
-    //     setUserInfo(userInfo);
-    //     setUserToken(userInfo.data.token);
-    //
-    //     AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
-    //     AsyncStorage.setItem("userToken", userInfo.data.token);
-    //
-    //     console.log("User Info: " + userInfo);
-    //     console.log("User Token: " + userInfo.data.token);
-    //   })
-    //   .catch((e) => {
-    //     console.log(`Error at AuthContext - ${e}`);
-    //     console.log(`Message: ${e.response.data.message}`);
-    //   });
-    // setUserToken("asdjgfowei");
-    // setIsLoading(false);
+  const register = async (user) => {
+    setIsLoading(true);
+    const response = await API.post("/auth/register", user);
+    response &&
+      Alert.alert(
+        "Đăng ký thành công",
+        "Chúc mừng quý khách vừa tạo tài khoản thành công, quý khách đã có thể đăng nhập vào hệ thống",
+        [{ text: "OK" }],
+      );
+    setIsLoading(false);
+  };
+
+  const login = async (email, password) => {
+    setIsLoading(true);
+    const response = await API.post("/auth/login", {
+      email: email,
+      password: password,
+    });
+
+    if (response) {
+      let decodedToken = jwtDecode(response.token);
+      setUserToken(response);
+      setUserInfo(decodedToken);
+      AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+      AsyncStorage.setItem(
+        "userData",
+        JSON.stringify({ userInfo: response.token, loggedIn: "systemLog" }),
+      );
+    }
+    setIsLoading(false);
   };
 
   const onBtnGoogleLoginHandler = async () => {
@@ -139,13 +148,15 @@ export const AuthProvider = ({ children }) => {
         showPlayServicesUpdateDialog: true,
       });
       const userInfo = await GoogleSignin.signIn();
-      AsyncStorage.setItem(
-        "googleUserData",
-        JSON.stringify({ userInfo, loggedIn: true }),
-      );
+
       console.log(JSON.stringify(userInfo, null, 2));
-      setUserInfo(userInfo);
+      setUserInfo(userInfo.user);
       setUserToken(userInfo.idToken);
+      AsyncStorage.setItem(
+        "userData",
+        JSON.stringify({ userInfo, loggedIn: "google" }),
+      );
+      AsyncStorage.setItem("userInfo", JSON.stringify(userInfo.user));
       // switch(account.role) {
       //   case "unknown":
       //     const signUp_Response = API.post("/signup", {
@@ -180,19 +191,28 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setIsLoading(true);
     setUserToken(null);
-    AsyncStorage.removeItem("googleUserData");
+    AsyncStorage.removeItem("userData");
+    AsyncStorage.removeItem("userInfo");
     setIsLoading(false);
   };
 
   const isLoggedIn = async () => {
     setIsLoading(true);
     try {
-      const userStorage = await AsyncStorage.getItem("googleUserData");
+      const userStorage = await AsyncStorage.getItem("userData");
 
       if (userStorage !== null) {
         const data = JSON.parse(userStorage);
-        setUserToken(data.userInfo.idToken);
-        setUserInfo(data.userInfo);
+        const userInfo = await AsyncStorage.getItem("userInfo");
+        const userInfoJsonParse = JSON.parse(userInfo);
+
+        if (data.loggedIn === "google") {
+          setUserToken(data.userInfo.idToken);
+          setUserInfo(userInfoJsonParse);
+        } else if (data.loggedIn === "systemLog") {
+          setUserToken(data.userInfo);
+          setUserInfo(userInfoJsonParse);
+        }
       }
     } catch (e) {
       console.log(`Error occurred at: isLoggedIn error: ${e}`);
@@ -209,6 +229,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         onBtnGoogleLoginHandler,
+        register,
         login,
         logout,
         isLoading,

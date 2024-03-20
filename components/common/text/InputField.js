@@ -1,41 +1,47 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import { Colors } from "../../../constants/colors";
+import { View, TextInput, StyleSheet } from "react-native";
 
 function InputField({
   label,
   icon,
+  maxLength,
   inputType,
+  autoCapitalize,
+  autoCorrect,
   keyboardType,
-  fieldButtonLabel,
-  fieldButtonFunction,
+  value,
+  onChangeText,
+  style,
 }) {
+  const mergedContainer = { ...styles.container, ...style };
+
   return (
-    <View style={styles.container}>
+    <View style={mergedContainer}>
       {icon}
       {inputType == "password" ? (
         <TextInput
           placeholder={label}
+          maxLength={maxLength}
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
           keyboardType={keyboardType}
-          style={styles.textInput}
           secureTextEntry={true}
+          value={value}
+          onChangeText={onChangeText}
+          style={styles.textInput}
         />
       ) : (
         <TextInput
+          maxLength={maxLength}
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
           placeholder={label}
           keyboardType={keyboardType}
+          onChangeText={onChangeText}
+          value={value}
           style={styles.textInput}
         />
       )}
-      <TouchableOpacity onPress={fieldButtonFunction}>
-        <Text style={styles.btnText}>{fieldButtonLabel}</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -53,9 +59,5 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     paddingVertical: 0,
-  },
-  btnText: {
-    color: Colors.primaryGreen800,
-    fontWeight: "700",
   },
 });

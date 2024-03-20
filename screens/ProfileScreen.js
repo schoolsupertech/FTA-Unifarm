@@ -67,13 +67,20 @@ function ProfileScreen() {
           </View>
           <View style={{ height: 100 }}>
             <Image
-              source={{ uri: userInfo.user.photo }}
+              source={{
+                uri:
+                  userInfo.photo !== undefined
+                    ? userInfo.photo
+                    : userInfo.avatar !== undefined
+                      ? userInfo.avatar
+                      : "https://media.istockphoto.com/id/1533794626/vi/anh/bi%E1%BB%83u-c%E1%BA%A3m-vui-m%E1%BB%ABng-%E1%BA%A3nh-minh-h%E1%BB%8Da.jpg?s=2048x2048&w=is&k=20&c=VRqbg2wcGBhmm3SdmhhIc-Si_PHM-5jKBfebhTRon3Q=",
+              }}
               style={styles.avatar}
             />
           </View>
           <View style={styles.displayUserName}>
-            <Text style={styles.textDisplay}>{userInfo.user.name}</Text>
-            <Text style={styles.textDisplay}>{userInfo.user.email}</Text>
+            <Text style={styles.textDisplay}>{userInfo.name}</Text>
+            <Text style={styles.textDisplay}>{userInfo.email}</Text>
           </View>
         </LinearGradient>
 
@@ -124,6 +131,26 @@ function ProfileScreen() {
               <View style={[styles.orderView, { width: "100%" }]}>
                 <TouchableOpacity style={styles.orderLineViewContent}>
                   <View style={styles.orderInnerViewContent}>
+                    <AntDesign name="user" size={28} color="black" />
+                    <View style={{ marginLeft: 8 }}>
+                      <Text>Thông tin của bạn</Text>
+                    </View>
+                  </View>
+                  <AntDesign name="right" size={24} color="gray" />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.orderLineViewContent}>
+                  <View style={styles.orderInnerViewContent}>
+                    <Ionicons name="pin-outline" size={28} color="black" />
+                    <View style={{ marginLeft: 8 }}>
+                      <Text>Sổ địa chỉ</Text>
+                    </View>
+                  </View>
+                  <AntDesign name="right" size={24} color="gray" />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.orderLineViewContent}>
+                  <View style={styles.orderInnerViewContent}>
                     <Entypo name="heart-outlined" size={28} color="black" />
                     <View style={{ marginLeft: 8 }}>
                       <Text>Yêu Thích</Text>
@@ -161,16 +188,6 @@ function ProfileScreen() {
                     />
                     <View style={{ marginLeft: 8 }}>
                       <Text>Lịch sử mua hàng</Text>
-                    </View>
-                  </View>
-                  <AntDesign name="right" size={24} color="gray" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.orderLineViewContent}>
-                  <View style={styles.orderInnerViewContent}>
-                    <Ionicons name="bookmark-outline" size={28} color="black" />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Voucher</Text>
                     </View>
                   </View>
                   <AntDesign name="right" size={24} color="gray" />

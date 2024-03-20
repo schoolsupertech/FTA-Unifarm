@@ -80,7 +80,7 @@ function CartScreen() {
               240.700 VNĐ
             </Text>
           </View>
-          <View style={styles.buttonView}>
+          <View style={[DefaultTheme.btnView, styles.buttonView]}>
             <MainButton onPress={() => navigation.navigate("OrderScreen")}>
               Thanh toán
             </MainButton>
@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     backgroundColor: DefaultTheme.cardBgColor,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
   cardContent: {
     marginVertical: 0,
-    paddingVertical: 12,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
+    paddingVertical: 16,
   },
   cardContentDetail: {
     paddingHorizontal: 20,
@@ -128,18 +128,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonView: {
-    height: 50,
-    width: "50%",
     marginBottom: 12,
     borderRadius: 8,
-    elevation: 4,
-    shadowColor: "black",
-    shadowOpacity: 0.25,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowRadius: 8,
-    overflow: "visible",
   },
 });

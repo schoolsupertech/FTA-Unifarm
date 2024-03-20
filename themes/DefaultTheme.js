@@ -16,8 +16,8 @@ export const DefaultTheme = {
   linearGradient: {
     width: "100%",
     padding: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
   },
 
   // Text
@@ -34,6 +34,20 @@ export const DefaultTheme = {
   // Button
   btnBgColor800: Colors.primaryGreen800,
   btnColor700: Colors.primaryGreen700,
+  btnView: {
+    height: 50,
+    width: "50%",
+    borderRadius: 8,
+    elevation: 4,
+    shadowColor: "black",
+    shadowOpacity: 0.25,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 8,
+    overflow: "visible",
+  },
 
   // Progress Bar
   pgBarColor: Colors.brandingError,

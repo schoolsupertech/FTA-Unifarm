@@ -70,21 +70,23 @@ function TabNavigator() {
           ),
         }}
       />
-      <Tab.Screen
-        name="Cart"
-        component={userToken ? CartScreen : ProfileScreen}
-        options={{
-          title: "Giỏ hàng",
-          tabBarIcon: ({ color, size }) => (
-            <>
-              <Ionicons name="cart" color={color} size={size} />
-              <Badge style={{ position: "absolute", top: -4, right: 14 }}>
-                6
-              </Badge>
-            </>
-          ),
-        }}
-      />
+      {userToken && (
+        <Tab.Screen
+          name="Cart"
+          component={CartScreen}
+          options={{
+            title: "Giỏ hàng",
+            tabBarIcon: ({ color, size }) => (
+              <>
+                <Ionicons name="cart" color={color} size={size} />
+                <Badge style={{ position: "absolute", top: -4, right: 14 }}>
+                  6
+                </Badge>
+              </>
+            ),
+          }}
+        />
+      )}
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
