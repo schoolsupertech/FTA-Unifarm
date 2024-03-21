@@ -4,8 +4,6 @@ import {
   GoogleSignin,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
-import { jwtDecode } from "jwt-decode";
-import "core-js/stable/atob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
@@ -20,14 +18,30 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [productsInfo, setProductsInfo] = useState(null);
-  const [prodItemInfo, setProdItemInfo] = useState(null);
-  const [userToken, setUserToken] = useState(null);
+  const [authState, setAuthState] = useState({
+    token: "",
+    authenticated: false,
+  });
 
   GoogleSignin.configure({
     // webClientId: '<FROM DEVELOPER CONSOLE>', // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
     iosClientId:
       "611874810536-ea5432vg9er0nb16i4drj14tv5rv6i8v.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
   });
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const response = await API.customRequest(
+        "get",
+        "/aboutMe",
+        authState?.token,
+      );
+      setUserInfo(response);
+      AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+    };
+
+    authState?.authenticated && fetchUserInfo();
+  }, [authState]);
 
   const products = () => {
     setIsLoading(true);
@@ -129,13 +143,14 @@ export const AuthProvider = ({ children }) => {
     });
 
     if (response) {
-      let decodedToken = jwtDecode(response.token);
-      setUserToken(response);
-      setUserInfo(decodedToken);
-      AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+      setAuthState({
+        token: response.token,
+        authenticated: true,
+      });
+
       AsyncStorage.setItem(
-        "userData",
-        JSON.stringify({ userInfo: response.token, loggedIn: "systemLog" }),
+        "TOKEN_KEY",
+        JSON.stringify({ token: response.token, loggedIn: "systemLog" }),
       );
     }
     setIsLoading(false);
@@ -149,12 +164,14 @@ export const AuthProvider = ({ children }) => {
       });
       const userInfo = await GoogleSignin.signIn();
 
-      console.log(JSON.stringify(userInfo, null, 2));
       setUserInfo(userInfo.user);
-      setUserToken(userInfo.idToken);
+      setAuthState({
+        token: userInfo.idToken,
+        authenticated: true,
+      });
       AsyncStorage.setItem(
-        "userData",
-        JSON.stringify({ userInfo, loggedIn: "google" }),
+        "TOKEN_KEY",
+        JSON.stringify({ token: userInfo.idToken, loggedIn: "google" }),
       );
       AsyncStorage.setItem("userInfo", JSON.stringify(userInfo.user));
       // switch(account.role) {
@@ -190,8 +207,9 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setIsLoading(true);
-    setUserToken(null);
-    AsyncStorage.removeItem("userData");
+    setAuthState(null);
+    setUserInfo(null);
+    AsyncStorage.removeItem("TOKEN_KEY");
     AsyncStorage.removeItem("userInfo");
     setIsLoading(false);
   };
@@ -199,20 +217,20 @@ export const AuthProvider = ({ children }) => {
   const isLoggedIn = async () => {
     setIsLoading(true);
     try {
-      const userStorage = await AsyncStorage.getItem("userData");
+      const tokenStorage = await AsyncStorage.getItem("TOKEN_KEY");
 
-      if (userStorage !== null) {
-        const data = JSON.parse(userStorage);
+      console.log("Token storage: " + JSON.stringify(tokenStorage, null, 2));
+
+      if (tokenStorage !== null) {
+        const data = JSON.parse(tokenStorage);
         const userInfo = await AsyncStorage.getItem("userInfo");
         const userInfoJsonParse = JSON.parse(userInfo);
 
-        if (data.loggedIn === "google") {
-          setUserToken(data.userInfo.idToken);
-          setUserInfo(userInfoJsonParse);
-        } else if (data.loggedIn === "systemLog") {
-          setUserToken(data.userInfo);
-          setUserInfo(userInfoJsonParse);
-        }
+        setAuthState({
+          token: data.token,
+          authenticated: true,
+        });
+        setUserInfo(userInfoJsonParse);
       }
     } catch (e) {
       console.log(`Error occurred at: isLoggedIn error: ${e}`);
@@ -225,20 +243,16 @@ export const AuthProvider = ({ children }) => {
     products();
   }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        onBtnGoogleLoginHandler,
-        register,
-        login,
-        logout,
-        isLoading,
-        userToken,
-        userInfo,
-        productsInfo,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    onBtnGoogleLoginHandler,
+    register,
+    login,
+    logout,
+    isLoading,
+    authState,
+    userInfo,
+    productsInfo,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

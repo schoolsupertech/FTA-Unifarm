@@ -17,80 +17,74 @@ import CardCartItem from "../components/ui/cart/CardCartItem";
 
 function CartScreen() {
   const navigation = useNavigation();
-  const { userToken, userInfo } = useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
 
-  console.log("User Info in Cart Screen: " + JSON.stringify(userInfo, null, 2));
-
-  if (userToken) {
-    return (
-      <SafeAreaView style={DefaultTheme.root}>
-        <Card style={styles.cardContainer}>
-          <Card.Content style={styles.cardContent}>
-            <HeaderContent onPress={() => {}} label={"Thay đổi"} icon={true}>
-              Thông tin nhận hàng
-            </HeaderContent>
-            <GrayLine />
-            <View style={styles.headerContent}>
-              <Title color="gray">Người nhận hàng:</Title>
-              <View style={styles.cardContentDetail}>
-                <PaperText variant="titleSmall">
-                  {userInfo.name} - {userInfo.email}
-                </PaperText>
-              </View>
-              <GrayLine />
-              <Title color="gray">Nhận hàng tại Station:</Title>
-              <View style={styles.cardContentDetail}>
-                <Ellipsis
-                  description={
-                    "Trạm nhận hàng số A-01, hầm 01, toà A, Chung cư Vinhomes Royal, Khu nhà giày, Phường Long Thạn Mỹ, Quận Thủ Đức, Thành phố Hồ Chí Minh."
-                  }
-                  numberOfLines={1}
-                />
-              </View>
-              <GrayLine />
-              <Title color="gray">
-                Thời gian nhận:{" "}
-                <PaperText variant="titleSmall" style={{ color: "black" }}>
-                  Từ 16h, ngày mai (20/03)
-                </PaperText>
-              </Title>
+  return (
+    <SafeAreaView style={DefaultTheme.root}>
+      <Card style={styles.cardContainer}>
+        <Card.Content style={styles.cardContent}>
+          <HeaderContent onPress={() => {}} label={"Thay đổi"} icon={true}>
+            Thông tin nhận hàng
+          </HeaderContent>
+          <GrayLine />
+          <View style={styles.headerContent}>
+            <Title color="gray">Người nhận hàng:</Title>
+            <View style={styles.cardContentDetail}>
+              <PaperText variant="titleSmall">
+                {userInfo.name} - {userInfo.email}
+              </PaperText>
             </View>
-          </Card.Content>
-        </Card>
+            <GrayLine />
+            <Title color="gray">Nhận hàng tại Station:</Title>
+            <View style={styles.cardContentDetail}>
+              <Ellipsis
+                description={
+                  "Trạm nhận hàng số A-01, hầm 01, toà A, Chung cư Vinhomes Royal, Khu nhà giày, Phường Long Thạn Mỹ, Quận Thủ Đức, Thành phố Hồ Chí Minh."
+                }
+                numberOfLines={1}
+              />
+            </View>
+            <GrayLine />
+            <Title color="gray">
+              Thời gian nhận:{" "}
+              <PaperText variant="titleSmall" style={{ color: "black" }}>
+                Từ 16h, ngày mai (20/03)
+              </PaperText>
+            </Title>
+          </View>
+        </Card.Content>
+      </Card>
 
-        <ScrollView style={[DefaultTheme.scrollContainer, { paddingTop: 12 }]}>
-          <View style={{ flex: 1 }}>
-            {cartItems.map((item, index) => (
-              <CardCartItem item={item} key={index} />
-            ))}
-          </View>
-        </ScrollView>
-
-        <View style={styles.safeAreaView}>
-          <View
-            style={{
-              justifyContent: "flex-start",
-              paddingBottom: 8,
-            }}
-          >
-            <Text style={{ fontSize: 18, color: Colors.primaryGreen800 }}>
-              Total price:
-            </Text>
-            <Text style={{ fontWeight: "bold", color: Colors.primaryGreen700 }}>
-              240.700 VNĐ
-            </Text>
-          </View>
-          <View style={[DefaultTheme.btnView, styles.buttonView]}>
-            <MainButton onPress={() => navigation.navigate("OrderScreen")}>
-              Thanh toán
-            </MainButton>
-          </View>
+      <ScrollView style={[DefaultTheme.scrollContainer, { paddingTop: 12 }]}>
+        <View style={{ flex: 1 }}>
+          {cartItems.map((item, index) => (
+            <CardCartItem item={item} key={index} />
+          ))}
         </View>
-      </SafeAreaView>
-    );
-  } else {
-    return <AuthStack />;
-  }
+      </ScrollView>
+
+      <View style={styles.safeAreaView}>
+        <View
+          style={{
+            justifyContent: "flex-start",
+            paddingBottom: 8,
+          }}
+        >
+          <Text style={{ fontSize: 18, color: Colors.primaryGreen800 }}>
+            Total price:
+          </Text>
+          <Text style={{ fontWeight: "bold", color: Colors.primaryGreen700 }}>
+            240.700 VNĐ
+          </Text>
+        </View>
+        <View style={[DefaultTheme.btnView, styles.buttonView]}>
+          <MainButton onPress={() => navigation.navigate("OrderScreen")}>
+            Thanh toán
+          </MainButton>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
 }
 
 export default CartScreen;

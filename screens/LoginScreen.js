@@ -91,7 +91,7 @@ const LoginScreen = ({ navigation }) => {
           <MainButton
             onPress={() => {
               login(email, password).then(() =>
-                console.log("Signed in with email, password"),
+                console.log("Signed in with systemLog"),
               );
             }}
           >

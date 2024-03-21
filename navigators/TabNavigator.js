@@ -26,7 +26,7 @@ const getTabBarVisibility = (route) => {
 };
 
 function TabNavigator() {
-  const { userToken } = useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
 
   return (
     <Tab.Navigator
@@ -70,7 +70,7 @@ function TabNavigator() {
           ),
         }}
       />
-      {userToken && (
+      {authState?.authenticated && (
         <Tab.Screen
           name="Cart"
           component={CartScreen}

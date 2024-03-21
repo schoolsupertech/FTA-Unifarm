@@ -79,18 +79,18 @@ const createAxios = () => {
       });
   };
 
-  const customRequest = async (method, endpoint, data) => {
+  const customRequest = async (method, endpoint, token) => {
     return await api
       .request({
         method: method,
         url: endpoint,
-        data: data,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
       })
       .then((res) => res.data)
       .catch((e) => {
-        throw new Error(
-          method + " request to " + endpoint + " failed: " + e.message,
-        );
+        return e;
       });
   };
 

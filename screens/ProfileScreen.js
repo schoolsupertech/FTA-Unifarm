@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -29,13 +29,31 @@ import AuthStack from "../navigators/AuthStack";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
-// import createAxios from "../utils/axiosUtility";
+import createAxios from "../utils/AxiosUtility";
+
+const API = createAxios();
 
 function ProfileScreen() {
   const navigation = useNavigation();
-  const { userToken, userInfo, logout } = useContext(AuthContext);
+  const { authState, logout } = useContext(AuthContext);
+  const [userInfo, setUserInfo] = useState(null);
 
-  if (userToken) {
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const response = await API.customRequest(
+        "GET",
+        "/aboutMe",
+        authState.token,
+      );
+      setUserInfo(response);
+    };
+
+    if (authState?.authenticated) {
+      fetchUserInfo();
+    }
+  }, [authState]);
+
+  if (authState?.authenticated) {
     return (
       <SafeAreaView style={[DefaultTheme.root, styles.container]}>
         <LinearGradient
@@ -69,18 +87,20 @@ function ProfileScreen() {
             <Image
               source={{
                 uri:
-                  userInfo.photo !== undefined
+                  userInfo?.photo !== undefined
                     ? userInfo.photo
-                    : userInfo.avatar !== undefined
-                      ? userInfo.avatar
+                    : userInfo?.avatar !== undefined
+                      ? userInfo?.avatar
                       : "https://media.istockphoto.com/id/1533794626/vi/anh/bi%E1%BB%83u-c%E1%BA%A3m-vui-m%E1%BB%ABng-%E1%BA%A3nh-minh-h%E1%BB%8Da.jpg?s=2048x2048&w=is&k=20&c=VRqbg2wcGBhmm3SdmhhIc-Si_PHM-5jKBfebhTRon3Q=",
               }}
               style={styles.avatar}
             />
           </View>
           <View style={styles.displayUserName}>
-            <Text style={styles.textDisplay}>{userInfo.name}</Text>
-            <Text style={styles.textDisplay}>{userInfo.email}</Text>
+            <Text style={styles.textDisplay}>
+              {userInfo?.lastName} {userInfo?.firstName} -{" "}
+              {userInfo?.phoneNumber}
+            </Text>
           </View>
         </LinearGradient>
 
@@ -247,7 +267,7 @@ const styles = StyleSheet.create({
     marginTop: 28,
   },
   textDisplay: {
-    color: Colors.primaryGreen200,
+    color: Colors.primaryGreen100,
     fontWeight: "bold",
     fontSize: 18,
   },
@@ -341,7 +361,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 28,
     alignSelf: "center",
-    backgroundColor: "white",
     // -- Shadow for android --
     borderRadius: 8,
     elevation: 4,

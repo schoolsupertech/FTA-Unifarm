@@ -7,6 +7,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { Badge, IconButton, Searchbar, Snackbar } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,80 +22,130 @@ import PopularCategories from "../components/common/list/PopularCategories";
 import HeaderContent from "../components/common/HeaderContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
 import LogoTitle from "../themes/LogoTitle";
+import createAxios from "../utils/AxiosUtility";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { Colors } from "../constants/colors";
 import { windowWidth } from "../utils/Dimensions";
 import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
 import { AuthContext } from "../context/AuthContext";
-import { BASE_URL } from "../api/config";
+
+const API = createAxios();
 
 function HomeScreen() {
   const navigation = useNavigation();
+  const { authState } = useContext(AuthContext);
   const [searchPrd, setSearchPrd] = useState("");
   const [visible, setVisible] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState("");
   const [onCartAdded, setOnCartAdded] = useState(false);
-  const [locationModalVisible, setLocationModalVisible] = useState(false);
+  const [locationModalVisible, setLocationModalVisible] = useState({
+    isVisible: false,
+    status: null,
+  });
   const [categoriesRecommendsInfo, setCategoriesRecommendsInfo] =
     useState(null);
-  const [prodsItemInfo, setProdsItemInfo] = useState([]);
-  const { userToken } = useContext(AuthContext);
+  const [prodItemsInfo, setProdItemsInfo] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchProdItems = async (prodItemId) => {
+        const prodItemsInfoResponse = await API.get(
+          "/product/" + prodItemId + "/product-items",
+        );
+        const newProdItemsInfo = Object.fromEntries(
+          Object.entries(prodItemsInfo),
+        );
+        setProdItemsInfo((oldProdItemsInfo) => [
+          ...oldProdItemsInfo,
+          ...prodItemsInfoResponse.payload,
+        ]);
+      };
+
+      const catRecomResponse = await API.get("/categories-recommends");
+      setCategoriesRecommendsInfo(catRecomResponse.payload);
+
+      let categoryRecomId = catRecomResponse.payload
+        .filter((items) => items.name.toLowerCase().includes("nổi bật"))
+        .map((item) => item.id);
+
+      if (categoryRecomId) {
+        const prodsInfoResponse = await API.get(
+          "/category/" + categoryRecomId + "/products",
+        );
+        prodsInfoResponse.payload.map((item) => {
+          fetchProdItems(item.id);
+        });
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchingUserLocation = async () => {
+      const response = await API.customRequest(
+        "get",
+        "/apartment-station",
+        authState?.token,
+      );
+
+      if (response.response.status == 400) {
+        Alert.alert(
+          "Lần đầu đăng nhập?",
+          "Bạn cần phải chọn vị trí của bạn để chúng tôi giao hàng cho bạn.",
+          [{ text: "OK" }],
+        );
+        setLocationModalVisible({
+          ...locationModalVisible,
+          isVisible: true,
+          status: response.response.status,
+        });
+      }
+    };
+
+    fetchingUserLocation();
+  }, []);
 
   const renderNewsLettersBanner = ({ item, index }) => (
     <BannerNewsLettersSlider data={item} />
   );
 
-  const fetchData = async () => {
-    await axios
-      .get(BASE_URL + "/categories-recommends")
-      .then((res) => {
-        let categoriesInfo = res.data;
-        setCategoriesRecommendsInfo(categoriesInfo.payload);
-        let categoryRecomId = categoriesInfo.payload
-          .filter((items) => items.name.toLowerCase().includes("nổi bật"))
-          .map((item) => item.id);
-        categoryRecomId &&
-          axios
-            .get(BASE_URL + "/category/" + categoryRecomId + "/products")
-            .then((res) => {
-              let prodsInfo = res.data;
-              prodsInfo.payload.map((item) => {
-                axios
-                  .get(BASE_URL + "/product/" + item.id + "/product-items")
-                  .then((res) => {
-                    let prodsItemInfo = res.data;
-                    setProdsItemInfo((oldProdsItemInfo) => [
-                      ...oldProdsItemInfo,
-                      ...prodsItemInfo.payload,
-                    ]);
-                  })
-                  .catch((e) => {
-                    console.log(
-                      "An error occurred while loading API-prodsItem: " + e,
-                    );
-                    console.log("Message: " + e.response.status);
-                  });
-              });
-            })
-            .catch((e) => {
-              console.log("An error occurred while loading API-prods: " + e);
-              console.log("Message: " + e.response.status);
-            });
-      })
-      .catch((e) => {
-        console.log(
-          `An error occurred while loading API-categories_recommends: ${e}`,
-        );
-        console.log(`Message: ${e.response.status}`);
+  function updateLocationHandler(locationData) {
+    // setLocationModalVisible({
+    //   ...locationModalVisible,
+    //   isVisible: false,
+    //   status: null,
+    // });
+  }
+
+  function onCancelUpdateLocationHandler() {
+    if (locationModalVisible.status === 400) {
+      Alert.alert(
+        "QUý khách chưa chọn địa điểm",
+        "Quý khách chắc chắn muốn thoát?",
+        [
+          {
+            text: "Có",
+            style: "cancel",
+            onPress: () =>
+              setLocationModalVisible({
+                ...locationModalVisible,
+                isVisible: false,
+                status: null,
+              }),
+          },
+          {
+            text: "Huỷ bỏ",
+          },
+        ],
+      );
+    } else {
+      setLocationModalVisible({
+        ...locationModalVisible,
+        isVisible: false,
+        status: null,
       });
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  function updateLocationHandler(data) {
-    setLocationModalVisible(false);
+    }
   }
 
   function renderPopularCategories(itemData) {
@@ -132,7 +183,7 @@ function HomeScreen() {
     };
 
     function AddingCartHandler(cartAdded) {
-      if (userToken) {
+      if (authState?.authenticated) {
         setVisible(true);
         if (cartAdded) {
           setOnCartAdded(cartAdded);
@@ -168,7 +219,7 @@ function HomeScreen() {
             <TouchableOpacity
               style={{ marginEnd: 16 }}
               onPress={() => {
-                userToken
+                authState?.authenticated
                   ? navigation.navigate("CartScreen")
                   : navigation.navigate("Profile");
               }}
@@ -205,7 +256,12 @@ function HomeScreen() {
             >
               Vị trí
             </Text>
-            <TouchableOpacity onPress={() => setLocationModalVisible(true)}>
+            <TouchableOpacity
+              onPress={() =>
+                authState?.authenticated &&
+                setLocationModalVisible({ isVisible: true, status: 0 })
+              }
+            >
               <Text style={styles.textLocation}>
                 Thủ Đức, Tp. Hồ Chí Minh <Ionicons name="arrow-down" />
               </Text>
@@ -213,7 +269,7 @@ function HomeScreen() {
             <LocationOptions
               visible={locationModalVisible}
               onPress={updateLocationHandler}
-              onCancel={() => setLocationModalVisible(false)}
+              onCancel={onCancelUpdateLocationHandler}
             />
           </View>
           <View>
@@ -282,7 +338,7 @@ function HomeScreen() {
           <HeaderContent>Sản phẩm khuyên dùng</HeaderContent>
           <View>
             <FlatList
-              data={prodsItemInfo}
+              data={prodItemsInfo}
               keyExtractor={(item) => item.id}
               renderItem={renderProdItem}
             />
