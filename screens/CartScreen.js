@@ -34,7 +34,7 @@ function CartScreen() {
               <Title color="gray">Người nhận hàng:</Title>
               <View style={styles.cardContentDetail}>
                 <PaperText variant="titleSmall">
-                  {userInfo.user.name} - {userInfo.user.email}
+                  {userInfo.name} - {userInfo.email}
                 </PaperText>
               </View>
               <GrayLine />
