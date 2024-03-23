@@ -1,7 +1,8 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
+  Alert,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
@@ -16,11 +17,11 @@ import Ellipsis from "../components/common/text/Ellipsis";
 import ProdMoreInfo from "../components/common/list/ProdMoreInfo";
 import SwiperSlide from "../components/ui/product/SwiperSlide";
 import RatingStar from "../components/common/RatingStar";
+import MainButton from "../components/common/button/MainButton";
 import { Colors } from "../constants/colors";
-import { PRODUCTS } from "../data/Data-Template";
 import { BASE_URL } from "../api/config";
 import { DefaultTheme } from "../themes/DefaultTheme";
-import MainButton from "../components/common/button/MainButton";
+import { AuthContext } from "../context/AuthContext";
 
 function ProductDetailScreen({ route, navigation }) {
   const prodItemId = route.params.prodItemId;
@@ -28,6 +29,7 @@ function ProductDetailScreen({ route, navigation }) {
   const [count, setCount] = useState(1);
   const [visible, setVisible] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState("");
+  const { authState } = useContext(AuthContext);
 
   const fetchProdItemData = async () => {
     await axios
@@ -97,10 +99,13 @@ function ProductDetailScreen({ route, navigation }) {
   }
 
   function addingCartHandler() {
-    // const fetchCartUser = API.get("/check-out-cart");
-
-    setVisible(true);
-    setSnackbarLabel("Đã thêm vào giỏ hàng");
+    if (authState?.authenticated) {
+      setVisible(true);
+      setSnackbarLabel("Đã thêm vào giỏ hàng");
+    } else {
+      Alert.alert("Bạn cần phải đăng nhập trước", [{ text: "OK" }]);
+      navigation.navigate("Profile");
+    }
   }
 
   return (
@@ -168,6 +173,7 @@ function ProductDetailScreen({ route, navigation }) {
               label: "Xong",
               onPress: () => setVisible(false),
             }}
+            style={{ marginBottom: 80 }}
           >
             {snackbarLabel}
           </Snackbar>

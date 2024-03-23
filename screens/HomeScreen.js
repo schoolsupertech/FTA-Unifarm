@@ -52,9 +52,9 @@ function HomeScreen() {
         const prodItemsInfoResponse = await API.get(
           "/product/" + prodItemId + "/product-items",
         );
-        const newProdItemsInfo = Object.fromEntries(
-          Object.entries(prodItemsInfo),
-        );
+        // const newProdItemsInfo = Object.fromEntries(
+        //   Object.entries(prodItemsInfo),
+        // );
         setProdItemsInfo((oldProdItemsInfo) => [
           ...oldProdItemsInfo,
           ...prodItemsInfoResponse.payload,
@@ -89,7 +89,7 @@ function HomeScreen() {
         authState?.token,
       );
 
-      if (response.response.status == 400) {
+      if (response.response?.status == 400) {
         Alert.alert(
           "Lần đầu đăng nhập?",
           "Bạn cần phải chọn vị trí của bạn để chúng tôi giao hàng cho bạn.",
@@ -107,21 +107,47 @@ function HomeScreen() {
   }, []);
 
   const renderNewsLettersBanner = ({ item, index }) => (
-    <BannerNewsLettersSlider data={item} />
+    <BannerNewsLettersSlider key={index} data={item} />
   );
 
-  function updateLocationHandler(locationData) {
-    // setLocationModalVisible({
-    //   ...locationModalVisible,
-    //   isVisible: false,
-    //   status: null,
-    // });
+  async function updateLocationHandler(apartmentData, stationData, isDefault) {
+    if (apartmentData && stationData) {
+      const response = await API.customRequest(
+        "/post",
+        "/apartment-station/upsert",
+        {
+          stationId: stationData.id,
+          apartmentId: apartmentData.id,
+          isDefault: isDefault,
+        },
+        authState?.token,
+      );
+      console.log("Save location: " + JSON.stringify(response, null, 2));
+      if (response) {
+        Alert.alert("Cập nhật vị trí thành công", [
+          {
+            text: "OK",
+          },
+        ]);
+        setLocationModalVisible({
+          ...locationModalVisible,
+          isVisible: false,
+          status: null,
+        });
+      }
+    } else {
+      Alert.alert("Xin quý khách hãy nhập đầy đủ thông tin", [
+        {
+          text: "OK",
+        },
+      ]);
+    }
   }
 
   function onCancelUpdateLocationHandler() {
     if (locationModalVisible.status === 400) {
       Alert.alert(
-        "QUý khách chưa chọn địa điểm",
+        "Quý khách chưa chọn địa điểm",
         "Quý khách chắc chắn muốn thoát?",
         [
           {
@@ -148,24 +174,24 @@ function HomeScreen() {
     }
   }
 
-  function renderPopularCategories(itemData) {
+  function renderPopularCategories(item) {
     function selectedCategoryHandler() {
       navigation.navigate("CatListProdScreen", {
-        catRecomId: itemData.item.id,
+        catRecomId: item.id,
       });
     }
 
     return (
       <PopularCategories
-        title={itemData.item.name}
-        image={itemData.item.image}
+        key={item.id}
+        title={item.name}
+        image={item.image}
         onPress={selectedCategoryHandler}
       />
     );
   }
 
-  function renderProdItem(itemData) {
-    const item = itemData.item;
+  function renderProdItem(item) {
     const prodItemProps = {
       id: item.id,
       title: item.title,
@@ -195,7 +221,13 @@ function HomeScreen() {
       }
     }
 
-    return <CardProdItem {...prodItemProps} onAddingCart={AddingCartHandler} />;
+    return (
+      <CardProdItem
+        key={prodItemsInfo.id}
+        {...prodItemProps}
+        onAddingCart={AddingCartHandler}
+      />
+    );
   }
 
   function displaySearchPrdText(prdSearch) {
@@ -259,7 +291,11 @@ function HomeScreen() {
             <TouchableOpacity
               onPress={() =>
                 authState?.authenticated &&
-                setLocationModalVisible({ isVisible: true, status: 0 })
+                setLocationModalVisible({
+                  ...locationModalVisible,
+                  isVisible: true,
+                  status: 0,
+                })
               }
             >
               <Text style={styles.textLocation}>
@@ -322,27 +358,26 @@ function HomeScreen() {
           >
             Danh mục phổ biến
           </HeaderContent>
-          <View>
-            <FlatList
-              data={categoriesRecommendsInfo}
-              keyExtractor={(item) => item.id}
-              renderItem={renderPopularCategories}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            />
-          </View>
+          {
+            categoriesRecommendsInfo && (
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              >
+                {categoriesRecommendsInfo.map((item) =>
+                  renderPopularCategories(item),
+                )}
+              </ScrollView>
+            )
+          }
         </View>
 
         {/* Danh sách sản phẩm */}
         <View style={styles.contentView}>
           <HeaderContent>Sản phẩm khuyên dùng</HeaderContent>
-          <View>
-            <FlatList
-              data={prodItemsInfo}
-              keyExtractor={(item) => item.id}
-              renderItem={renderProdItem}
-            />
-          </View>
+          {
+            prodItemsInfo?.map((item) => renderProdItem(item))
+          }
         </View>
       </ScrollView>
       <Snackbar

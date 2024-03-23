@@ -35,23 +35,7 @@ const API = createAxios();
 
 function ProfileScreen() {
   const navigation = useNavigation();
-  const { authState, logout } = useContext(AuthContext);
-  const [userInfo, setUserInfo] = useState(null);
-
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const response = await API.customRequest(
-        "GET",
-        "/aboutMe",
-        authState.token,
-      );
-      setUserInfo(response);
-    };
-
-    if (authState?.authenticated) {
-      fetchUserInfo();
-    }
-  }, [authState]);
+  const { authState, userInfo, logout } = useContext(AuthContext);
 
   if (authState?.authenticated) {
     return (

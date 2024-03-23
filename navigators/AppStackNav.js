@@ -44,8 +44,20 @@ function AppStackNav() {
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
       <Stack.Screen name="CatListProdScreen" component={CatListProdScreen} />
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
-      <Stack.Screen name="CartScreen" component={CartScreen} />
-      <Stack.Screen name="OrderScreen" component={OrderScreen} />
+      <Stack.Screen
+        name="CartScreen"
+        component={CartScreen}
+        options={{
+          title: "Giỏ hàng",
+        }}
+      />
+      <Stack.Screen
+        name="OrderScreen"
+        component={OrderScreen}
+        options={{
+          title: "Thanh toán đơn hàng",
+        }}
+      />
       <Stack.Screen name="SearchScreen" component={SearchScreen} />
       <Stack.Screen name="ReceiveInfoScreen" component={ReceiveInfoScreen} />
     </Stack.Navigator>

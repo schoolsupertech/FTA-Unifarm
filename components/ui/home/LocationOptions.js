@@ -9,20 +9,21 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { Text as PaperText, Searchbar } from "react-native-paper";
+import { Text as PaperText, Searchbar, Checkbox } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 
-import Title from "../../common/text/Title";
 import MainButton from "../../common/button/MainButton";
 import createAxios from "../../../utils/AxiosUtility";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
 import { Colors } from "../../../constants/colors";
+import Title from "../../common/text/Title";
 
 const API = createAxios();
 
 function LocationOptions(props) {
   const [apartmentInfo, setApartmentInfo] = useState(null);
   const [stationInfo, setStationInfo] = useState(null);
+  const [isDefault, setIsDefault] = useState(false);
   const [isApartmentSearching, setIsApartmentSearching] = useState(false);
   const [isStationSearching, setIsStationSearching] = useState(false);
   const [searchingApartment, setSearchingApartment] = useState([]);
@@ -38,7 +39,7 @@ function LocationOptions(props) {
           return item;
         }
       });
-      setSearchingApartment(apartmentList);
+      setSearchingApartment(...searchingApartment, apartmentList);
     }
   }
 
@@ -52,25 +53,23 @@ function LocationOptions(props) {
           return item;
         }
       });
-      setSearchingStation(stationList);
+      setSearchingStation(...searchingStation, stationList);
     }
   }
 
-  function renderSearching(itemData) {
+  function renderSearching(item) {
     function onSelectApartmentHandler() {
       setIsApartmentSearching(false);
-      setApartmentInfo(itemData.item);
-      setSearchingApartment(itemData.item.address);
-      console.log(
-        "Apartment address: " + JSON.stringify(itemData.item, null, 2),
-      );
+      setApartmentInfo(item);
+      setSearchingApartment(item.address);
+      console.log("Apartment address: " + JSON.stringify(item, null, 2));
     }
 
     function onSelectStationHandler() {
       setIsStationSearching(false);
-      setStationInfo(itemData.item);
-      setSearchingStation(itemData.item.address);
-      console.log("Station address: " + JSON.stringify(itemData.item, null, 2));
+      setStationInfo(item);
+      setSearchingStation(item.address);
+      console.log("Station address: " + JSON.stringify(item, null, 2));
     }
 
     return (
@@ -84,7 +83,7 @@ function LocationOptions(props) {
       >
         <View style={styles.dropdownSearching}>
           <Text style={styles.dropdownText} numberOfLines={2}>
-            {itemData.item.address}
+            {item.address}
           </Text>
         </View>
       </TouchableOpacity>
@@ -93,13 +92,19 @@ function LocationOptions(props) {
 
   return (
     <Modal visible={props.visible.isVisible} animationType="slide">
-      <ScrollView>
-        <View style={styles.container}>
-          <View style={styles.title}>
-            <PaperText variant="headlineMedium" style={{ fontWeight: "bold" }}>
-              Cập Nhật Địa Điểm
-            </PaperText>
-          </View>
+      <View style={DefaultTheme.root}>
+        <View style={styles.title}>
+          <PaperText variant="headlineMedium" style={{ fontWeight: "bold" }}>
+            Cập Nhật Địa Điểm
+          </PaperText>
+        </View>
+        <ScrollView
+          style={[
+            DefaultTheme.scrollContainer,
+            DefaultTheme.flex_1,
+            { paddingBottom: 12 },
+          ]}
+        >
           <View style={styles.modalView}>
             <View style={styles.location}>
               <Searchbar
@@ -113,17 +118,12 @@ function LocationOptions(props) {
                     size={24}
                   />
                 )}
-                value={searchingApartment}
                 onChangeText={onSearchingApartmentHandler}
               />
               {isApartmentSearching && (
                 <View style={styles.dropdownContainer}>
                   {searchingApartment.length ? (
-                    <FlatList
-                      data={searchingApartment}
-                      keyExtractor={(item) => item.id}
-                      renderItem={renderSearching}
-                    />
+                    searchingApartment.map((item) => renderSearching(item))
                   ) : (
                     <View style={styles.dropdownNoneItem}>
                       <Text style={styles.dropdownNoneText}>
@@ -162,17 +162,12 @@ function LocationOptions(props) {
                     size={24}
                   />
                 )}
-                value={searchingStation}
                 onChangeText={onSearchingStationHandler}
               />
               {isStationSearching && (
                 <View style={styles.dropdownContainer}>
                   {searchingStation.length ? (
-                    <FlatList
-                      data={searchingStation}
-                      keyExtractor={(item) => item.id}
-                      renderItem={renderSearching}
-                    />
+                    searchingStation.map((item) => renderSearching(item))
                   ) : (
                     <View style={styles.dropdownNoneItem}>
                       <Text style={styles.dropdownNoneText}>
@@ -187,7 +182,7 @@ function LocationOptions(props) {
                   <Image
                     source={{ uri: stationInfo.image }}
                     style={{
-                      width: 330,
+                      width: 350,
                       height: 300,
                       borderRadius: 8,
                       marginBottom: 8,
@@ -214,10 +209,26 @@ function LocationOptions(props) {
                 </View>
               )}
             </View>
+            <View style={styles.checkboxContainer}>
+              <View style={styles.checkbox}>
+                <Checkbox
+                  status={isDefault ? "checked" : "unchecked"}
+                  onPress={() => setIsDefault(!isDefault)}
+                  color={Colors.primaryGreen700}
+                />
+              </View>
+              <Title color={Colors.primaryGreen700}>
+                Đặt làm địa chỉ mặc định?
+              </Title>
+            </View>
           </View>
           <View style={styles.btnContainer}>
             <View style={[DefaultTheme.btnView, { marginRight: 4 }]}>
-              <MainButton onPress={props.onPress(apartmentInfo, stationInfo)}>
+              <MainButton
+                onPress={() =>
+                  props.onPress(apartmentInfo, stationInfo, isDefault)
+                }
+              >
                 Lưu
               </MainButton>
             </View>
@@ -225,8 +236,8 @@ function LocationOptions(props) {
               <MainButton onPress={props.onCancel}>Huỷ bỏ</MainButton>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </Modal>
   );
 }
@@ -234,13 +245,8 @@ function LocationOptions(props) {
 export default LocationOptions;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    marginTop: 40,
-    backgroundColor: DefaultTheme.bgColor,
-  },
   modalView: {
+    marginBottom: 4,
     padding: 12,
     borderRadius: 20,
     borderColor: "green",
@@ -256,7 +262,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   title: {
-    margin: 20,
+    marginTop: 60,
+    marginBottom: 12,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -325,9 +332,24 @@ const styles = StyleSheet.create({
   txtInput: {
     color: DefaultTheme.btnColor700,
   },
+  checkboxContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  checkbox: {
+    padding: 2,
+    marginRight: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.primaryGreen700,
+  },
   btnContainer: {
     flexDirection: "row",
-    marginTop: 16,
+    marginHorizontal: 32,
+    marginTop: 12,
+    marginBottom: 20,
     justifyContent: "center",
     alignItems: "center",
   },

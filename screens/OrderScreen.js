@@ -5,33 +5,44 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
+import CardHeaderInfo from "../components/common/card/CardHeaderInfo";
+import CardFooter from "../components/common/card/CardFooter";
 import { DefaultTheme } from "../themes/DefaultTheme";
+import { Colors } from "../constants/colors";
+import GroupItems from "../components/common/GroupItems";
 
 function OrderScreen() {
   const navigation = useNavigation();
 
+  function onPaymentHandler() {
+    console.log("Successfully paid");
+  }
+
   return (
     <SafeAreaView style={DefaultTheme.root}>
-      <View style={styles.headerContainer}>
-        <Text>Chốt đơn</Text>
-        <View>
-          <Text>Thông tin nhận hàng</Text>
-          <Text>Nhật Trường - số điện thoại</Text>
-          <Text>
-            Trạm nhận hàng số A-01, hầm 01, toà A, Chung cư Vinhomes Royal, Khu
-            nhà giày, Phường Long Thạn Mỹ, Quận Thủ Đức, Thành phố Hồ Chí Minh.
-          </Text>
-        </View>
-      </View>
-      <View style={styles.bodyContainer}>
-        <View>
-          <Text>San pham 1</Text>
-        </View>
-      </View>
+      <CardHeaderInfo />
+
+      <ScrollView
+        style={[
+          DefaultTheme.scrollContainer,
+          DefaultTheme.flex_1,
+          { paddingTop: 12 },
+        ]}
+      >
+        <GroupItems />
+      </ScrollView>
+
+      <CardFooter
+        txtLabel="Tổng số tiền: "
+        txtValue="247.990"
+        onPress={onPaymentHandler}
+        btnLabel="Xác nhận"
+      />
     </SafeAreaView>
   );
 }
@@ -39,9 +50,6 @@ function OrderScreen() {
 export default OrderScreen;
 
 const styles = StyleSheet.create({
-  headerContainer: {},
-  bodyContainer: {},
-  container: {},
   bodyContent: {},
   textContent: {},
 });

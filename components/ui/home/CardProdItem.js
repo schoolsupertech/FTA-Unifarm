@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useContext, useLayoutEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -13,11 +13,13 @@ import CartBtn from "../../common/button/CartBtn";
 import Title from "../../common/text/Title";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
 import { BASE_URL } from "../../../api/config";
+import { AuthContext } from "../../../context/AuthContext";
 
-function CardProdItem(props) {
+function CardProdItem(props, { key }) {
   const navigation = useNavigation();
   const [isCartAdded, setIsCartAdded] = useState(false);
   const [prodItemImgsInfo, setProdItemImgsInfo] = useState(null);
+  const { authState } = useContext(AuthContext);
 
   function selectedProductDetailHandler() {
     navigation.navigate("ProductDetail", {
@@ -51,8 +53,10 @@ function CardProdItem(props) {
   }, [isCartAdded]);
 
   function onToggleSnackBar() {
-    setIsCartAdded(!isCartAdded);
-    console.log("ID Product: " + props.id + "; isCartAdded: " + isCartAdded);
+    if (authState?.authenticated) {
+      setIsCartAdded(!isCartAdded);
+      console.log("ID Product: " + props.id + "; isCartAdded: " + isCartAdded);
+    }
   }
 
   function imgCoverHandler() {
@@ -81,7 +85,7 @@ function CardProdItem(props) {
   }
 
   return (
-    <TouchableOpacity onPress={selectedProductDetailHandler}>
+    <TouchableOpacity key={key} onPress={selectedProductDetailHandler}>
       <Card style={styles.container}>
         <Card.Content style={styles.content}>
           {prodItemImgsInfo ? (

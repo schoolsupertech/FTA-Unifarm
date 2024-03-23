@@ -34,7 +34,8 @@ export const AuthProvider = ({ children }) => {
       const response = await API.customRequest(
         "get",
         "/aboutMe",
-        authState?.token,
+        null,
+        authState.token,
       );
       setUserInfo(response);
       AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
@@ -219,12 +220,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const tokenStorage = await AsyncStorage.getItem("TOKEN_KEY");
 
-      console.log("Token storage: " + JSON.stringify(tokenStorage, null, 2));
-
       if (tokenStorage !== null) {
         const data = JSON.parse(tokenStorage);
         const userInfo = await AsyncStorage.getItem("userInfo");
         const userInfoJsonParse = JSON.parse(userInfo);
+
+        console.log("Token storage: " + JSON.stringify(data, null, 2));
 
         setAuthState({
           token: data.token,

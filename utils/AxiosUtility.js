@@ -79,19 +79,35 @@ const createAxios = () => {
       });
   };
 
-  const customRequest = async (method, endpoint, token) => {
-    return await api
-      .request({
-        method: method,
-        url: endpoint,
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => res.data)
-      .catch((e) => {
-        return e;
-      });
+  const customRequest = async (method, endpoint, data, token) => {
+    if (data !== null) {
+      return await api
+        .request({
+          method: method,
+          url: endpoint,
+          data: data,
+          headers: {
+            Authorization: "Bearer: " + token,
+          },
+        })
+        .then((res) => res.data)
+        .catch((e) => {
+          return e;
+        });
+    } else {
+      return await api
+        .request({
+          method: method,
+          url: endpoint,
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        })
+        .then((res) => res.data)
+        .catch((e) => {
+          return e;
+        });
+    }
   };
 
   return {
