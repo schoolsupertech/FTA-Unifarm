@@ -45,7 +45,7 @@ function ChipContent({ chipData, onChipSelected }) {
 
     return (
       <Chip
-        mode={selectedProds.includes(item.id) ? "outlined" : "flat"}
+        mode={"outlined"}
         selected={selectedProds.includes(item.id)}
         selectedColor={Colors.primaryGreen800}
         style={[styles.chip, { backgroundColor: Colors.primaryGreen100 }]}

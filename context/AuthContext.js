@@ -5,10 +5,8 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 
 import createAxios from "../utils/AxiosUtility";
-import { BASE_URL } from "../api/config";
 
 const API = createAxios();
 
@@ -17,7 +15,6 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  const [productsInfo, setProductsInfo] = useState(null);
   const [authState, setAuthState] = useState({
     token: "",
     authenticated: false,
@@ -43,86 +40,6 @@ export const AuthProvider = ({ children }) => {
 
     authState?.authenticated && fetchUserInfo();
   }, [authState]);
-
-  const products = () => {
-    setIsLoading(true);
-    axios
-      .get(BASE_URL + "/products")
-      .then((res) => {
-        let productsInfo = res.data;
-        setProductsInfo(productsInfo.payload);
-      })
-      .catch((e) => {
-        console.log("An error occurred while loading API-products: " + e);
-        console.log("Message: " + e.response.status);
-      });
-    setIsLoading(false);
-  };
-
-  // const prodsItem = async () => {
-  //   setIsLoading(true);
-  //
-  //   await axios
-  //     .get(BASE_URL + "/categories-recommends")
-  //     .then((res) => {
-  //       let categoriesInfo = res.data;
-  //       let categoryRecomId = categoriesInfo.payload
-  //         .filter((items) => items.name.toLowerCase().includes("nổi bật"))
-  //         .map((item) => item.id);
-  //       categoryRecomId &&
-  //         axios
-  //           .get(BASE_URL + "/category/" + categoryRecomId + "/products")
-  //           .then((res) => {
-  //             let prodsInfo = res.data;
-  //             let prodRecomId = prodsInfo.payload.map((item) => item.id);
-  //             prodRecomId &&
-  //               axios
-  //                 .get(BASE_URL + "/product/" + prodRecomId + "/product-items")
-  //                 .then((res) => {
-  //                   let prodsItemInfo = res.data;
-  //                   setProdsItemInfo(prodsItemInfo.payload);
-  //                 })
-  //                 .catch((e) => {
-  //                   console.log(
-  //                     "An error occurred while loading API-prodsItem: " + e,
-  //                   );
-  //                   console.log("Message: " + e.response.status);
-  //                 });
-  //           })
-  //           .catch((e) => {
-  //             console.log("An error occurred while loading API-prods: " + e);
-  //             console.log("Message: " + e.response.status);
-  //           });
-  //     })
-  //     .catch((e) => {
-  //       console.log(
-  //         `An error occurred while loading API-categories_recommends: ${e}`,
-  //       );
-  //       console.log(`Message: ${e.response.status}`);
-  //     });
-  //
-  //   setIsLoading(false);
-  // };
-
-  // const prodItemDetail = async (prodItemId) => {
-  //   setIsLoading(true);
-  //
-  //   await axios
-  //     .get(BASE_URL + "/product-item" + prodItemId)
-  //     .then((res) => {
-  //       let prodItemDetailInfo = res.data;
-  //       setProdItemInfo(prodItemDetailInfo.payload);
-  //       console.log(
-  //         "prodItemDetailInfo: " + JSON.stringify(prodItemDetailInfo.payload),
-  //       );
-  //     })
-  //     .catch((e) => {
-  //       console.log("An error occurred while loading API-prodItemDetail: " + e);
-  //       console.log("Message: " + e.response.status);
-  //     });
-  //
-  //   setIsLoading(false);
-  // };
 
   const register = async (user) => {
     setIsLoading(true);
@@ -241,7 +158,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     isLoggedIn();
-    products();
   }, []);
 
   const value = {
@@ -252,7 +168,6 @@ export const AuthProvider = ({ children }) => {
     isLoading,
     authState,
     userInfo,
-    productsInfo,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,11 +1,11 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { View, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 
+import TopHeader from "../components/common/headers/TopHeader";
 import CardCatItem from "../components/ui/categories/CardCatItem";
-import LogoTitle from "../themes/LogoTitle";
 import createAxios from "../utils/AxiosUtility";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { Colors } from "../constants/colors";
@@ -17,12 +17,15 @@ function CategoriesScreen() {
   const navigation = useNavigation();
   const [searchPrd, setSearchPrd] = useState("");
   const [categoriesInfo, setCategoriesInfo] = useState(null);
+  const { authState } = useContext(AuthContext);
 
   useEffect(() => {
     const categoriesDataResponse = async () => {
       const response = await API.get("/categories");
       if (response) {
-        setCategoriesInfo(response.payload);
+        setCategoriesInfo(
+          response.payload.filter((item) => item.status === "Active"),
+        );
       }
     };
 
@@ -33,6 +36,7 @@ function CategoriesScreen() {
     function selectedCatListProdHandler() {
       navigation.navigate("CatListProdScreen", {
         catRecomId: itemData.item.id,
+        catRecomName: itemData.item.name,
       });
     }
 
@@ -59,16 +63,25 @@ function CategoriesScreen() {
         colors={["white", Colors.primaryGreen900]}
         style={DefaultTheme.linearGradient}
       >
-        <View style={styles.headerContainer}>
-          <LogoTitle />
-        </View>
-        <Searchbar
-          theme={DefaultTheme.searchbar}
-          placeholder="Tìm kiếm danh mục"
-          elevation={3}
-          value={searchPrd}
-          onChangeText={(prodSearch) => setSearchPrd(prodSearch)}
+        <TopHeader
+          onCartIconPress={() => {
+            authState?.authenticated
+              ? navigation.navigate("CartScreen")
+              : navigation.navigate("Profile");
+          }}
+          onNotiIconPress={() => {
+            navigation.navigate("Notification");
+          }}
         />
+        <View style={{ marginTop: 8 }}>
+          <Searchbar
+            theme={DefaultTheme.searchbar}
+            placeholder="Tìm kiếm danh mục"
+            elevation={3}
+            value={searchPrd}
+            onChangeText={(prodSearch) => setSearchPrd(prodSearch)}
+          />
+        </View>
       </LinearGradient>
       <FlatList
         data={categoriesInfo}
@@ -82,16 +95,4 @@ function CategoriesScreen() {
 
 export default CategoriesScreen;
 
-const styles = StyleSheet.create({
-  headerContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    marginTop: 4,
-    marginBottom: 8,
-    height: 45,
-  },
-  linearGradient: {
-    width: "100%",
-    padding: 20,
-  },
-});
+const styles = StyleSheet.create({});

@@ -5,62 +5,73 @@ import { useNavigation } from "@react-navigation/native";
 
 import ChipContent from "../components/ui/categories/ChipContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
+import createAxios from "../utils/AxiosUtility";
 import { CHIPCATEGORYCONTENT } from "../constants/chipCategoryContent";
 import { CATEGORIES, PRODUCTS } from "../data/Data-Template";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import axios from "axios";
 import { BASE_URL } from "../api/config";
 
+const API = createAxios();
+
 function CatListProdScreen({ route }) {
   const navigation = useNavigation();
   const catRecomId = route.params.catRecomId;
+  const catRecomName = route.params.catRecomName;
   const [prodsInfo, setProdsInfo] = useState(null);
   const [selectedChips, setSelectedChips] = useState(null);
   const [prodItemsInfo, setProdItemsInfo] = useState([]);
   const [onCartAdded, setOnCartAdded] = useState(false);
 
-  console.log("Product Items Info: " + JSON.stringify(prodItemsInfo));
-
   useEffect(() => {
     const fetchProds = async () => {
-      try {
-        const res = await axios.get(
-          BASE_URL + "/category/" + catRecomId + "/products",
-        );
-        let prodsInfo = await res.data;
-        setProdsInfo([CHIPCATEGORYCONTENT, ...prodsInfo.payload]);
-      } catch (e) {
-        console.log(
-          "An error occurred while loading API-category/{id}/products: " + e,
-        );
-        console.log("Message: " + e.response.message);
-      }
+      const response = await API.get("/category/" + catRecomId + "/products");
+      setProdsInfo([CHIPCATEGORYCONTENT, ...response.payload]);
+      // try {
+      //   const res = await axios.get(
+      //     BASE_URL + "/category/" + catRecomId + "/products",
+      //   );
+      //   let prodsInfo = await res.data;
+      //   setProdsInfo([CHIPCATEGORYCONTENT, ...prodsInfo.payload]);
+      // } catch (e) {
+      //   console.log(
+      //     "An error occurred while loading API-category/{id}/products: " + e,
+      //   );
+      //   console.log("Message: " + e.response.message);
+      // }
     };
 
     fetchProds();
   }, []);
 
   useEffect(() => {
-    const fetchListProdItems = async (prodItemsId) => {
-      await axios
-        .get(BASE_URL + "/product/" + prodItemsId + "/product-items")
-        .then((res) => {
-          let getProdItemsInfo = res.data;
-          setProdItemsInfo((oldItemsInfo) => [
-            ...oldItemsInfo,
-            ...getProdItemsInfo.payload,
-          ]);
-          console.log(
-            "fetchListProdItems: " + JSON.stringify(getProdItemsInfo.payload),
-          );
-        })
-        .catch((e) => {
-          console.log(
-            "An error occurred while loading API-product/{id}/product-items: " +
-              e,
-          );
-          console.log("Message: " + e.response.message);
-        });
+    const fetchListProdItems = async (prodItemId) => {
+      const response = await API.get(
+        "/product/" + prodItemId + "/product-items",
+      );
+      setProdItemsInfo((oldItemsInfo) => [
+        ...oldItemsInfo,
+        ...response.payload,
+      ]);
+      // await axios
+      //   .get(BASE_URL + "/product/" + prodItemsId + "/product-items")
+      //   .then((res) => {
+      //     let getProdItemsInfo = res.data;
+      //     setProdItemsInfo((oldItemsInfo) => [
+      //       ...oldItemsInfo,
+      //       ...getProdItemsInfo.payload,
+      //     ]);
+      //     console.log(
+      //       "fetchListProdItems: " + JSON.stringify(getProdItemsInfo.payload),
+      //     );
+      //   })
+      //   .catch((e) => {
+      //     console.log(
+      //       "An error occurred while loading API-product/{id}/product-items: " +
+      //         e,
+      //     );
+      //     console.log("Message: " + e.response.message);
+      //   });
     };
 
     if (
@@ -68,7 +79,6 @@ function CatListProdScreen({ route }) {
       selectedChips.length === CHIPCATEGORYCONTENT.id &&
       selectedChips.includes(CHIPCATEGORYCONTENT.id)
     ) {
-      console.log("Selected Chips if: " + JSON.stringify(selectedChips));
       prodItemsInfo.length && setProdItemsInfo([]);
       prodsInfo &&
         prodsInfo
@@ -76,7 +86,6 @@ function CatListProdScreen({ route }) {
             (ignoreDefault) => ignoreDefault.id !== CHIPCATEGORYCONTENT.id,
           )
           .map((prodItems) => {
-            console.log("prodItems: " + JSON.stringify(prodItems.id));
             fetchListProdItems(prodItems.id);
           });
     } else if (
@@ -84,38 +93,25 @@ function CatListProdScreen({ route }) {
       selectedChips.length &&
       !selectedChips.includes(CHIPCATEGORYCONTENT.id)
     ) {
-      console.log("Selected Chips Length: " + selectedChips.length);
-      console.log("Selected Chips else if: " + JSON.stringify(selectedChips));
       prodItemsInfo.length && setProdItemsInfo([]);
       selectedChips.map((chip) => {
-        console.log("Chip: " + JSON.stringify(chip));
         fetchListProdItems(chip);
       });
     } else {
-      console.log("Selected Chips else: " + JSON.stringify(selectedChips));
       setProdItemsInfo([]);
     }
   }, [selectedChips]);
 
   useLayoutEffect(() => {
-    axios
-      .get(BASE_URL + "/category/" + catRecomId)
-      .then((res) => {
-        let catRecomDetail = res.data;
-        navigation.setOptions({
-          title: catRecomDetail.payload.name,
-          // headerSearchBarOptions: {
-          //   onChangeText: (event) => console.log(event.nativeEvent.text),
-          //   onSearchButtonPress: (event) =>
-          //     console.log("Search", event.nativeEvent),
-          // },
-        });
-      })
-      .catch((e) => {
-        console.log("An error occurred while loading API-category/{id}: " + e);
-        console.log("Message: " + e.response.status);
-      });
-  }, [catRecomId, navigation]);
+    navigation.setOptions({
+      title: catRecomName,
+      // headerSearchBarOptions: {
+      //   onChangeText: (event) => console.log(event.nativeEvent.text),
+      //   onSearchButtonPress: (event) =>
+      //     console.log("Search", event.nativeEvent),
+      // },
+    });
+  }, [navigation]);
 
   // useEffect(() => {
   //   const unsubcribe = navigation.getParent().addListener("tabPress", (e) => {
@@ -224,6 +220,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   chipContainer: {
+    marginVertical: 12,
     marginHorizontal: 10,
     padding: 8,
     justifyContent: "center",

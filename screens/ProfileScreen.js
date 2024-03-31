@@ -29,9 +29,6 @@ import AuthStack from "../navigators/AuthStack";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
-import createAxios from "../utils/AxiosUtility";
-
-const API = createAxios();
 
 function ProfileScreen() {
   const navigation = useNavigation();
@@ -74,7 +71,9 @@ function ProfileScreen() {
                   userInfo?.photo !== undefined
                     ? userInfo.photo
                     : userInfo?.avatar !== undefined
-                      ? userInfo?.avatar
+                      ? userInfo?.avatar !== null
+                        ? userInfo?.avatar
+                        : "https://media.istockphoto.com/id/1533794626/vi/anh/bi%E1%BB%83u-c%E1%BA%A3m-vui-m%E1%BB%ABng-%E1%BA%A3nh-minh-h%E1%BB%8Da.jpg?s=2048x2048&w=is&k=20&c=VRqbg2wcGBhmm3SdmhhIc-Si_PHM-5jKBfebhTRon3Q="
                       : "https://media.istockphoto.com/id/1533794626/vi/anh/bi%E1%BB%83u-c%E1%BA%A3m-vui-m%E1%BB%ABng-%E1%BA%A3nh-minh-h%E1%BB%8Da.jpg?s=2048x2048&w=is&k=20&c=VRqbg2wcGBhmm3SdmhhIc-Si_PHM-5jKBfebhTRon3Q=",
               }}
               style={styles.avatar}
@@ -251,7 +250,7 @@ const styles = StyleSheet.create({
     marginTop: 28,
   },
   textDisplay: {
-    color: Colors.primaryGreen100,
+    color: Colors.primaryGreen50,
     fontWeight: "bold",
     fontSize: 18,
   },

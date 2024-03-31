@@ -2,26 +2,24 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { Badge, IconButton, Searchbar, Snackbar } from "react-native-paper";
+import { Searchbar, Snackbar } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Carousel from "react-native-snap-carousel";
-import axios from "axios";
 
 import BannerNewsLettersSlider from "../components/ui/home/BannerNewsLettersSlider";
+import TopHeader from "../components/common/headers/TopHeader";
 import LocationOptions from "../components/ui/home/LocationOptions";
 import PopularCategories from "../components/common/list/PopularCategories";
 import HeaderContent from "../components/common/HeaderContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
-import LogoTitle from "../themes/LogoTitle";
 import createAxios from "../utils/AxiosUtility";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { Colors } from "../constants/colors";
@@ -178,6 +176,7 @@ function HomeScreen() {
     function selectedCategoryHandler() {
       navigation.navigate("CatListProdScreen", {
         catRecomId: item.id,
+        catRecomName: item.name,
       });
     }
 
@@ -245,73 +244,54 @@ function HomeScreen() {
         colors={["white", Colors.primaryGreen900]}
         style={styles.linearGradient}
       >
-        <View style={styles.headerContainer}>
-          <LogoTitle />
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              style={{ marginEnd: 16 }}
-              onPress={() => {
-                authState?.authenticated
-                  ? navigation.navigate("CartScreen")
-                  : navigation.navigate("Profile");
-              }}
-            >
-              <Ionicons
-                name="bag-outline"
-                color={Colors.primaryGreen700}
-                size={24}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ marginEnd: 4 }}
-              onPress={() => {
-                navigation.navigate("Notification");
-              }}
-            >
-              <Ionicons
-                name="notifications"
-                color={Colors.primaryGreen700}
-                size={24}
-              />
-              <Badge style={{ position: "absolute", top: -6, right: -12 }}>
-                3
-              </Badge>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <TopHeader
+          onCartIconPress={() => {
+            authState?.authenticated
+              ? navigation.navigate("CartScreen")
+              : navigation.navigate("Profile");
+          }}
+          onNotiIconPress={() => {
+            navigation.navigate("Notification");
+          }}
+        />
         <View style={styles.headerLocation}>
-          <View>
+          <View style={styles.headerLocationContent}>
+            <Ionicons
+              name="location"
+              color={Colors.primaryGreen800}
+              size={24}
+            />
             <Text
               style={{
+                fontSize: 16,
+                fontWeight: "700",
                 color: Colors.primaryGreen800,
               }}
             >
-              Vị trí
+              Vị trí:{" "}
             </Text>
-            <TouchableOpacity
-              onPress={() =>
-                authState?.authenticated &&
-                setLocationModalVisible({
-                  ...locationModalVisible,
-                  isVisible: true,
-                  status: 0,
-                })
-              }
-            >
-              <Text style={styles.textLocation}>
-                Thủ Đức, Tp. Hồ Chí Minh <Ionicons name="arrow-down" />
-              </Text>
-            </TouchableOpacity>
-            <LocationOptions
-              visible={locationModalVisible}
-              onPress={updateLocationHandler}
-              onCancel={onCancelUpdateLocationHandler}
-            />
           </View>
-          <View>
-            <Text>Holder</Text>
-          </View>
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() =>
+              authState?.authenticated &&
+              setLocationModalVisible({
+                ...locationModalVisible,
+                isVisible: true,
+                status: 0,
+              })
+            }
+          >
+            <Text style={styles.textLocation}>
+              Thủ Đức, Tp. Hồ Chí Minh <Ionicons name="arrow-down" />
+            </Text>
+          </TouchableOpacity>
         </View>
+        <LocationOptions
+          visible={locationModalVisible}
+          onPress={updateLocationHandler}
+          onCancel={onCancelUpdateLocationHandler}
+        />
         <Searchbar
           placeholder="Tìm kiếm sản phẩm"
           elevation={3}
@@ -323,14 +303,14 @@ function HomeScreen() {
           // }
         />
         <View style={styles.headerMenu}>
-          <View>
-            <Text style={styles.textMenu}>Thực đơn:</Text>
-          </View>
-          <View>
-            <Text style={styles.textMenu}>
-              Hôm nay (ngày 26 tháng 01 năm 2024)
+          <Text style={styles.textMenu}>
+            <Text style={{ fontWeight: "600" }}>
+              Hôm nay:{" "}
+              <Text style={{ textDecorationLine: "underline" }}>
+                Ngày 26 tháng 01 năm 2024
+              </Text>
             </Text>
-          </View>
+          </Text>
         </View>
       </LinearGradient>
 
@@ -358,26 +338,22 @@ function HomeScreen() {
           >
             Danh mục phổ biến
           </HeaderContent>
-          {
-            categoriesRecommendsInfo && (
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-              >
-                {categoriesRecommendsInfo.map((item) =>
-                  renderPopularCategories(item),
-                )}
-              </ScrollView>
-            )
-          }
+          {categoriesRecommendsInfo && (
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              {categoriesRecommendsInfo.map((item) =>
+                renderPopularCategories(item),
+              )}
+            </ScrollView>
+          )}
         </View>
 
         {/* Danh sách sản phẩm */}
         <View style={styles.contentView}>
           <HeaderContent>Sản phẩm khuyên dùng</HeaderContent>
-          {
-            prodItemsInfo?.map((item) => renderProdItem(item))
-          }
+          {prodItemsInfo?.map((item) => renderProdItem(item))}
         </View>
       </ScrollView>
       <Snackbar
@@ -411,32 +387,32 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
   },
-  headerContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 4,
-    marginBottom: 8,
-    height: 45,
-  },
   headerLocation: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "center",
-    marginBottom: 12,
+    marginVertical: 12,
+  },
+  headerLocationContent: {
+    marginLeft: 8,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   textLocation: {
-    color: Colors.primaryGreen700,
+    fontSize: 14,
+    color: Colors.primaryGreen800,
     textDecorationLine: "underline",
   },
   headerMenu: {
     width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     marginTop: 12,
   },
   textMenu: {
+    fontSize: 14,
     color: Colors.primaryGreen100,
   },
   contentView: {
