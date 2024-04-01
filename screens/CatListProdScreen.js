@@ -27,18 +27,6 @@ function CatListProdScreen({ route }) {
     const fetchProds = async () => {
       const response = await API.get("/category/" + catRecomId + "/products");
       setProdsInfo([CHIPCATEGORYCONTENT, ...response.payload]);
-      // try {
-      //   const res = await axios.get(
-      //     BASE_URL + "/category/" + catRecomId + "/products",
-      //   );
-      //   let prodsInfo = await res.data;
-      //   setProdsInfo([CHIPCATEGORYCONTENT, ...prodsInfo.payload]);
-      // } catch (e) {
-      //   console.log(
-      //     "An error occurred while loading API-category/{id}/products: " + e,
-      //   );
-      //   console.log("Message: " + e.response.message);
-      // }
     };
 
     fetchProds();

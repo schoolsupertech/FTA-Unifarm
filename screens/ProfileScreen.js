@@ -29,10 +29,22 @@ import AuthStack from "../navigators/AuthStack";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
+import GridTile from "../components/ui/profile/GridTile";
+import LocationOptions from "../components/ui/home/LocationOptions";
 
 function ProfileScreen() {
   const navigation = useNavigation();
   const { authState, userInfo, logout } = useContext(AuthContext);
+  const [modalVisible, setModalVisible] = useState({
+    isVisible: false,
+    status: 0,
+  });
+
+  function modalWalletHandler() {
+    navigation.navigate("WalletScreen", {
+      wallet: userInfo.wallet,
+    });
+  }
 
   if (authState?.authenticated) {
     return (
@@ -99,104 +111,89 @@ function ProfileScreen() {
             <HeaderContent onPress={() => {}} label={"Xem tất cả"} icon={true}>
               Đơn hàng của bạn
             </HeaderContent>
+
             <GrayLine />
 
-            <View style={styles.orderContent}>
-              <View style={styles.orderViewContent}>
-                <TouchableOpacity style={styles.orderView}>
-                  <FontAwesome5 name="people-carry" size={30} color="gray" />
-                  <Text style={styles.orderTextView}>Chờ vận{"\n"}chuyển</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.orderView}>
-                  <FontAwesome5 name="shipping-fast" size={30} color="gray" />
-                  <Text style={styles.orderTextView}>Đang vận{"\n"}chuyển</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.orderView}>
-                  <MaterialCommunityIcons
-                    name="book-check-outline"
-                    size={30}
-                    color="gray"
-                  />
-                  <Text style={styles.orderTextView}>Đã nhận{"\n"}hàng</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.orderView}>
-                  <Fontisto
-                    name="spinner-rotate-forward"
-                    size={30}
-                    color="gray"
-                  />
-                  <Text style={styles.orderTextView}>Đổi trả{"\n"}hàng</Text>
-                </TouchableOpacity>
-              </View>
-
-              <GrayLine />
-
-              <View style={[styles.orderView, { width: "100%" }]}>
-                <TouchableOpacity style={styles.orderLineViewContent}>
-                  <View style={styles.orderInnerViewContent}>
-                    <AntDesign name="user" size={28} color="black" />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Thông tin của bạn</Text>
-                    </View>
-                  </View>
-                  <AntDesign name="right" size={24} color="gray" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.orderLineViewContent}>
-                  <View style={styles.orderInnerViewContent}>
-                    <Ionicons name="pin-outline" size={28} color="black" />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Sổ địa chỉ</Text>
-                    </View>
-                  </View>
-                  <AntDesign name="right" size={24} color="gray" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.orderLineViewContent}>
-                  <View style={styles.orderInnerViewContent}>
-                    <Entypo name="heart-outlined" size={28} color="black" />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Yêu Thích</Text>
-                    </View>
-                  </View>
-                  <AntDesign name="right" size={24} color="gray" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.orderLineViewContent}>
-                  <View style={styles.orderInnerViewContent}>
-                    <AntDesign name="book" size={28} color="black" />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Đơn mua</Text>
-                    </View>
-                  </View>
-                  <AntDesign name="right" size={24} color="gray" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.orderLineViewContent}>
-                  <View style={styles.orderInnerViewContent}>
-                    <Feather name="star" size={28} color="black" />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Đánh giá</Text>
-                    </View>
-                  </View>
-                  <AntDesign name="right" size={24} color="gray" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.orderLineViewContent}>
-                  <View style={styles.orderInnerViewContent}>
-                    <MaterialCommunityIcons
-                      name="history"
-                      size={28}
-                      color="black"
-                    />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Lịch sử mua hàng</Text>
-                    </View>
-                  </View>
-                  <AntDesign name="right" size={24} color="gray" />
-                </TouchableOpacity>
-              </View>
+            <View style={styles.orderViewContent}>
+              <TouchableOpacity style={styles.orderView}>
+                <FontAwesome5 name="people-carry" size={30} color="gray" />
+                <Text style={styles.orderTextView}>Chờ vận{"\n"}chuyển</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.orderView}>
+                <FontAwesome5 name="shipping-fast" size={30} color="gray" />
+                <Text style={styles.orderTextView}>Đang vận{"\n"}chuyển</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.orderView}>
+                <MaterialCommunityIcons
+                  name="book-check-outline"
+                  size={30}
+                  color="gray"
+                />
+                <Text style={styles.orderTextView}>Đã nhận{"\n"}hàng</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.orderView}>
+                <Fontisto
+                  name="spinner-rotate-forward"
+                  size={30}
+                  color="gray"
+                />
+                <Text style={styles.orderTextView}>Đổi trả{"\n"}hàng</Text>
+              </TouchableOpacity>
             </View>
+
+            <GrayLine />
+
+            <GridTile
+              icon={<AntDesign name="user" size={24} color="black" />}
+              onPress={() => {}}
+            >
+              Thông tin của bạn
+            </GridTile>
+            <GridTile
+              icon={
+                <MaterialCommunityIcons
+                  name="map-marker-radius-outline"
+                  size={24}
+                  color="black"
+                />
+              }
+              onPress={() => {}}
+            >
+              Sổ địa chỉ
+            </GridTile>
+            {/*
+             <LocationOptions
+              visible={false}
+              onPress={() => {}}
+              onCancel={() => {}}
+            />
+            */}
+
+            <GridTile
+              icon={<AntDesign name="wallet" size={24} color="black" />}
+              onPress={modalWalletHandler}
+            >
+              Ví tiền của bạn
+            </GridTile>
+
+            <GridTile
+              icon={<Entypo name="heart-outlined" size={24} color="black" />}
+              onPress={() => {}}
+            >
+              Yêu thích
+            </GridTile>
+            <GridTile
+              icon={
+                <MaterialCommunityIcons
+                  name="history"
+                  size={24}
+                  color="black"
+                />
+              }
+              onPress={() => {}}
+            >
+              Lịch sử mua hàng
+            </GridTile>
           </View>
           <View style={styles.gridItem}>
             <MainButton onPress={logout}>Đăng xuất</MainButton>
@@ -255,9 +252,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   orderContainer: {
-    backgroundColor: Colors.primaryGreen50,
-    width: "100%",
     flex: 1,
+    width: "100%",
+    backgroundColor: Colors.primaryGreen50,
     padding: 20,
     borderRadius: 12,
   },
@@ -268,7 +265,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   orderContent: {
-    flex: 1,
     width: "100%",
   },
   textScrollHeader: {
@@ -287,16 +283,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  orderLineViewContent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "75%",
-    padding: 8,
-    marginBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "gray",
-  },
   orderView: {
     alignItems: "center",
     justifyContent: "center",
@@ -305,11 +291,6 @@ const styles = StyleSheet.create({
   orderTextView: {
     fontSize: 12,
     marginTop: 4,
-  },
-  orderInnerViewContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
   },
   scrollViewDetail1: {
     flexDirection: "row",

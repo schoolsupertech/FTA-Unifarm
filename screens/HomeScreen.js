@@ -50,25 +50,33 @@ function HomeScreen() {
         const prodItemsInfoResponse = await API.get(
           "/product/" + prodItemId + "/product-items",
         );
-        // const newProdItemsInfo = Object.fromEntries(
-        //   Object.entries(prodItemsInfo),
-        // );
-        setProdItemsInfo((oldProdItemsInfo) => [
-          ...oldProdItemsInfo,
-          ...prodItemsInfoResponse.payload,
-        ]);
+        const isDuplicate = prodItemsInfo.some(
+          (items) =>
+            items.id ===
+            prodItemsInfoResponse.payload.map((prodId) => prodId.id),
+        );
+
+        !isDuplicate &&
+          setProdItemsInfo((oldProdItemsInfo) => [
+            ...oldProdItemsInfo,
+            ...prodItemsInfoResponse.payload,
+          ]);
       };
 
       const catRecomResponse = await API.get("/categories-recommends");
-      setCategoriesRecommendsInfo(catRecomResponse.payload);
+      setCategoriesRecommendsInfo(
+        catRecomResponse.payload.filter(
+          (category) => category.displayIndex <= 5,
+        ),
+      );
 
-      let categoryRecomId = catRecomResponse.payload
-        .filter((items) => items.name.toLowerCase().includes("nổi bật"))
-        .map((item) => item.id);
+      let categoryRecomId = catRecomResponse.payload.find((items) =>
+        items.name.toLowerCase().includes("nổi bật"),
+      );
 
       if (categoryRecomId) {
         const prodsInfoResponse = await API.get(
-          "/category/" + categoryRecomId + "/products",
+          "/category/" + categoryRecomId.id + "/products",
         );
         prodsInfoResponse.payload.map((item) => {
           fetchProdItems(item.id);
@@ -222,7 +230,7 @@ function HomeScreen() {
 
     return (
       <CardProdItem
-        key={prodItemsInfo.id}
+        key={prodItemProps.id}
         {...prodItemProps}
         onAddingCart={AddingCartHandler}
       />

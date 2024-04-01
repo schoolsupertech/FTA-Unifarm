@@ -21,12 +21,13 @@ function CategoriesScreen() {
 
   useEffect(() => {
     const categoriesDataResponse = async () => {
-      const response = await API.get("/categories");
-      if (response) {
-        setCategoriesInfo(
-          response.payload.filter((item) => item.status === "Active"),
-        );
-      }
+      const response = await API.get("/categories-recommends");
+      // if (response) {
+      //   setCategoriesInfo(
+      //     response.payload.filter((item) => item.status === "Active"),
+      //   );
+      // }
+      setCategoriesInfo(response.payload);
     };
 
     categoriesDataResponse();

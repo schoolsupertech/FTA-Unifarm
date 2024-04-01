@@ -30,11 +30,20 @@ function CardItem({ item }) {
       </View>
       <View style={styles.itemsContainer}>
         <View style={{ marginRight: 12 }}>
-          <Image source={item.image} style={styles.image} />
+          <Image
+            source={{
+              uri: item.productImages
+                .filter((images) => images.displayIndex === 1)
+                .map((image) => image.imageUrl),
+            }}
+            style={styles.image}
+          />
         </View>
         <View style={[DefaultTheme.flex_1, { marginRight: 12 }]}>
-          <Text style={styles.textName}>{item.name}</Text>
-          <Text style={styles.textPrice}>30.000 vnđ / quả</Text>
+          <Text style={styles.textName}>{item.title}</Text>
+          <Text style={styles.textPrice}>
+            {item.price} vnđ / {item.unit}
+          </Text>
         </View>
         <View style={styles.selectingQuantity}>
           <TouchableOpacity

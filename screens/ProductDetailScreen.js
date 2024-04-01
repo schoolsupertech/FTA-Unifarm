@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Card, Badge, Text as PaperText, Snackbar } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
-import axios from "axios";
 
 import GrayLine from "../components/common/text/GrayLine";
 import Ellipsis from "../components/common/text/Ellipsis";
@@ -18,10 +17,13 @@ import ProdMoreInfo from "../components/common/list/ProdMoreInfo";
 import SwiperSlide from "../components/ui/product/SwiperSlide";
 import RatingStar from "../components/common/RatingStar";
 import MainButton from "../components/common/button/MainButton";
+import createAxios from "../utils/AxiosUtility";
+import { addToCart } from "../context/redux/actions/cartActions";
 import { Colors } from "../constants/colors";
-import { BASE_URL } from "../api/config";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
+
+const API = createAxios();
 
 function ProductDetailScreen({ route, navigation }) {
   const prodItemId = route.params.prodItemId;
@@ -31,20 +33,12 @@ function ProductDetailScreen({ route, navigation }) {
   const [snackbarLabel, setSnackbarLabel] = useState("");
   const { authState } = useContext(AuthContext);
 
-  const fetchProdItemData = async () => {
-    await axios
-      .get(BASE_URL + "/product-item/" + prodItemId)
-      .then((res) => {
-        let prodItemDetailInfo = res.data;
-        setSelectedProd(prodItemDetailInfo.payload);
-      })
-      .catch((e) => {
-        console.log("An error occurred while loading API-prodItemDetail: " + e);
-        console.log("Message: " + e.response.status);
-      });
-  };
-
   useEffect(() => {
+    const fetchProdItemData = async () => {
+      const response = await API.get("/product-item/" + prodItemId);
+      response && setSelectedProd(response.payload);
+    };
+
     fetchProdItemData();
   }, []);
 
@@ -92,6 +86,7 @@ function ProductDetailScreen({ route, navigation }) {
       setCount(count + 1);
     }
   }
+
   function minusCountHandler() {
     if (count > 1) {
       setCount(count - 1);
@@ -100,6 +95,10 @@ function ProductDetailScreen({ route, navigation }) {
 
   function addingCartHandler() {
     if (authState?.authenticated) {
+      addToCart({
+        id: selectedProd.id,
+        qty: count,
+      });
       setVisible(true);
       setSnackbarLabel("Đã thêm vào giỏ hàng");
     } else {

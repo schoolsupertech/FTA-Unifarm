@@ -1,36 +1,45 @@
 import React from "react";
-import { View, Text, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
 
 import CardHeaderInfo from "../components/common/card/CardHeaderInfo";
 import CardFooter from "../components/common/card/CardFooter";
+import CardCartItem from "../components/ui/cart/CardCartItem";
+import rootReducer from "../context/redux/reducers";
 import { DefaultTheme } from "../themes/DefaultTheme";
-import GroupItems from "../components/common/GroupItems";
+
+const cartStore = configureStore({
+  reducer: rootReducer,
+});
 
 function CartScreen() {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView style={DefaultTheme.root}>
-      <CardHeaderInfo />
+    <Provider store={cartStore}>
+      <SafeAreaView style={DefaultTheme.root}>
+        <CardHeaderInfo />
 
-      <ScrollView
-        style={[
-          DefaultTheme.scrollContainer,
-          DefaultTheme.flex_1,
-          { paddingTop: 12 },
-        ]}
-      >
-        <GroupItems />
-      </ScrollView>
+        <ScrollView
+          style={[
+            DefaultTheme.scrollContainer,
+            DefaultTheme.flex_1,
+            { paddingTop: 12 },
+          ]}
+        >
+          <CardCartItem />
+        </ScrollView>
 
-      <CardFooter
-        txtLabel="Tổng số tiền: "
-        txtValue="247.990"
-        onPress={() => navigation.navigate("OrderScreen")}
-        btnLabel="Thanh toán"
-      />
-    </SafeAreaView>
+        <CardFooter
+          txtLabel="Tổng số tiền: "
+          txtValue="247.990"
+          onPress={() => navigation.navigate("OrderScreen")}
+          btnLabel="Thanh toán"
+        />
+      </SafeAreaView>
+    </Provider>
   );
 }
 

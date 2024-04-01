@@ -15,7 +15,7 @@ import { DefaultTheme } from "../../../themes/DefaultTheme";
 import { BASE_URL } from "../../../api/config";
 import { AuthContext } from "../../../context/AuthContext";
 
-function CardProdItem(props, { key }) {
+function CardProdItem(props) {
   const navigation = useNavigation();
   const [isCartAdded, setIsCartAdded] = useState(false);
   const [prodItemImgsInfo, setProdItemImgsInfo] = useState(null);
@@ -85,7 +85,7 @@ function CardProdItem(props, { key }) {
   }
 
   return (
-    <TouchableOpacity key={key} onPress={selectedProductDetailHandler}>
+    <TouchableOpacity onPress={selectedProductDetailHandler}>
       <Card style={styles.container}>
         <Card.Content style={styles.content}>
           {prodItemImgsInfo ? (
