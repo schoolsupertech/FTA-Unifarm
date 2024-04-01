@@ -1,7 +1,8 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, FlatList, StyleSheet, SafeAreaView , TextInput} from "react-native";
 import { ActivityIndicator, Searchbar, Snackbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
 import ChipContent from "../components/ui/categories/ChipContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
@@ -11,6 +12,7 @@ import { CATEGORIES, PRODUCTS } from "../data/Data-Template";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import axios from "axios";
 import { BASE_URL } from "../api/config";
+import { Colors } from "../constants/colors";
 
 const API = createAxios();
 
@@ -164,14 +166,33 @@ function CatListProdScreen({ route }) {
     setOnCartAdded(false);
   }
 
+
   return (
     <SafeAreaView style={DefaultTheme.flex_1}>
-      <Searchbar
+      {/* <Searchbar
         style={styles.searchbar}
-        placeholder="Tìm kiếm sản phẩm trong danh mục"
+        placeholder="Tìm kiếm sản phẩm..."
         elevation={3}
         theme={DefaultTheme.searchbar}
-      />
+      /> */}
+      <View>
+                    <TextInput 
+                  placeholder="Tìm kiếm sản phẩm..."
+                  style={{
+                  backgroundColor: 'white',
+                  paddingLeft: 65,
+                  fontSize: 15,
+                  fontWeight: '500',
+                  padding: 20
+                }}
+                selectionColor={"green"}
+                placeholderTextColor={"grey"}
+                underlineColor="transparent"
+              />
+              <View style={{position: 'absolute', top: 15, left: 25}}>
+                <Ionicons name="search" size={24} color={'green'}/>
+              </View>
+      </View>
       <View style={styles.chipContainer}>
         {/* Filter by Product Type */}
         {prodsInfo && (
@@ -188,12 +209,13 @@ function CatListProdScreen({ route }) {
             data={prodItemsInfo}
             keyExtractor={(item) => item.id}
             renderItem={renderProdItem}
+            showsVerticalScrollIndicator={false}
           />
         ) : (
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <ActivityIndicator size={"large"} />
+            <ActivityIndicator size={"large"} color={Colors.primaryGreen700}/>
           </View>
         )}
       </View>

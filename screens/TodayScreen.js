@@ -13,6 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Carousel from "react-native-snap-carousel";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import BannerNewsLettersSlider from "../components/ui/home/BannerNewsLettersSlider";
 import TopHeader from "../components/common/headers/TopHeader";
@@ -29,7 +30,7 @@ import { AuthContext } from "../context/AuthContext";
 
 const API = createAxios();
 
-function HomeScreen() {
+function TodayScreen() {
   const navigation = useNavigation();
   const { authState } = useContext(AuthContext);
   const [searchPrd, setSearchPrd] = useState("");
@@ -43,7 +44,28 @@ function HomeScreen() {
   const [categoriesRecommendsInfo, setCategoriesRecommendsInfo] =
     useState(null);
   const [prodItemsInfo, setProdItemsInfo] = useState([]);
+  //////////////////////////////
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [datePicked, setDatePicked] = useState(new Date());
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
 
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+  const handleConfirm = (date) => {
+    setDatePicked(date);
+    hideDatePicker();
+  };
+  ///////////////////////////////////////
+
+  function formatDatePicked(datePicked) {
+    const day = datePicked.getDate();
+    const month = datePicked.getMonth() + 1; 
+    const year = datePicked.getFullYear();
+    return `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year}`;
+}
   useEffect(() => {
     const fetchData = async () => {
       const fetchProdItems = async (prodItemId) => {
@@ -239,7 +261,7 @@ function HomeScreen() {
   }
 
   return (
-    <SafeAreaView style={DefaultTheme.root}>
+    <SafeAreaView style={[DefaultTheme.root]}>
       <LinearGradient
         colors={["white", Colors.primaryGreen900]}
         style={styles.linearGradient}
@@ -285,9 +307,6 @@ function HomeScreen() {
             <Text style={styles.textLocation}>
               Thủ Đức, Tp. Hồ Chí Minh <Ionicons name="arrow-down" />
             </Text>
-            {/* <Text style={{fontSize: 12, fontWeight: 'bold', color: 'white', marginTop: 5}}>
-            Ngày 26 tháng 01 năm 2024
-            </Text> */}
           </TouchableOpacity>
         </View>
         <LocationOptions
@@ -305,7 +324,7 @@ function HomeScreen() {
             </Text>
           </Text>
         </View> */}
-        <Searchbar
+        {/* <Searchbar
           placeholder="Tìm kiếm sản phẩm..."
           elevation={1}
           theme={DefaultTheme.searchbar}
@@ -314,52 +333,24 @@ function HomeScreen() {
           // onIconPress={() =>
           //   navigation.navigate("SearchScreen", { searchItem: searchPrd })
           // }
-        />
-        <TouchableOpacity style={{alignItems: 'flex-end', marginTop:10}}
-        onPress={()=>navigation.navigate("TodayScreen")}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: 'white', marginTop: 5, textDecorationLine: 'underline'}}>
-            Hôm nay: Ngày 26 tháng 01 năm 2024 <Ionicons name="arrow-forward" />
-            </Text>
+        /> */}
+        <TouchableOpacity style={{flexDirection: 'row',justifyContent: 'center', alignItems: 'center', padding: 20, borderWidth: 2, borderColor: 'white', borderRadius: 5, backgroundColor: Colors.primaryGreen50 }}
+        onPress={showDatePicker}>
+          <Ionicons name='calendar-outline' size={25} color={Colors.primaryGreen700}/>
+          <Text style={{color: Colors.primaryGreen700, fontWeight: 'bold', fontSize: 16}}>{"  "}{datePicked && formatDatePicked(datePicked)}</Text>
         </TouchableOpacity>
+        <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+        cancelTextIOS="Đóng"
+        confirmTextIOS="Xác nhận"
+        buttonTextColorIOS={Colors.primaryGreen700}
+      />
       </LinearGradient>
 
       <ScrollView style={DefaultTheme.scrollContainer}>
-        <View style={styles.contentView}>
-          <View style={{marginBottom: 8}}>
-          <HeaderContent>Tin tức mới</HeaderContent>
-          </View>
-          <Carousel
-            ref={(c) => {
-              this._carousel = c;
-            }}
-            data={SLIDERNEWSLETTERS}
-            renderItem={renderNewsLettersBanner}
-            sliderWidth={windowWidth - 40}
-            itemWidth={320}
-            loop={true}
-          />
-        </View>
-
-        {/* Danh mục */}
-        <View style={styles.contentView}>
-          <HeaderContent
-            onPress={selectedCategoriesStack}
-            label={"Xem tất cả"}
-            icon={true}
-          >
-            Danh mục phổ biến
-          </HeaderContent>
-          {categoriesRecommendsInfo && (
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            >
-              {categoriesRecommendsInfo.map((item) =>
-                renderPopularCategories(item),
-              )}
-            </ScrollView>
-          )}
-        </View>
 
         {/* Danh sách sản phẩm */}
         <View style={styles.contentView}>
@@ -383,7 +374,7 @@ function HomeScreen() {
   );
 }
 
-export default HomeScreen;
+export default TodayScreen;
 
 const styles = StyleSheet.create({
   // searchBar: {
@@ -404,7 +395,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "flex-start",
-    alignItems: "flex-start",
+    alignItems: "center",
     marginVertical: 12,
   },
   headerLocationContent: {

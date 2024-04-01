@@ -4,11 +4,11 @@ import { Checkbox } from "react-native-paper";
 
 import GrayLine from "./text/GrayLine";
 import Title from "./text/Title";
-import CardItem from "./CardItem";
 import { cartItems } from "../../constants/cartItems";
 import { Ionicons } from "@expo/vector-icons";
+import CardItemOrder from "./CardItemOrder";
 
-function GroupItems() {
+function GroupItemsOrder() {
   return (
     <View style={{ flex: 1, padding: 10, backgroundColor: '#f9f9f9', marginBottom: 5, borderRadius: 5 }}>
       {
@@ -30,7 +30,7 @@ function GroupItems() {
           </View>
           <GrayLine />
           {cartItems.map((item, index) => (
-            <CardItem item={item} key={index} />
+            <CardItemOrder item={item} key={index} />
           ))}
         </View>
         
@@ -39,7 +39,7 @@ function GroupItems() {
   );
 }
 
-export default GroupItems;
+export default GroupItemsOrder;
 
 const styles = StyleSheet.create({
   groupContainer: {

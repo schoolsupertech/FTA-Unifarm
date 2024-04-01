@@ -13,6 +13,7 @@ import OrderScreen from "../screens/OrderScreen";
 import SearchScreen from "../screens/SearchScreen";
 import ReceiveInfoScreen from "../screens/ReceiveInfoScreen";
 import { DefaultTheme } from "../themes/DefaultTheme";
+import AddressScreen from "../screens/AddressScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,9 +43,32 @@ function AppStackNav() {
           headerShown: false,
         }}
       />
-      <Stack.Screen name="Notification" component={NotificationScreen} />
-      <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
-      <Stack.Screen name="CatListProdScreen" component={CatListProdScreen} />
+      <Stack.Screen name="Notification" component={NotificationScreen} options={{
+          title: "Thông báo",
+          headerTintColor: '#000',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            fontSize: 18
+          },
+        }} />
+      <Stack.Screen name="ProductDetail" component={ProductDetailScreen} 
+              options={{
+                headerTintColor: '#000',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                  fontSize: 18
+                },
+              }}
+      />
+      <Stack.Screen name="CatListProdScreen" component={CatListProdScreen} 
+       options={{
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          fontSize: 18
+        },
+      }}
+      />
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
       <Stack.Screen
         name="CartScreen"
@@ -72,6 +96,16 @@ function AppStackNav() {
       />
       <Stack.Screen name="SearchScreen" component={SearchScreen} />
       <Stack.Screen name="ReceiveInfoScreen" component={ReceiveInfoScreen} />
+      <Stack.Screen name="AddressScreen" component={AddressScreen} 
+      options={{
+        title: "Địa chỉ",
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          fontSize: 18
+        },
+      }}/>
+
     </Stack.Navigator>
   );
 }

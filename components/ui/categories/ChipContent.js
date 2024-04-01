@@ -48,8 +48,9 @@ function ChipContent({ chipData, onChipSelected }) {
         mode={"outlined"}
         selected={selectedProds.includes(item.id)}
         selectedColor={Colors.primaryGreen800}
-        style={[styles.chip, { backgroundColor: Colors.primaryGreen100 }]}
+        style={[styles.chip, { backgroundColor: '#fff' }]}
         onPress={onChipToggleHandler}
+        textStyle={{fontWeight: 'bold'}}
       >
         {item.name}
       </Chip>

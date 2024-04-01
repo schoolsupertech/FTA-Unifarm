@@ -70,6 +70,7 @@ const RegisterScreen = ({ navigation }) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ paddingHorizontal: 25 }}
+        contentContainerStyle={{paddingBottom: 80}}
       >
         <View style={{ alignItems: "center" }}>
           <Image
@@ -81,10 +82,10 @@ const RegisterScreen = ({ navigation }) => {
           />
           <Text
             style={{
-              marginTop: 8,
+              marginTop: 18,
               marginBottom: 20,
               // fontFamily: 'Roboto-Medium',
-              fontSize: 48,
+              fontSize: 28,
               fontWeight: "bold",
               textAlign: "center",
               color: Colors.primaryGreen700,
@@ -287,6 +288,5 @@ const styles = StyleSheet.create({
   buttonView: {
     ...DefaultTheme.btnView,
     width: "100%",
-    alignItems: "center",
   },
 });

@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/colors";
 import { DefaultTheme } from "../../themes/DefaultTheme";
 
-function CardItem({ item }) {
+function CardItemOrder({ item }) {
   const [count, setCount] = useState(item.qty);
 
   function addCountHandler() {
@@ -46,7 +46,7 @@ function CardItem({ item }) {
     </View>
     <View style={{alignItems: 'flex-end',  marginTop: -15}}>
          <View style={styles.selectingQuantity}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={minusCountHandler}
             style={styles.selectingBtn}
           >
@@ -55,9 +55,9 @@ function CardItem({ item }) {
               size={20}
               color={Colors.primaryGreen700}
             />
-          </TouchableOpacity>
-          <Text style={styles.quantity}>{item.qty}</Text>
-          <TouchableOpacity
+          </TouchableOpacity> */}
+          <Text style={styles.quantity}>x{item.qty}</Text>
+          {/* <TouchableOpacity
             onPress={addCountHandler}
             style={styles.selectingBtn}
           >
@@ -66,14 +66,14 @@ function CardItem({ item }) {
               size={20}
               color={Colors.primaryGreen700}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
     </View>
     </View>
   );
 }
 
-export default CardItem;
+export default CardItemOrder;
 
 const styles = StyleSheet.create({
   container: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   checkboxContainer: {
     transform: [
       {
-        scale: 0.60,
+        scale: 0.50,
       },
     ],
     marginRight: 0,
@@ -106,8 +106,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    height: 60,
-    width: 60,
+    height: 55,
+    width: 55,
   },
   textName: {
     color: "black",
@@ -136,6 +136,6 @@ const styles = StyleSheet.create({
   quantity: {
     color: Colors.primaryGreen700,
     fontWeight: "700",
-    fontSize: 18,
+    fontSize: 15
   },
 });

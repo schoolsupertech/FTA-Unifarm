@@ -9,8 +9,10 @@ import HomeScreen from "../screens/HomeScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
 import CartScreen from "../screens/CartScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import WalletScreen from "../screens/WalletScreen";
 import { Colors } from "../constants/colors";
 import { AuthContext } from "../context/AuthContext";
+import TodayScreen from "../screens/TodayScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -68,8 +70,8 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="BusinessDay"
-        component={HomeScreen}
+        name="TodayScreen"
+        component={TodayScreen}
         options={{
           title: "Hôm nay",
           tabBarIcon: ({ color, size }) => (
@@ -88,18 +90,28 @@ function TabNavigator() {
       />
       {authState?.authenticated && (
         <Tab.Screen
-          name="Cart"
-          component={CartScreen}
+          name="Wallet"
+          component={WalletScreen}
           options={{
-            title: "Giỏ hàng",
+            title: "Ví",
             tabBarIcon: ({focused, color, size }) => (
               <>
-                <Ionicons name={focused ? "cart":"cart-outline"} color={color} size={size} />
-                <Badge style={{ position: "absolute", top: 0, right: 20, backgroundColor: '#FF2929' }}>
+                <Ionicons name={focused ? "wallet":"wallet-outline"} color={color} size={size} />
+                {/* <Badge style={{ position: "absolute", top: 0, right: 20, backgroundColor: '#FF2929' }}>
                   6
-                </Badge>
+                </Badge> */}
               </>
             ),
+            // headerShown: true,
+            // headerTitle: "Số dư ví",
+            // headerRight: () => (
+            //   <Ionicons
+            //     style={{ marginRight: 20, padding: 0 }}
+            //     name={"wallet-outline"}
+            //     size={24}
+
+            //   />
+            // )
           }}
         />
       )}

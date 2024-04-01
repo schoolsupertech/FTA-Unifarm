@@ -59,5 +59,6 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     paddingVertical: 0,
+    fontSize: 16
   },
 });

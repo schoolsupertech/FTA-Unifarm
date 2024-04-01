@@ -47,8 +47,8 @@ function ProfileScreen() {
             </View>
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity style={{ marginEnd: 20 }} onPress={() => {}}>
-                <MaterialCommunityIcons
-                  name="book-check-outline"
+                <Ionicons
+                  name="mail-unread-outline"
                   size={24}
                   color={Colors.primaryGreen700}
                 />
@@ -57,7 +57,7 @@ function ProfileScreen() {
                 style={{ marginEnd: 4 }}
                 onPress={() => navigation.navigate("CartScreen")}
               >
-                <Ionicons name="bag" size={24} color={Colors.primaryGreen700} />
+                <Ionicons name="cart" size={24} color={Colors.primaryGreen700} />
                 <Badge style={{ position: "absolute", top: -8, right: -16 }}>
                   3
                 </Badge>
@@ -84,6 +84,9 @@ function ProfileScreen() {
               {userInfo?.lastName} {userInfo?.firstName} -{" "}
               {userInfo?.phoneNumber}
             </Text>
+            <Text style={[styles.textDisplay, {fontSize: 14, marginTop: 5}]}>
+            {userInfo?.email}
+            </Text>
           </View>
         </LinearGradient>
 
@@ -94,92 +97,93 @@ function ProfileScreen() {
             DefaultTheme.flex_1,
             { width: "100%", paddingTop: 12 },
           ]}
+          contentContainerStyle={{paddingBottom: 50}}
         >
           <View style={styles.orderContainer}>
+            <View style={{borderBottomWidth: 2, borderBottomColor: '#ddd', marginBottom: 20, paddingBottom: 5}}>
             <HeaderContent onPress={() => {}} label={"Xem tất cả"} icon={true}>
               Đơn hàng của bạn
             </HeaderContent>
-            <GrayLine />
-
+            </View>
             <View style={styles.orderContent}>
               <View style={styles.orderViewContent}>
                 <TouchableOpacity style={styles.orderView}>
-                  <FontAwesome5 name="people-carry" size={30} color="gray" />
-                  <Text style={styles.orderTextView}>Chờ vận{"\n"}chuyển</Text>
+                  <Ionicons name="file-tray-outline" size={30} color="gray" />
+                  <Text style={styles.orderTextView}>Chờ vận chuyển</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.orderView}>
-                  <FontAwesome5 name="shipping-fast" size={30} color="gray" />
-                  <Text style={styles.orderTextView}>Đang vận{"\n"}chuyển</Text>
+                  <Ionicons name="swap-horizontal" size={30} color="gray" />
+                  <Text style={styles.orderTextView}>Đang vận chuyển</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.orderView}>
-                  <MaterialCommunityIcons
-                    name="book-check-outline"
+                  <Ionicons
+                    name="bag-check-outline"
                     size={30}
                     color="gray"
                   />
-                  <Text style={styles.orderTextView}>Đã nhận{"\n"}hàng</Text>
+                  <Text style={styles.orderTextView}>Đã nhận hàng</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.orderView}>
-                  <Fontisto
-                    name="spinner-rotate-forward"
+                  <Ionicons
+                    name="refresh"
                     size={30}
                     color="gray"
                   />
-                  <Text style={styles.orderTextView}>Đổi trả{"\n"}hàng</Text>
+                  <Text style={styles.orderTextView}>Đổi trả hàng</Text>
                 </TouchableOpacity>
               </View>
 
-              <GrayLine />
 
-              <View style={[styles.orderView, { width: "100%" }]}>
+              <View style={{}}>
                 <TouchableOpacity style={styles.orderLineViewContent}>
                   <View style={styles.orderInnerViewContent}>
-                    <AntDesign name="user" size={28} color="black" />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Thông tin của bạn</Text>
+                    <Ionicons name="person-outline" size={28} color="grey" />
+                    <View style={{ marginLeft: 18 }}>
+                      <Text style={styles.textContent}>Thông tin của bạn</Text>
                     </View>
                   </View>
-                  <AntDesign name="right" size={24} color="gray" />
+                  <Ionicons name="chevron-forward" size={24} color="gray" />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.orderLineViewContent}
+                onPress={()=>navigation.navigate("AddressScreen")}>
+                  <View style={styles.orderInnerViewContent}>
+                    <Ionicons name="location-outline" size={28} color="grey" />
+                    <View style={{ marginLeft: 18 }}>
+                      <Text style={styles.textContent}>Địa chỉ</Text>
+                    </View>
+                  </View>
+                  <Ionicons name="chevron-forward"  size={24} color="gray" />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.orderLineViewContent}>
                   <View style={styles.orderInnerViewContent}>
-                    <Ionicons name="pin-outline" size={28} color="black" />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Sổ địa chỉ</Text>
+                    <Ionicons name="heart-outline" size={28} color="gray" />
+                    <View style={{ marginLeft: 18 }}>
+                      <Text style={styles.textContent}>Yêu Thích</Text>
                     </View>
                   </View>
-                  <AntDesign name="right" size={24} color="gray" />
+                  <Ionicons name="chevron-forward"  size={24} color="gray" />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.orderLineViewContent}>
                   <View style={styles.orderInnerViewContent}>
-                    <Entypo name="heart-outlined" size={28} color="black" />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Yêu Thích</Text>
+                    <Ionicons name="document-outline" size={28} color="grey" />
+                    <View style={{ marginLeft: 18 }}>
+                      <Text style={styles.textContent}>Đơn mua</Text>
                     </View>
                   </View>
-                  <AntDesign name="right" size={24} color="gray" />
+                  <Ionicons name="chevron-forward"  size={24} color="gray" />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.orderLineViewContent}>
                   <View style={styles.orderInnerViewContent}>
-                    <AntDesign name="book" size={28} color="black" />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Đơn mua</Text>
+                    <Ionicons name="star-outline" size={28} color="grey" />
+                    <View style={{ marginLeft: 18 }}>
+                      <Text style={styles.textContent}>Đánh giá</Text>
                     </View>
                   </View>
-                  <AntDesign name="right" size={24} color="gray" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.orderLineViewContent}>
-                  <View style={styles.orderInnerViewContent}>
-                    <Feather name="star" size={28} color="black" />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Đánh giá</Text>
-                    </View>
-                  </View>
-                  <AntDesign name="right" size={24} color="gray" />
+                  <Ionicons name="chevron-forward"  size={24} color="gray" />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.orderLineViewContent}>
@@ -187,19 +191,19 @@ function ProfileScreen() {
                     <MaterialCommunityIcons
                       name="history"
                       size={28}
-                      color="black"
+                      color="grey"
                     />
-                    <View style={{ marginLeft: 8 }}>
-                      <Text>Lịch sử mua hàng</Text>
+                    <View style={{ marginLeft: 18 }}>
+                      <Text style={styles.textContent}>Lịch sử mua hàng</Text>
                     </View>
                   </View>
-                  <AntDesign name="right" size={24} color="gray" />
+                  <Ionicons name="chevron-forward"  size={24} color="gray" />
                 </TouchableOpacity>
               </View>
             </View>
           </View>
           <View style={styles.gridItem}>
-            <MainButton onPress={logout}>Đăng xuất</MainButton>
+            <MainButton onPress={logout} styleButton={{backgroundColor: 'grey'}}>Đăng xuất</MainButton>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -255,7 +259,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   orderContainer: {
-    backgroundColor: Colors.primaryGreen50,
+    backgroundColor: "#fff",
     width: "100%",
     flex: 1,
     padding: 20,
@@ -286,25 +290,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 20,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 5
   },
   orderLineViewContent: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: "75%",
-    padding: 8,
-    marginBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "gray",
+    padding: 15,
+    marginBottom: 5,
   },
   orderView: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 4,
+    padding: 14,
+    width: '25%',
   },
   orderTextView: {
     fontSize: 12,
-    marginTop: 4,
+    marginTop: 14,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  textContent: {
+      fontSize: 15,
+      fontWeight: '500'
   },
   orderInnerViewContent: {
     flexDirection: "row",

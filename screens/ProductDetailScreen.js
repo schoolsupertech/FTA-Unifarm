@@ -107,38 +107,70 @@ function ProductDetailScreen({ route, navigation }) {
       navigation.navigate("Profile");
     }
   }
-
+  function formatCurrency(amount) {
+    return parseFloat(amount).toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  }
   return (
     <SafeAreaView style={[DefaultTheme.root, styles.container]}>
       {selectedProd ? (
         <>
-          <ScrollView style={{ marginHorizontal: 10, marginBottom: 72 }}>
+          <ScrollView style={{ marginHorizontal: 10, marginBottom: 72 }} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 20}}>
             <View style={styles.headerContainer}>
               <SwiperSlide prodItemId={selectedProd.id} />
               <View style={styles.headerContent}>
                 <PaperText variant="titleLarge" style={{ fontWeight: "bold" }}>
                   {selectedProd.title}
                 </PaperText>
-                <PaperText variant="titleMedium" style={{ fontWeight: "700" }}>
-                  {selectedProd.price} vnđ / {selectedProd.unit}
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                <PaperText variant="titleMedium" style={{ fontWeight: "500" }}>
+                  {formatCurrency(selectedProd.price)} / {selectedProd.unit}
                 </PaperText>
-                <GrayLine />
-                <PaperText variant="bodySmall">(4.5*)</PaperText>
+                  <View style={styles.selectingQuantity}>
+              <TouchableOpacity
+                onPress={minusCountHandler}
+                style={styles.selectingBtn}
+              >
+                <Ionicons
+                  name="remove-circle"
+                  size={28}
+                  color={Colors.primaryGreen700}
+                />
+              </TouchableOpacity>
+              <Text style={styles.quantity}>{count}</Text>
+              <TouchableOpacity
+                onPress={addCountHandler}
+                style={styles.selectingBtn}
+              >
+                <Ionicons
+                  name="add-circle"
+                  size={28}
+                  color={Colors.primaryGreen700}
+                />
+              </TouchableOpacity>
+                  </View>
+                  </View>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                
                 <RatingStar
                   disabled={true}
                   halfStarEnabled={true}
-                  size={24}
+                  size={18}
                   ratingStar={4.5}
                 />
-                <PaperText variant="titleSmall">
-                  {/* prodItem.sold */} Người đã mua
+                <PaperText variant="bodySmall">{"  "}(4.5*)</PaperText>
+                </View>
+                <PaperText variant="titleSmall" style={{fontSize: 12, alignSelf: 'flex-end'}}>
+                  {/* prodItem.sold */}95 đã bán
                 </PaperText>
                 <GrayLine />
                 <PaperText variant="titleSmall">
                   Nguồn gốc: {selectedProd.productOrigin}
                 </PaperText>
-                <PaperText variant="titleSmall">
-                  Ngày mở bán: {/* prodItem.openDate */}
+                <PaperText variant="titleSmall" style={{marginTop: 5}}>
+                  Ngày mở bán: 01/12/2024{/* prodItem.openDate */}
                 </PaperText>
               </View>
             </View>
@@ -163,7 +195,11 @@ function ProductDetailScreen({ route, navigation }) {
               >
                 Thông Tin Sản Phẩm
               </PaperText>
-              {/* <ProdMoreInfo data={prodItem.moreInfo} /> */}
+              <ProdMoreInfo data={["Độ tươi: 100%", "Chế độ nấu: luộc, chiên, hấp, xào,…",
+            "Kiểu chế biến: gọt vỏ,…",
+            "Ngày hết hạn: 23/04/2099",
+            "Hướng dẫn sử dụng: dùng ngay || phải thông qua kiểu chế biến và chế độ nấu phù hợp, để đạt được độ ngon nhất của món ăn phải nêm thêm các gia vị cần thiết,…."
+                            ]} />
             </View>
           </ScrollView>
           <Snackbar
@@ -178,18 +214,7 @@ function ProductDetailScreen({ route, navigation }) {
             {snackbarLabel}
           </Snackbar>
           <View style={styles.safeAreaView}>
-            <View style={styles.selectingQuantity}>
-              <TouchableOpacity
-                onPress={addCountHandler}
-                style={styles.selectingBtn}
-              >
-                <Ionicons
-                  name="add-circle"
-                  size={32}
-                  color={Colors.primaryGreen700}
-                />
-              </TouchableOpacity>
-              <Text style={styles.quantity}>{count}</Text>
+            {/* <View style={styles.selectingQuantity}>
               <TouchableOpacity
                 onPress={minusCountHandler}
                 style={styles.selectingBtn}
@@ -200,14 +225,44 @@ function ProductDetailScreen({ route, navigation }) {
                   color={Colors.primaryGreen700}
                 />
               </TouchableOpacity>
-            </View>
+              <Text style={styles.quantity}>{count}</Text>
+              <TouchableOpacity
+                onPress={addCountHandler}
+                style={styles.selectingBtn}
+              >
+                <Ionicons
+                  name="add-circle"
+                  size={32}
+                  color={Colors.primaryGreen700}
+                />
+              </TouchableOpacity>
+            </View> */}
             <View style={styles.buttonView}>
-              <MainButton onPress={addingCartHandler}>Thêm vào giỏ</MainButton>
+            
+              {/* <MainButton onPress={addingCartHandler}>
+             
+                Thêm vào giỏ</MainButton> */}
+                <TouchableOpacity style={{
+                  backgroundColor: Colors.primaryGreen700,
+                  flexDirection: 'row',
+                  padding: 12,
+                  alignItems: 'center',
+                  borderRadius: 8,
+                  justifyContent: 'center'
+                }}
+                  activeOpacity={0.5}
+                  onPress={addingCartHandler}>
+                <Ionicons name="cart-outline" size={28} color={"white"}/>
+                  <Text style={{   
+                    fontWeight: "bold",
+                    fontSize: 18,
+                    color: Colors.primaryGreen50,}}>{"  "}Thêm vào giỏ hàng</Text>
+                </TouchableOpacity>
             </View>
           </View>
         </>
       ) : (
-        <Text>Loading...</Text>
+        <Text style={{fontSize: 14, fontWeight: '500'}}>Đang tải...</Text>
       )}
     </SafeAreaView>
   );
@@ -223,13 +278,13 @@ const styles = StyleSheet.create({
   headerContainer: {},
   headerContent: {
     padding: 16,
-    backgroundColor: Colors.primaryGreen100,
+    backgroundColor: "#f5f5f5",
     borderRadius: 12,
   },
   descriptionContainer: {
     marginTop: 8,
     padding: 16,
-    backgroundColor: Colors.primaryGreen100,
+    backgroundColor: "#f5f5f5",
     borderRadius: 12,
   },
   descriptionHeader: {
@@ -237,7 +292,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   safeAreaView: {
-    backgroundColor: Colors.primaryGreen50,
+    backgroundColor: "#f5f5f5",
     position: "absolute",
     bottom: 0,
     width: "100%",
@@ -257,9 +312,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.primaryGreen200,
-    borderWidth: 1,
-    borderColor: Colors.primaryGreen700,
     borderRadius: 8,
   },
   selectingBtn: {
@@ -268,11 +320,16 @@ const styles = StyleSheet.create({
   quantity: {
     color: Colors.primaryGreen700,
     fontWeight: "700",
-    fontSize: 28,
+    fontSize: 25,
+    marginHorizontal: 5,
+    paddingHorizontal: 25, 
+    borderWidth: 1,
+    borderColor: Colors.primaryGreen700,
+    borderRadius: 8
   },
   buttonView: {
     height: 50,
-    width: "50%",
+    width: "100%",
     borderRadius: 8,
     elevation: 4,
     shadowColor: "black",
@@ -283,5 +340,6 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 8,
     overflow: "visible",
+    justifyContent: 'center',
   },
 });

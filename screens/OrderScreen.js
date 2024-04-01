@@ -14,7 +14,7 @@ import CardHeaderInfo from "../components/common/card/CardHeaderInfo";
 import CardFooter from "../components/common/card/CardFooter";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { Colors } from "../constants/colors";
-import GroupItems from "../components/common/GroupItems";
+import GroupItemsOrder from "../components/common/GroupItemsOrder";
 
 function OrderScreen() {
   const navigation = useNavigation();
@@ -38,7 +38,7 @@ function OrderScreen() {
 
 <CardHeaderInfo />
 
-        <GroupItems />
+        <GroupItemsOrder />
       </ScrollView>
 
       <CardFooter

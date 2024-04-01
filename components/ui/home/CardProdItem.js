@@ -84,6 +84,12 @@ function CardProdItem(props, { key }) {
     );
   }
 
+  function formatCurrency(amount) {
+    return parseFloat(amount).toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  }
   return (
     <TouchableOpacity key={key} onPress={selectedProductDetailHandler}>
       <Card style={styles.container} mode="contained">
@@ -105,16 +111,16 @@ function CardProdItem(props, { key }) {
             <Title>{props.title}</Title>
             <View style={styles.titleContent}>
               <View style={DefaultTheme.flex_1}>
+                <PaperText variant="bodySmall" style={styles.listedPrice}>
+                  {/* props.listedPrice */}50.000 VNĐ
+                </PaperText>
+                <PaperText variant="bodyLarge" style={{fontWeight: '500', color: 'green', marginBottom: 5}}>{formatCurrency(props.price)}</PaperText>
                 <View style={styles.progressBarContent}>
                   <PaperText variant="bodySmall">
                     Đã bán {/* props.sold */}
                   </PaperText>
                   <ProgressBar progress={0.5} color={DefaultTheme.pgBarColor} />
                 </View>
-                <PaperText variant="bodyLarge">{props.price} VNĐ</PaperText>
-                <PaperText variant="bodySmall" style={styles.listedPrice}>
-                  {/* props.listedPrice */}50.000 VNĐ
-                </PaperText>
               </View>
               <CartBtn onCartAdded={isCartAdded} onPress={onToggleSnackBar} />
             </View>
@@ -131,7 +137,7 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 8,
     backgroundColor: DefaultTheme.bgColor,
-    marginBottom: 12,
+    marginBottom: 10,
     borderWidth: 1,
     borderColor: '#EEEEEE'
   },
@@ -154,7 +160,7 @@ const styles = StyleSheet.create({
   titleContent: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 12,
+    marginTop: 5,
   },
   progressBarContent: {
     marginEnd: 32,

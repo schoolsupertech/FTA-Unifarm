@@ -18,6 +18,7 @@ import MainButton from "../components/common/button/MainButton";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
+import LogoTitle from "../themes/LogoTitle";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -27,39 +28,42 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      <View style={{ flex: 1, paddingHorizontal: 25 }}>
+      <View style={{ flex:1, paddingHorizontal: 25, justifyContent: 'center' }}>
         <View
           style={{
-            flex: 1,
             alignItems: "center",
             justifyContent: "center",
+            marginBottom: 20
           }}
         >
           <Image
             source={require("../assets/toppng.com-vegetables-images-png-vegetables-1911x1320.png")}
-            resizeMode="cover"
-            style={{ height: 300, width: "100%" }}
+            resizeMode="contain"
+            style={{ height: 150, width: "100%" }}
           />
-          <Text
+          <View style={{height: 50, width: 500, marginVertical: 15 ,justifyContent: 'center', alignItems: 'center'}}>
+          <LogoTitle />
+          </View>
+
+        </View>
+        {/* <Text
             style={{
-              marginTop: 8,
+              marginBottom: 30,
               // fontFamily: 'Roboto-Medium',
-              fontSize: 48,
+              fontSize: 25,
               fontWeight: "bold",
               color: Colors.primaryGreen700,
               textAlign: "center",
             }}
           >
-            ĐĂNG NHẬP
-          </Text>
-        </View>
-
+            Đăng nhập
+          </Text> */}
         <InputField
           label={"Email ID"}
           icon={
             <Ionicons
               name="at"
-              size={20}
+              size={30}
               color="#666"
               style={{ marginRight: 5 }}
             />
@@ -72,11 +76,11 @@ const LoginScreen = ({ navigation }) => {
         />
 
         <InputField
-          label={"Password"}
+          label={"Mật khẩu"}
           icon={
             <Ionicons
               name="key-outline"
-              size={20}
+              size={30}
               color="#666"
               style={{ marginRight: 5 }}
             />
@@ -95,22 +99,23 @@ const LoginScreen = ({ navigation }) => {
                 console.log("Signed in with systemLog"),
               );
             }}
+            styleButton={{width: "100%"}}
           >
             Đăng nhập
           </MainButton>
         </View>
 
+        <View style={{marginTop: 30}}>
         <Text
           style={{ textAlign: "center", color: "#666", marginVertical: 20 }}
         >
           Hoặc, đăng nhập với ...
         </Text>
-
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-between",
-            marginBottom: 30,
+            marginBottom: 20,
+            justifyContent: 'center',
           }}
         >
           <TouchableOpacity
@@ -120,41 +125,42 @@ const LoginScreen = ({ navigation }) => {
             //   );
             // }}
             style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
+              borderWidth: 1,
+              borderColor: '#ddd',
+              borderRadius: 50,
+              padding: 10,
+              marginHorizontal: 10
             }}
           >
-            <GoogleSVG height={24} width={24} />
+            <GoogleSVG height={35} width={35} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {}}
             style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
+              borderWidth: 1,
+              borderColor: '#ddd',
+              borderRadius: 50,
+              padding: 10,
+              marginHorizontal: 10
+
             }}
           >
-            <FacebookSVG height={24} width={24} />
+            <FacebookSVG height={35} width={35} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {}}
             style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
+              borderWidth: 1,
+              borderColor: '#ddd',
+              borderRadius: 50,
+              padding: 10,
+              marginHorizontal: 10
+
             }}
           >
-            <TwitterSVG height={24} width={24} />
+            <TwitterSVG height={35} width={35} />
           </TouchableOpacity>
         </View>
-
         <View
           style={{
             flexDirection: "row",
@@ -170,6 +176,7 @@ const LoginScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -181,7 +188,6 @@ const styles = StyleSheet.create({
   buttonView: {
     ...DefaultTheme.btnView,
     width: "100%",
-    alignItems: "center",
     borderRadius: 20,
   },
 });

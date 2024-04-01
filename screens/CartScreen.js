@@ -25,6 +25,8 @@ function CartScreen() {
           DefaultTheme.flex_1,
           { paddingTop: 12 },
         ]}
+        contentContainerStyle={{paddingBottom: 100}}
+        showsVerticalScrollIndicator={false}
       >
         <GroupItems />
         <GroupItems />
