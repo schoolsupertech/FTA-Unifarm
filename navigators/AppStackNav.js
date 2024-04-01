@@ -1,6 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { IconButton } from "react-native-paper";
+import { Ionicons } from "@expo/vector-icons";
 
 import TabNavigator from "./TabNavigator";
 import ProductDetailScreen from "../screens/ProductDetailScreen";
@@ -20,17 +21,18 @@ function AppStackNav() {
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
         headerBackTitleVisible: false,
-        headerStyle: { backgroundColor: DefaultTheme.headerBgColor },
+        headerStyle: { backgroundColor: DefaultTheme.headerBgColor, height: 50 },
         headerLeft: () => (
-          <IconButton
+          <Ionicons
             style={{ margin: 0, padding: 0 }}
-            icon={"chevron-left-circle-outline"}
-            size={30}
+            name={"chevron-back-outline"}
+            size={28}
             onPress={() => {
               navigation.goBack();
             }}
           />
         ),
+        
       })}
     >
       <Stack.Screen
@@ -49,6 +51,11 @@ function AppStackNav() {
         component={CartScreen}
         options={{
           title: "Giỏ hàng",
+          headerTintColor: '#000',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            fontSize: 18
+          },
         }}
       />
       <Stack.Screen
@@ -56,6 +63,11 @@ function AppStackNav() {
         component={OrderScreen}
         options={{
           title: "Thanh toán đơn hàng",
+          headerTintColor: '#000',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            fontSize: 18
+          },
         }}
       />
       <Stack.Screen name="SearchScreen" component={SearchScreen} />

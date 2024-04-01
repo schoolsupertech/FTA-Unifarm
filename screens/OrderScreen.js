@@ -25,15 +25,19 @@ function OrderScreen() {
 
   return (
     <SafeAreaView style={DefaultTheme.root}>
-      <CardHeaderInfo />
 
       <ScrollView
         style={[
           DefaultTheme.scrollContainer,
           DefaultTheme.flex_1,
-          { paddingTop: 12 },
+          { paddingTop: 10 },
         ]}
+        contentContainerStyle={{paddingBottom: 80}}
+        showsVerticalScrollIndicator={false}
       >
+
+<CardHeaderInfo />
+
         <GroupItems />
       </ScrollView>
 

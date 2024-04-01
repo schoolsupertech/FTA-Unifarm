@@ -28,6 +28,7 @@ export const DefaultTheme = {
     colors: {
       elevation: { level3: Colors.primaryGreen50 },
       primary: Colors.primaryGreen800,
+      onSurface: 'grey'
     },
   },
 

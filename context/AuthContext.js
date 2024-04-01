@@ -1,9 +1,9 @@
 import React, { createContext, useState, useEffect } from "react";
 import { Alert } from "react-native";
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
+// import {
+//   GoogleSignin,
+//   statusCodes,
+// } from "@react-native-google-signin/google-signin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import createAxios from "../utils/AxiosUtility";
@@ -20,11 +20,11 @@ export const AuthProvider = ({ children }) => {
     authenticated: false,
   });
 
-  GoogleSignin.configure({
-    // webClientId: '<FROM DEVELOPER CONSOLE>', // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
-    iosClientId:
-      "611874810536-ea5432vg9er0nb16i4drj14tv5rv6i8v.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
-  });
+  // GoogleSignin.configure({
+  //   // webClientId: '<FROM DEVELOPER CONSOLE>', // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
+  //   iosClientId:
+  //     "611874810536-ea5432vg9er0nb16i4drj14tv5rv6i8v.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+  // });
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -74,54 +74,54 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
-  const onBtnGoogleLoginHandler = async () => {
-    setIsLoading(true);
-    try {
-      await GoogleSignin.hasPlayServices({
-        showPlayServicesUpdateDialog: true,
-      });
-      const userInfo = await GoogleSignin.signIn();
+  // const onBtnGoogleLoginHandler = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     await GoogleSignin.hasPlayServices({
+  //       showPlayServicesUpdateDialog: true,
+  //     });
+  //     const userInfo = await GoogleSignin.signIn();
 
-      setUserInfo(userInfo.user);
-      setAuthState({
-        token: userInfo.idToken,
-        authenticated: true,
-      });
-      AsyncStorage.setItem(
-        "TOKEN_KEY",
-        JSON.stringify({ token: userInfo.idToken, loggedIn: "google" }),
-      );
-      AsyncStorage.setItem("userInfo", JSON.stringify(userInfo.user));
-      // switch(account.role) {
-      //   case "unknown":
-      //     const signUp_Response = API.post("/signup", {
-      //       role: "customer",
-      //       address: loggedUser?.address || "",
-      //       user: {
-      //         photo: userInfo.user.photo,
-      //         name: userInfo.user.name,
-      //         phone: loggedUser?.phoneNumber || "",
-      //         email: userInfo.user.email,
-      //       },
-      //     });
-      //     await navigation.navigate("Profile");
-      //     break;
-      //   case "customer":
-      //     break;
-      // }
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        // some other error happened
-      }
-    }
-    setIsLoading(false);
-  };
+  //     setUserInfo(userInfo.user);
+  //     setAuthState({
+  //       token: userInfo.idToken,
+  //       authenticated: true,
+  //     });
+  //     AsyncStorage.setItem(
+  //       "TOKEN_KEY",
+  //       JSON.stringify({ token: userInfo.idToken, loggedIn: "google" }),
+  //     );
+  //     AsyncStorage.setItem("userInfo", JSON.stringify(userInfo.user));
+  //     // switch(account.role) {
+  //     //   case "unknown":
+  //     //     const signUp_Response = API.post("/signup", {
+  //     //       role: "customer",
+  //     //       address: loggedUser?.address || "",
+  //     //       user: {
+  //     //         photo: userInfo.user.photo,
+  //     //         name: userInfo.user.name,
+  //     //         phone: loggedUser?.phoneNumber || "",
+  //     //         email: userInfo.user.email,
+  //     //       },
+  //     //     });
+  //     //     await navigation.navigate("Profile");
+  //     //     break;
+  //     //   case "customer":
+  //     //     break;
+  //     // }
+  //   } catch (error) {
+  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+  //       // user cancelled the login flow
+  //     } else if (error.code === statusCodes.IN_PROGRESS) {
+  //       // operation (e.g. sign in) is in progress already
+  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+  //       // play services not available or outdated
+  //     } else {
+  //       // some other error happened
+  //     }
+  //   }
+  //   setIsLoading(false);
+  // };
 
   const logout = () => {
     setIsLoading(true);
@@ -161,7 +161,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const value = {
-    onBtnGoogleLoginHandler,
+    // onBtnGoogleLoginHandler,
     register,
     login,
     logout,

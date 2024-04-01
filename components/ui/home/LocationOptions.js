@@ -109,7 +109,6 @@ function LocationOptions(props) {
             <View style={styles.location}>
               <Searchbar
                 placeholder="Chọn ví trí chung cư"
-                elevation={3}
                 theme={DefaultTheme.searchbar}
                 icon={() => (
                   <Ionicons
@@ -223,7 +222,11 @@ function LocationOptions(props) {
             </View>
           </View>
           <View style={styles.btnContainer}>
-            <View style={[DefaultTheme.btnView, { marginRight: 4 }]}>
+            
+            <View style={[DefaultTheme.btnView, {  marginRight: 4 }]}>
+              <MainButton onPress={props.onCancel} styleButton={{backgroundColor: 'red'}}>Huỷ bỏ</MainButton>
+            </View>
+            <View style={[DefaultTheme.btnView, {marginLeft: 8 }]}>
               <MainButton
                 onPress={() =>
                   props.onPress(apartmentInfo, stationInfo, isDefault)
@@ -231,9 +234,6 @@ function LocationOptions(props) {
               >
                 Lưu
               </MainButton>
-            </View>
-            <View style={[DefaultTheme.btnView, { marginLeft: 8 }]}>
-              <MainButton onPress={props.onCancel}>Huỷ bỏ</MainButton>
             </View>
           </View>
         </ScrollView>

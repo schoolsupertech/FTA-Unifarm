@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { Card, Text as PaperText } from "react-native-paper";
 
 import HeaderContent from "../../common/HeaderContent";
@@ -14,21 +14,20 @@ function CardHeaderInfo() {
   const { userInfo } = useContext(AuthContext);
 
   return (
-    <Card style={styles.cardContainer}>
+    <Card style={styles.cardContainer} mode="contained">
       <Card.Content style={styles.cardContent}>
         <HeaderContent onPress={() => {}} label={"Thay đổi"} icon={true}>
           Thông tin nhận hàng
         </HeaderContent>
-        <GrayLine />
         <View style={styles.headerContent}>
           <Title color={Colors.primaryGreen800}>Người nhận hàng:</Title>
           <View style={styles.cardContentDetail}>
-            <PaperText variant="titleSmall">
+            <Text variant="titleSmall">
               {userInfo?.lastName} {userInfo?.firstName} -{" "}
               {userInfo?.phoneNumber}
-            </PaperText>
+            </Text>
           </View>
-          <GrayLine />
+          <View style={{marginBottom: 10}}></View>
           <Title color={Colors.primaryGreen800}>Nhận hàng tại Station:</Title>
           <View style={styles.cardContentDetail}>
             <Ellipsis
@@ -38,7 +37,6 @@ function CardHeaderInfo() {
               numberOfLines={1}
             />
           </View>
-          <GrayLine />
           <Title color={Colors.primaryGreen800}>
             Thời gian nhận:{" "}
             <PaperText variant="titleSmall" style={{ color: "black" }}>
@@ -55,18 +53,17 @@ export default CardHeaderInfo;
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: DefaultTheme.cardBgColor,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
+    backgroundColor: "white",
+    marginBottom: 10
   },
   cardContent: {
     marginVertical: 0,
     paddingVertical: 16,
   },
   cardContentDetail: {
-    paddingHorizontal: 20,
+    marginVertical: 7
   },
   headerContent: {
-    marginHorizontal: 20,
+    marginHorizontal: 0,
   },
 });

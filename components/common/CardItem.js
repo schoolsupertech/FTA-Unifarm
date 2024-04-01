@@ -22,6 +22,7 @@ function CardItem({ item }) {
   }
 
   return (
+    <View style={{ borderBottomWidth: 5, borderBottomColor: 'white'}}>
     <View style={styles.container}>
       <View style={styles.checkboxContainer}>
         <View style={styles.checkbox}>
@@ -36,30 +37,33 @@ function CardItem({ item }) {
           <Text style={styles.textName}>{item.name}</Text>
           <Text style={styles.textPrice}>30.000 vnđ / quả</Text>
         </View>
-        <View style={styles.selectingQuantity}>
+      </View>
+    </View>
+    <View style={{alignItems: 'flex-end',  marginTop: -15}}>
+         <View style={styles.selectingQuantity}>
           <TouchableOpacity
-            onPress={addCountHandler}
+            onPress={minusCountHandler}
             style={styles.selectingBtn}
           >
             <Ionicons
-              name="add-circle"
+              name="remove-circle-outline"
               size={20}
               color={Colors.primaryGreen700}
             />
           </TouchableOpacity>
           <Text style={styles.quantity}>{item.qty}</Text>
           <TouchableOpacity
-            onPress={minusCountHandler}
+            onPress={addCountHandler}
             style={styles.selectingBtn}
           >
             <Ionicons
-              name="remove-circle"
+              name="add-circle-outline"
               size={20}
               color={Colors.primaryGreen700}
             />
           </TouchableOpacity>
         </View>
-      </View>
+    </View>
     </View>
   );
 }
@@ -69,26 +73,26 @@ export default CardItem;
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
-    marginBottom: 12,
+    marginTop: 10,
     flexDirection: "row",
   },
   checkboxContainer: {
     transform: [
       {
-        scale: 0.75,
+        scale: 0.65,
       },
     ],
-    marginRight: 4,
+    marginRight: 0,
     paddingRight: 12,
     alignItems: "center",
     justifyContent: "center",
-    borderRightWidth: 1,
-    borderColor: "gray",
+    // borderRightWidth: 1,
+    // borderColor: "gray",
   },
   checkbox: {
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: "black",
+    borderColor: "grey",
   },
   itemsContainer: {
     flex: 1,
@@ -97,12 +101,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    height: 65,
-    width: 65,
+    height: 75,
+    width: 75,
   },
   textName: {
     color: "black",
     fontWeight: "bold",
+    fontSize: 15
   },
   textPrice: {
     color: Colors.primaryGreen700,
@@ -113,10 +118,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.primaryGreen50,
-    borderWidth: 1,
-    borderColor: Colors.primaryGreen700,
-    borderRadius: 8,
+    // backgroundColor: Colors.primaryGreen50,
+    // borderWidth: 1,
+    // borderColor: Colors.primaryGreen700,
+    // borderRadius: 8,
+    marginVertical: 5,
+    justifyContent: 'flex-start'
   },
   selectingBtn: {
     marginHorizontal: 4,
@@ -124,6 +131,6 @@ const styles = StyleSheet.create({
   quantity: {
     color: Colors.primaryGreen700,
     fontWeight: "700",
-    fontSize: 14,
+    fontSize: 18,
   },
 });

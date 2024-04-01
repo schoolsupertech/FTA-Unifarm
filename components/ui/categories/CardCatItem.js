@@ -14,7 +14,7 @@ function CardCatItem({ title, image, onPress }) {
   return (
     <View style={styles.outterContainer}>
       <TouchableOpacity style={DefaultTheme.flex_1} onPress={onPress}>
-        <Card style={styles.innerContainer}>
+        <Card style={styles.innerContainer} mode="contained">
           {image.includes("https://") ? (
             <Card.Cover
               style={styles.cover}
@@ -48,18 +48,22 @@ export default CardCatItem;
 const styles = StyleSheet.create({
   outterContainer: {
     flex: 1,
-    margin: 16,
+    marginBottom: 20,
+    marginHorizontal: 10,
+    borderWidth: 1,
+    borderColor: '#EEEEEE',
+    borderRadius: 8,
   },
   innerContainer: {
     flex: 1,
-    width: 180,
-    backgroundColor: DefaultTheme.cardBgColor,
+    width: 'auto',
+    backgroundColor: DefaultTheme.bgColor,
+  
   },
   cover: {
-    margin: 16,
-    width: 160,
+    margin: 15,
+    width: 'auto',
     height: 160,
-    alignSelf: "center",
   },
   content: {
     marginVertical: 4,

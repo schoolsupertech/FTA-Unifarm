@@ -259,7 +259,7 @@ function HomeScreen() {
             <Ionicons
               name="location"
               color={Colors.primaryGreen800}
-              size={24}
+              size={35}
             />
             <Text
               style={{
@@ -268,11 +268,11 @@ function HomeScreen() {
                 color: Colors.primaryGreen800,
               }}
             >
-              Vị trí:{" "}
+              {" "}
             </Text>
           </View>
           <TouchableOpacity
-            style={{ flex: 1 }}
+            style={{}}
             onPress={() =>
               authState?.authenticated &&
               setLocationModalVisible({
@@ -285,6 +285,9 @@ function HomeScreen() {
             <Text style={styles.textLocation}>
               Thủ Đức, Tp. Hồ Chí Minh <Ionicons name="arrow-down" />
             </Text>
+            <Text style={{fontSize: 12, fontWeight: 'bold', color: 'white', marginTop: 5}}>
+            Ngày 26 tháng 01 năm 2024
+            </Text>
           </TouchableOpacity>
         </View>
         <LocationOptions
@@ -292,9 +295,19 @@ function HomeScreen() {
           onPress={updateLocationHandler}
           onCancel={onCancelUpdateLocationHandler}
         />
+        {/* <View style={styles.headerMenu}>
+          <Text style={styles.textMenu}>
+            <Text style={{ fontWeight: "600" }}>
+              
+              <Text style={{ textDecorationLine: "underline" }}>
+                Ngày 26 tháng 01 năm 2024
+              </Text>
+            </Text>
+          </Text>
+        </View> */}
         <Searchbar
-          placeholder="Tìm kiếm sản phẩm"
-          elevation={3}
+          placeholder="Tìm kiếm sản phẩm..."
+          elevation={1}
           theme={DefaultTheme.searchbar}
           value={searchPrd}
           onChangeText={displaySearchPrdText}
@@ -302,21 +315,14 @@ function HomeScreen() {
           //   navigation.navigate("SearchScreen", { searchItem: searchPrd })
           // }
         />
-        <View style={styles.headerMenu}>
-          <Text style={styles.textMenu}>
-            <Text style={{ fontWeight: "600" }}>
-              Hôm nay:{" "}
-              <Text style={{ textDecorationLine: "underline" }}>
-                Ngày 26 tháng 01 năm 2024
-              </Text>
-            </Text>
-          </Text>
-        </View>
+
       </LinearGradient>
 
       <ScrollView style={DefaultTheme.scrollContainer}>
         <View style={styles.contentView}>
+          <View style={{marginBottom: 8}}>
           <HeaderContent>Tin tức mới</HeaderContent>
+          </View>
           <Carousel
             ref={(c) => {
               this._carousel = c;
@@ -352,7 +358,9 @@ function HomeScreen() {
 
         {/* Danh sách sản phẩm */}
         <View style={styles.contentView}>
+          <View style={{marginBottom: 8}}>
           <HeaderContent>Sản phẩm khuyên dùng</HeaderContent>
+          </View>
           {prodItemsInfo?.map((item) => renderProdItem(item))}
         </View>
       </ScrollView>
@@ -391,7 +399,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "flex-start",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginVertical: 12,
   },
   headerLocationContent: {
@@ -401,23 +409,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textLocation: {
-    fontSize: 14,
+    fontSize: 15,
     color: Colors.primaryGreen800,
-    textDecorationLine: "underline",
+    // textDecorationLine: "underline",
+    fontWeight: 'bold'
   },
   headerMenu: {
     width: "100%",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "flex-start",
-    marginTop: 12,
+    marginBottom: 20,
   },
   textMenu: {
     fontSize: 14,
     color: Colors.primaryGreen100,
   },
   contentView: {
-    marginTop: 8,
+    marginTop: 18,
     // marginVertical: 8,
+    marginHorizontal: 10
   },
   categoryTitle: {
     fontSize: 18,

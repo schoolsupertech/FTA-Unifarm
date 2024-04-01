@@ -20,7 +20,7 @@ export default Title;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 4,
+    padding: 0,
   },
   title: {
     fontWeight: "bold",

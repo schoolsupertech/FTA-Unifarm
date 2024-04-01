@@ -6,10 +6,11 @@ import GrayLine from "./text/GrayLine";
 import Title from "./text/Title";
 import CardItem from "./CardItem";
 import { cartItems } from "../../constants/cartItems";
+import { Ionicons } from "@expo/vector-icons";
 
 function GroupItems() {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, padding: 10, backgroundColor: '#f9f9f9', marginBottom: 5, borderRadius: 5 }}>
       {
         /*
          * const [farmhubGroup, setFarmhubGroup] = useState({ ...farmhubGroup, orders.filter((order) => order.farmhubId === prodItem.farmhubId) });
@@ -20,10 +21,11 @@ function GroupItems() {
         <View style={styles.groupContainer}>
           <View style={styles.groupItems}>
             <View style={styles.checkbox}>
-              <Checkbox status="checked" onPress={() => {}} color="black" />
+              <Checkbox status="checked" onPress={() => {}} color="black"   />
             </View>
             <View style={styles.groupTitle}>
               <Title color="black">Tôi là ông FarmHub A</Title>
+              <Ionicons name='storefront-outline' size={25}  color={'grey'}/>
             </View>
           </View>
           <GrayLine />
@@ -31,6 +33,7 @@ function GroupItems() {
             <CardItem item={item} key={index} />
           ))}
         </View>
+        
       }
     </View>
   );
@@ -53,12 +56,21 @@ const styles = StyleSheet.create({
   checkbox: {
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: "black",
+    borderColor: "grey",
+    transform: [
+      {
+        scale: 0.75,
+      },
+    ],
   },
   groupTitle: {
     marginLeft: 8,
     paddingLeft: 8,
     borderLeftWidth: 2,
     borderLeftColor: "gray",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1
   },
 });

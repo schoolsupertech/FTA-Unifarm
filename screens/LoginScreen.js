@@ -22,7 +22,8 @@ import { AuthContext } from "../context/AuthContext";
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, onBtnGoogleLoginHandler } = useContext(AuthContext);
+  // const { login, onBtnGoogleLoginHandler } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
@@ -113,11 +114,11 @@ const LoginScreen = ({ navigation }) => {
           }}
         >
           <TouchableOpacity
-            onPress={() => {
-              onBtnGoogleLoginHandler().then(() =>
-                console.log("Signed in with Google!"),
-              );
-            }}
+            // onPress={() => {
+            //   onBtnGoogleLoginHandler().then(() =>
+            //     console.log("Signed in with Google!"),
+            //   );
+            // }}
             style={{
               borderColor: "#ddd",
               borderWidth: 2,

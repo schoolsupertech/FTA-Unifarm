@@ -15,13 +15,13 @@ function Ellipsis({ description, numberOfLines }) {
       <Text
         variant="bodyMedium"
         numberOfLines={isCollapsed ? numberOfLines : null}
-        style={{ marginBottom: 5 }}
+        style={{ marginBottom: 5,  }}
       >
         {description}
       </Text>
 
       <TouchableOpacity onPress={toggleNumberOfLines}>
-        <Text style={{ color: Colors.primaryGreen700 }}>
+        <Text style={{ color: Colors.primaryGreen700}}>
           {isCollapsed ? "Đọc tiếp" : "Thu gọn"}
         </Text>
       </TouchableOpacity>

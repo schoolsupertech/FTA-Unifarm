@@ -33,6 +33,15 @@ function TabNavigator() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: Colors.primaryGreen700,
+        tabBarLabelStyle: {
+          fontWeight: '500',
+          fontSize: 12,
+          marginBottom: 5,
+        },
+        tabBarStyle: {
+          backgroundColor: "#fff",
+          height: 90
+        }
       }}
     >
       <Tab.Screen
@@ -43,8 +52,8 @@ function TabNavigator() {
           // tabBarStyle: {
           //   display: getTabBarVisibility(route),
           // },
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" color={color} size={size} />
+          tabBarIcon: ({focused, color, size }) => (
+            <Ionicons name={focused ? "home":"home-outline"} color={color} size={size} />
           ),
         })}
       />
@@ -53,8 +62,8 @@ function TabNavigator() {
         component={CategoriesScreen}
         options={{
           title: "Danh mục",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cart-sharp" color={color} size={size} />
+          tabBarIcon: ({focused, color, size }) => (
+            <Ionicons name={focused ? "layers":"layers-outline"} color={color} size={size} />
           ),
         }}
       />
@@ -62,10 +71,17 @@ function TabNavigator() {
         name="BusinessDay"
         component={HomeScreen}
         options={{
-          title: "Mặt hàng hôm nay",
+          title: "Hôm nay",
           tabBarIcon: ({ color, size }) => (
-            <View style={{ backgroundColor: "red" }}>
-              <Ionicons name="flash" color="yellow" size={size} />
+            <View style={{ backgroundColor: Colors.primaryGreen700, borderRadius: 50, padding: 20, marginTop: -40,
+                 shadowColor: '#7F5DF0',
+      shadowOffset: {
+        width: 0,
+        height: 5,
+      },
+      shadowOpacity: 0.25,
+            }}>
+              <Ionicons name="flash" color="#fff" size={size} />
             </View>
           ),
         }}
@@ -76,10 +92,10 @@ function TabNavigator() {
           component={CartScreen}
           options={{
             title: "Giỏ hàng",
-            tabBarIcon: ({ color, size }) => (
+            tabBarIcon: ({focused, color, size }) => (
               <>
-                <Ionicons name="cart" color={color} size={size} />
-                <Badge style={{ position: "absolute", top: -4, right: 14 }}>
+                <Ionicons name={focused ? "cart":"cart-outline"} color={color} size={size} />
+                <Badge style={{ position: "absolute", top: 0, right: 20, backgroundColor: '#FF2929' }}>
                   6
                 </Badge>
               </>
@@ -92,8 +108,8 @@ function TabNavigator() {
         component={ProfileScreen}
         options={{
           title: "Cá nhân",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="man" color={color} size={size} />
+          tabBarIcon: ({focused, color, size }) => (
+            <Ionicons name={focused ? "person":"person-outline"} color={color} size={size} />
           ),
         }}
       />

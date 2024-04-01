@@ -13,12 +13,6 @@
     },
     "assetBundlePatterns": ["**/*"],
     "plugins": [
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps.611874810536-ea5432vg9er0nb16i4drj14tv5rv6i8v"
-        }
-      ]
     ],
     "ios": {
       "supportsTablet": true,

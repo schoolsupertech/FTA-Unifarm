@@ -86,7 +86,7 @@ function CardProdItem(props, { key }) {
 
   return (
     <TouchableOpacity key={key} onPress={selectedProductDetailHandler}>
-      <Card style={styles.container}>
+      <Card style={styles.container} mode="contained">
         <Card.Content style={styles.content}>
           {prodItemImgsInfo ? (
             imgCoverHandler()
@@ -111,9 +111,9 @@ function CardProdItem(props, { key }) {
                   </PaperText>
                   <ProgressBar progress={0.5} color={DefaultTheme.pgBarColor} />
                 </View>
-                <PaperText variant="bodyLarge">{props.price} Vnđ</PaperText>
+                <PaperText variant="bodyLarge">{props.price} VNĐ</PaperText>
                 <PaperText variant="bodySmall" style={styles.listedPrice}>
-                  {/* props.listedPrice */} Vnđ
+                  {/* props.listedPrice */}50.000 VNĐ
                 </PaperText>
               </View>
               <CartBtn onCartAdded={isCartAdded} onPress={onToggleSnackBar} />
@@ -130,8 +130,10 @@ export default CardProdItem;
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 8,
-    backgroundColor: DefaultTheme.cardBgColor,
+    backgroundColor: DefaultTheme.bgColor,
     marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#EEEEEE'
   },
   content: {
     flexDirection: "row",

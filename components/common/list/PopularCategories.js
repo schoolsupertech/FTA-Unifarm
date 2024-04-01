@@ -7,7 +7,7 @@ import { DefaultTheme } from "../../../themes/DefaultTheme";
 function PopularCategories({ title, image, onPress }) {
   return (
     <TouchableOpacity onPress={onPress}>
-      <Card style={styles.container}>
+      <Card style={styles.container} mode="contained" >
         <Card.Cover
           style={styles.cover}
           source={{
@@ -28,7 +28,9 @@ const styles = StyleSheet.create({
   container: {
     margin: 8,
     width: 170,
-    backgroundColor: DefaultTheme.cardBgColor,
+    backgroundColor: 'white',
+    // shadowOffset: 1.55,
+    // shadowColor: "#006600"
   },
   cover: {
     width: 150,
@@ -43,7 +45,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   textContent: {
-    fontWeight: "bold",
+    fontWeight: "500",
     alignSelf: "center",
   },
 });
