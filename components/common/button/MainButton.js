@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 
 import { Colors } from "../../../constants/colors";
 
-function MainButton({ children, onPress }) {
+function MainButton({ children, onPress, styleButton }) {
   return (
     <Pressable
       android_ripple={{ color: "#ccc" }}
@@ -13,7 +13,7 @@ function MainButton({ children, onPress }) {
       ]}
       onPress={onPress}
     >
-      <View style={styles.innerContainer}>
+      <View style={[styles.innerContainer, styleButton]}>
         <Text style={styles.btnText}>{children}</Text>
       </View>
     </Pressable>

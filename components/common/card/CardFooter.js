@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { Card, Text as PaperText } from "react-native-paper";
 
 import MainButton from "../button/MainButton";
+import currencyFormat from "../../../utils/CurrencyFormat";
 import { Colors } from "../../../constants/colors";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
 
@@ -21,12 +22,14 @@ function CardFooter({ txtLabel, txtValue, onPress, btnLabel }) {
             {txtLabel}
           </PaperText>
           <PaperText
-            variant="titleLarge"
+            variant="bodyMedium"
             style={{
+              fontSize: 20,
+              fontWeight: "bold",
               color: Colors.primaryGreen700,
             }}
           >
-            {txtValue} VNĐ
+            {currencyFormat(txtValue)}
           </PaperText>
         </View>
         <View style={[DefaultTheme.btnView, styles.buttonView]}>
@@ -45,19 +48,19 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: 100,
-    paddingHorizontal: 32,
-    paddingBottom: 12,
+    height: 110,
+    paddingBottom: 16,
   },
   cardContent: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
   },
   leftContent: {
-    marginRight: 12,
+    marginRight: 22,
     paddingBottom: 8,
-    justifyContent: "flex-start",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
   },
   buttonView: {
     marginBottom: 12,

@@ -1,44 +1,36 @@
-import React from "react";
 import {
-  View,
-  Text,
   StyleSheet,
+  Text,
+  View,
   FlatList,
   TouchableOpacity,
 } from "react-native";
+import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 
-const dataNoti = [
+const dataAddress = [
   {
     id: 1,
-    title: "Bạn có đơn hàng đang trên đường",
-    description:
-      "Đơn hàng sắp được giao đến bạn, vui lòng kiểm tra điện thoại thường xuyên",
+    title: "Lê Anh Kiệt | 0905078138",
+    description: "22C/1/2A, Tổ 7, KP3, P.10, Quận 13, TP. Hồ Chí Minh",
   },
   {
     id: 2,
-    title: "Giao hàng thành công",
+    title: "Lê Anh Kiệt | 0905078138",
     description:
-      "Đơn hàng đã giao đến bạn, vui lòng kiểm tra và đánh giá sản phẩm",
+      "189 Đường Lê Quý Đôn, P. Thái Hòa, TP. Tân Uyên, Tỉnh Bình Dương",
   },
   {
     id: 3,
-    title: "Xác nhận đã thanh toán",
-    description:
-      "Thanh toán cho đơn hàng 235F35AV323 thành công. Vui lòng kiểm tra thời gian nhận hàng trong chi tiết đơn hàng.",
-  },
-  {
-    id: 4,
-    title: "Bạn có đơn hàng đang trên đường",
-    description:
-      "Đơn hàng sắp được giao đến bạn, vui lòng kiểm tra điện thoại thường xuyên, Đơn hàng sắp được giao đến bạn, vui lòng kiểm tra điện thoại thường xuyên",
+    title: "Lê Anh Kiệt | 0905078138",
+    description: "Đường Võ Văn Kiệt, P. Bến Nghé, Quận 12, TP. Hồ Chí Minh",
   },
 ];
-function NotificationScreen() {
+const AddressScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={dataNoti}
+        data={dataAddress}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={{
@@ -51,7 +43,7 @@ function NotificationScreen() {
             }}
           >
             <View style={{ marginRight: 15 }}>
-              <Ionicons name="notifications-outline" size={28} color={"grey"} />
+              <Ionicons name="location-outline" size={28} color={"grey"} />
             </View>
             <View>
               <Text
@@ -69,19 +61,35 @@ function NotificationScreen() {
                   {item.description}
                 </Text>
                 <View style={{}}>
-                  <Ionicons name="chevron-forward" size={28} color={"grey"} />
+                  <Ionicons name="create-outline" size={20} color={"grey"} />
                 </View>
               </View>
             </View>
           </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id}
+        ListFooterComponent={() => (
+          <View
+            style={{
+              paddingVertical: 20,
+              alignItems: "center",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <Ionicons name="add-circle-outline" size={24} color={"grey"} />
+            <Text style={{ fontSize: 16, color: "grey" }}>
+              {" "}
+              Thêm địa chỉ mới
+            </Text>
+          </View>
+        )}
       />
     </View>
   );
-}
+};
 
-export default NotificationScreen;
+export default AddressScreen;
 
 const styles = StyleSheet.create({
   container: {

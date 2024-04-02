@@ -77,7 +77,7 @@ function CategoriesScreen() {
         <View style={{ marginTop: 8 }}>
           <Searchbar
             theme={DefaultTheme.searchbar}
-            placeholder="Tìm kiếm danh mục"
+            placeholder="Tìm kiếm danh mục..."
             elevation={3}
             value={searchPrd}
             onChangeText={(prodSearch) => setSearchPrd(prodSearch)}
@@ -89,6 +89,8 @@ function CategoriesScreen() {
         keyExtractor={(item) => item.id}
         renderItem={renderCategories}
         numColumns={2}
+        showsVerticalScrollIndicator={false}
+        style={{ marginTop: 20, marginHorizontal: 10 }}
       />
     </SafeAreaView>
   );

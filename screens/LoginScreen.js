@@ -15,6 +15,7 @@ import FacebookSVG from "../assets/images/misc/facebook.svg";
 import TwitterSVG from "../assets/images/misc/twitter.svg";
 import InputField from "../components/common/text/InputField";
 import MainButton from "../components/common/button/MainButton";
+import LogoTitle from "../themes/LogoTitle";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
@@ -26,41 +27,43 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      <View style={{ flex: 1, paddingHorizontal: 25 }}>
+      <View
+        style={{ flex: 1, paddingHorizontal: 25, justifyContent: "center" }}
+      >
         <View
           style={{
             flex: 1,
             alignItems: "center",
             justifyContent: "center",
+            marginBottom: 20,
           }}
         >
           <Image
             source={require("../assets/toppng.com-vegetables-images-png-vegetables-1911x1320.png")}
-            resizeMode="cover"
-            style={{ height: 300, width: "100%" }}
+            resizeMode="contain"
+            style={{ height: 150, width: "100%" }}
           />
-          <Text
+          <View
             style={{
-              marginTop: 8,
-              // fontFamily: 'Roboto-Medium',
-              fontSize: 48,
-              fontWeight: "bold",
-              color: Colors.primaryGreen700,
-              textAlign: "center",
+              height: 50,
+              width: 500,
+              marginVertical: 15,
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            ĐĂNG NHẬP
-          </Text>
+            <LogoTitle />
+          </View>
         </View>
 
         <InputField
-          label={"Email ID"}
+          label={"Tài khoản Email"}
           icon={
             <Ionicons
               name="at"
-              size={20}
+              size={30}
               color="#666"
-              style={{ marginRight: 5 }}
+              style={{ marginRight: 4 }}
             />
           }
           keyboardType="email-address"
@@ -71,13 +74,13 @@ const LoginScreen = ({ navigation }) => {
         />
 
         <InputField
-          label={"Password"}
+          label={"Mật khẩu"}
           icon={
             <Ionicons
               name="key-outline"
-              size={20}
+              size={30}
               color="#666"
-              style={{ marginRight: 5 }}
+              style={{ marginRight: 4 }}
             />
           }
           inputType="password"
@@ -89,6 +92,7 @@ const LoginScreen = ({ navigation }) => {
 
         <View style={styles.buttonView}>
           <MainButton
+            styleButton={{ width: "100%" }}
             onPress={() => {
               login(email, password).then(() =>
                 console.log("Signed in with systemLog"),
@@ -99,75 +103,79 @@ const LoginScreen = ({ navigation }) => {
           </MainButton>
         </View>
 
-        <Text
-          style={{ textAlign: "center", color: "#666", marginVertical: 20 }}
-        >
-          Hoặc, đăng nhập với ...
-        </Text>
+        <View style={{ marginTop: 30 }}>
+          <Text
+            style={{ textAlign: "center", color: "#666", marginVertical: 20 }}
+          >
+            Hoặc, đăng nhập với ...
+          </Text>
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginBottom: 30,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              onBtnGoogleLoginHandler().then(() =>
-                console.log("Signed in with Google!"),
-              );
-            }}
+          <View
             style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
+              flexDirection: "row",
+              marginBottom: 20,
+              justifyContent: "center",
             }}
           >
-            <GoogleSVG height={24} width={24} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
-            }}
-          >
-            <FacebookSVG height={24} width={24} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
-            }}
-          >
-            <TwitterSVG height={24} width={24} />
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              onPress={() => {
+                onBtnGoogleLoginHandler().then(() =>
+                  console.log("Signed in with Google!"),
+                );
+              }}
+              style={{
+                borderWidth: 1,
+                borderRadius: 52,
+                borderColor: "#ddd",
+                padding: 12,
+                marginHorizontal: 12,
+              }}
+            >
+              <GoogleSVG height={36} width={36} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {}}
+              style={{
+                borderWidth: 1,
+                borderRadius: 52,
+                borderColor: "#ddd",
+                padding: 12,
+                marginHorizontal: 12,
+              }}
+            >
+              <FacebookSVG height={36} width={36} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {}}
+              style={{
+                borderWidth: 1,
+                borderRadius: 52,
+                borderColor: "#ddd",
+                padding: 12,
+                marginHorizontal: 12,
+              }}
+            >
+              <TwitterSVG height={36} width={36} />
+            </TouchableOpacity>
+          </View>
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginBottom: 30,
-          }}
-        >
-          <Text>Bạn là khách hàng mới?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={{ color: Colors.primaryGreen800, fontWeight: "700" }}>
-              {" "}
-              Đăng ký ngay
-            </Text>
-          </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              marginBottom: 30,
+            }}
+          >
+            <Text>Bạn là khách hàng mới?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+              <Text
+                style={{ color: Colors.primaryGreen800, fontWeight: "700" }}
+              >
+                {" "}
+                Đăng ký ngay
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -180,7 +188,6 @@ const styles = StyleSheet.create({
   buttonView: {
     ...DefaultTheme.btnView,
     width: "100%",
-    alignItems: "center",
     borderRadius: 20,
   },
 });

@@ -1,22 +1,22 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Checkbox } from "react-native-paper";
-import { Ionicons } from "@expo/vector-icons";
 
 import GrayLine from "./text/GrayLine";
 import Title from "./text/Title";
-import CardItem from "./CardItem";
 import { cartItems } from "../../constants/cartItems";
+import { Ionicons } from "@expo/vector-icons";
+import CardItemOrder from "./CardItemOrder";
 
-function GroupItems() {
+function GroupItemsOrder() {
   return (
     <View
       style={{
         flex: 1,
         padding: 10,
         backgroundColor: "#f9f9f9",
-        marginBottom: 4,
-        borderRadius: 4,
+        marginBottom: 5,
+        borderRadius: 5,
       }}
     >
       {
@@ -33,12 +33,12 @@ function GroupItems() {
             </View>
             <View style={styles.groupTitle}>
               <Title color="black">Tôi là ông FarmHub A</Title>
-              <Ionicons name="storefront-outline" size={24} color="grey" />
+              <Ionicons name="storefront-outline" size={25} color={"grey"} />
             </View>
           </View>
           <GrayLine />
           {cartItems.map((item, index) => (
-            <CardItem item={item} key={index} />
+            <CardItemOrder item={item} key={index} />
           ))}
         </View>
       }
@@ -46,7 +46,7 @@ function GroupItems() {
   );
 }
 
-export default GroupItems;
+export default GroupItemsOrder;
 
 const styles = StyleSheet.create({
   groupContainer: {
@@ -71,13 +71,13 @@ const styles = StyleSheet.create({
     ],
   },
   groupTitle: {
-    flex: 1,
     marginLeft: 8,
     paddingLeft: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
     borderLeftWidth: 2,
     borderLeftColor: "gray",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flex: 1,
   },
 });

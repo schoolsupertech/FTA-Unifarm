@@ -1,9 +1,12 @@
 import React, { useContext } from "react";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import { View, ActivityIndicator } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 
 import AppStackNav from "./AppStackNav";
 import { AuthContext } from "../context/AuthContext";
+import { store, persistor } from "../context/redux/storage/store";
 
 function AppNav() {
   const { isLoading } = useContext(AuthContext);
@@ -17,9 +20,13 @@ function AppNav() {
   }
 
   return (
-    <NavigationContainer>
-      <AppStackNav />
-    </NavigationContainer>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <NavigationContainer>
+          <AppStackNav />
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }
 

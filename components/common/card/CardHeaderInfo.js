@@ -14,7 +14,7 @@ function CardHeaderInfo() {
   const { userInfo } = useContext(AuthContext);
 
   return (
-    <Card style={styles.cardContainer}>
+    <Card style={styles.cardContainer} mode="contained">
       <Card.Content style={styles.cardContent}>
         <HeaderContent onPress={() => {}} label={"Thay đổi"} icon={true}>
           Thông tin nhận hàng
@@ -23,12 +23,11 @@ function CardHeaderInfo() {
         <View style={styles.headerContent}>
           <Title color={Colors.primaryGreen800}>Người nhận hàng:</Title>
           <View style={styles.cardContentDetail}>
-            <PaperText variant="titleSmall">
+            <PaperText variant="bodyMedium">
               {userInfo?.lastName} {userInfo?.firstName} -{" "}
               {userInfo?.phoneNumber}
             </PaperText>
           </View>
-          <GrayLine />
           <Title color={Colors.primaryGreen800}>Nhận hàng tại Station:</Title>
           <View style={styles.cardContentDetail}>
             <Ellipsis
@@ -64,9 +63,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   cardContentDetail: {
-    paddingHorizontal: 20,
+    marginTop: 8,
+    marginBottom: 16,
   },
-  headerContent: {
-    marginHorizontal: 20,
-  },
+  headerContent: {},
 });

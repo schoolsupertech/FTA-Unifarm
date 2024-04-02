@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 8,
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
   },
   header: {
@@ -31,6 +32,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   btn: {
+    fontWeight: "bold",
     color: DefaultTheme.btnColor700,
     textDecorationLine: "underline",
   },

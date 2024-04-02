@@ -12,9 +12,9 @@ import { useNavigation } from "@react-navigation/native";
 
 import CardHeaderInfo from "../components/common/card/CardHeaderInfo";
 import CardFooter from "../components/common/card/CardFooter";
+import GroupOrderItems from "../components/common/GroupOrderItems";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { Colors } from "../constants/colors";
-import GroupItems from "../components/common/GroupItems";
 
 function OrderScreen() {
   const navigation = useNavigation();
@@ -33,8 +33,10 @@ function OrderScreen() {
           DefaultTheme.flex_1,
           { paddingTop: 12 },
         ]}
+        contentContainerStyle={{ paddingBottom: 80 }}
+        showsVerticalScrollIndicator={false}
       >
-        <GroupItems />
+        <GroupOrderItems />
       </ScrollView>
 
       <CardFooter

@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { View } from "react-native";
-import { Badge } from "react-native-paper";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 import HomeScreen from "../screens/HomeScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
-import CartScreen from "../screens/CartScreen";
+import TodayScreen from "../screens/TodayScreen";
+import WalletScreen from "../screens/WalletScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { Colors } from "../constants/colors";
 import { AuthContext } from "../context/AuthContext";
@@ -33,6 +33,15 @@ function TabNavigator() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: Colors.primaryGreen700,
+        tabBarLabelStyle: {
+          fontWeight: "500",
+          fontSize: 12,
+          marginBottom: 4,
+        },
+        tabBarStyle: {
+          backgroundColor: "#fff",
+          height: 90,
+        },
       }}
     >
       <Tab.Screen
@@ -43,8 +52,12 @@ function TabNavigator() {
           // tabBarStyle: {
           //   display: getTabBarVisibility(route),
           // },
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" color={color} size={size} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "home" : "home-outline"}
+              color={color}
+              size={size}
+            />
           ),
         })}
       />
@@ -53,35 +66,65 @@ function TabNavigator() {
         component={CategoriesScreen}
         options={{
           title: "Danh mục",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cart-sharp" color={color} size={size} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "layers" : "layers-outline"}
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
       <Tab.Screen
-        name="BusinessDay"
-        component={HomeScreen}
+        name="TodayScreen"
+        component={TodayScreen}
         options={{
-          title: "Mặt hàng hôm nay",
+          title: "Hôm nay",
           tabBarIcon: ({ color, size }) => (
-            <View style={{ backgroundColor: "red" }}>
-              <Ionicons name="flash" color="yellow" size={size} />
+            <View
+              style={{
+                backgroundColor: Colors.primaryGreen700,
+                borderRadius: 50,
+                padding: 20,
+                marginTop: -40,
+                shadowColor: "#7F5DF0",
+                shadowOffset: {
+                  width: 0,
+                  height: 4,
+                },
+                shadowOpacity: 0.25,
+              }}
+            >
+              <Ionicons name="flash" color="#fff" size={size} />
             </View>
           ),
         }}
       />
       {authState?.authenticated && (
         <Tab.Screen
-          name="Cart"
-          component={CartScreen}
+          name="Wallet"
+          component={WalletScreen}
           options={{
-            title: "Giỏ hàng",
-            tabBarIcon: ({ color, size }) => (
+            title: "Ví",
+            tabBarIcon: ({ focused, color, size }) => (
               <>
-                <Ionicons name="cart" color={color} size={size} />
-                <Badge style={{ position: "absolute", top: -4, right: 14 }}>
+                <Ionicons
+                  name={focused ? "wallet" : "wallet-outline"}
+                  color={color}
+                  size={size}
+                />
+                {/*
+                <Badge
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 20,
+                    backgroundColor: "#FF2929",
+                  }}
+                >
                   6
                 </Badge>
+                */}
               </>
             ),
           }}
@@ -92,8 +135,12 @@ function TabNavigator() {
         component={ProfileScreen}
         options={{
           title: "Cá nhân",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="man" color={color} size={size} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              color={color}
+              size={size}
+            />
           ),
         }}
       />

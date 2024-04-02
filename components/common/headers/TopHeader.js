@@ -13,7 +13,7 @@ function TopHeader({ onCartIconPress, onNotiIconPress }) {
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity style={{ marginEnd: 16 }} onPress={onCartIconPress}>
           <Ionicons
-            name="bag-outline"
+            name="cart-outline"
             color={Colors.primaryGreen700}
             size={24}
           />
@@ -24,7 +24,16 @@ function TopHeader({ onCartIconPress, onNotiIconPress }) {
             color={Colors.primaryGreen700}
             size={24}
           />
-          <Badge style={{ position: "absolute", top: -6, right: -12 }}>3</Badge>
+          <Badge
+            style={{
+              position: "absolute",
+              top: -6,
+              right: -12,
+              backgroundColor: "#FF2929",
+            }}
+          >
+            3
+          </Badge>
         </TouchableOpacity>
       </View>
     </View>

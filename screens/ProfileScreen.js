@@ -9,15 +9,7 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import {
-  Ionicons,
-  FontAwesome5,
-  MaterialCommunityIcons,
-  AntDesign,
-  Entypo,
-  Fontisto,
-  Feather,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Badge } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
@@ -59,8 +51,8 @@ function ProfileScreen() {
             </View>
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity style={{ marginEnd: 20 }} onPress={() => {}}>
-                <MaterialCommunityIcons
-                  name="book-check-outline"
+                <Ionicons
+                  name="mail-unread-outline"
                   size={24}
                   color={Colors.primaryGreen700}
                 />
@@ -69,7 +61,11 @@ function ProfileScreen() {
                 style={{ marginEnd: 4 }}
                 onPress={() => navigation.navigate("CartScreen")}
               >
-                <Ionicons name="bag" size={24} color={Colors.primaryGreen700} />
+                <Ionicons
+                  name="cart"
+                  size={24}
+                  color={Colors.primaryGreen700}
+                />
                 <Badge style={{ position: "absolute", top: -8, right: -16 }}>
                   3
                 </Badge>
@@ -96,6 +92,9 @@ function ProfileScreen() {
               {userInfo?.lastName} {userInfo?.firstName} -{" "}
               {userInfo?.phoneNumber}
             </Text>
+            <Text style={[styles.textDisplay, { fontSize: 12, marginTop: 4 }]}>
+              {userInfo?.email}
+            </Text>
           </View>
         </LinearGradient>
 
@@ -106,37 +105,43 @@ function ProfileScreen() {
             DefaultTheme.flex_1,
             { width: "100%", paddingTop: 12 },
           ]}
+          contentContainerStyle={{ paddingBottom: 50 }}
         >
           <View style={styles.orderContainer}>
-            <HeaderContent onPress={() => {}} label={"Xem tất cả"} icon={true}>
-              Đơn hàng của bạn
-            </HeaderContent>
+            <View
+              style={{
+                borderBottomWidth: 2,
+                borderBottomColor: "#ddd",
+                marginBottom: 20,
+                paddingBottom: 4,
+              }}
+            >
+              <HeaderContent
+                onPress={() => {}}
+                label={"Xem tất cả"}
+                icon={true}
+              >
+                Đơn hàng của bạn
+              </HeaderContent>
+            </View>
 
             <GrayLine />
 
             <View style={styles.orderViewContent}>
               <TouchableOpacity style={styles.orderView}>
-                <FontAwesome5 name="people-carry" size={30} color="gray" />
+                <Ionicons name="file-tray-outline" size={30} color="gray" />
                 <Text style={styles.orderTextView}>Chờ vận{"\n"}chuyển</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.orderView}>
-                <FontAwesome5 name="shipping-fast" size={30} color="gray" />
+                <Ionicons name="swap-horizontal" size={30} color="gray" />
                 <Text style={styles.orderTextView}>Đang vận{"\n"}chuyển</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.orderView}>
-                <MaterialCommunityIcons
-                  name="book-check-outline"
-                  size={30}
-                  color="gray"
-                />
+                <Ionicons name="bag-check-outline" size={30} color="gray" />
                 <Text style={styles.orderTextView}>Đã nhận{"\n"}hàng</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.orderView}>
-                <Fontisto
-                  name="spinner-rotate-forward"
-                  size={30}
-                  color="gray"
-                />
+                <Ionicons name="refresh" size={30} color="gray" />
                 <Text style={styles.orderTextView}>Đổi trả{"\n"}hàng</Text>
               </TouchableOpacity>
             </View>
@@ -144,20 +149,14 @@ function ProfileScreen() {
             <GrayLine />
 
             <GridTile
-              icon={<AntDesign name="user" size={24} color="black" />}
+              icon={<Ionicons name="person-outline" size={28} color="grey" />}
               onPress={() => {}}
             >
               Thông tin của bạn
             </GridTile>
             <GridTile
-              icon={
-                <MaterialCommunityIcons
-                  name="map-marker-radius-outline"
-                  size={24}
-                  color="black"
-                />
-              }
-              onPress={() => {}}
+              icon={<Ionicons name="location-outline" size={28} color="grey" />}
+              onPress={() => navigation.navigate("AddressScreen")}
             >
               Sổ địa chỉ
             </GridTile>
@@ -170,33 +169,36 @@ function ProfileScreen() {
             */}
 
             <GridTile
-              icon={<AntDesign name="wallet" size={24} color="black" />}
-              onPress={modalWalletHandler}
+              icon={<Ionicons name="wallet-outline" size={28} color="grey" />}
+              onPress={() => {}}
             >
               Ví tiền của bạn
             </GridTile>
 
             <GridTile
-              icon={<Entypo name="heart-outlined" size={24} color="black" />}
+              icon={<Ionicons name="heart-outline" size={28} color="grey" />}
               onPress={() => {}}
             >
               Yêu thích
             </GridTile>
+
             <GridTile
               icon={
-                <MaterialCommunityIcons
-                  name="history"
-                  size={24}
-                  color="black"
-                />
+                <MaterialCommunityIcons name="history" size={28} color="grey" />
               }
               onPress={() => {}}
             >
               Lịch sử mua hàng
             </GridTile>
           </View>
+
           <View style={styles.gridItem}>
-            <MainButton onPress={logout}>Đăng xuất</MainButton>
+            <MainButton
+              styleButton={{ backgroundColor: "grey" }}
+              onPress={logout}
+            >
+              Đăng xuất
+            </MainButton>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -254,15 +256,17 @@ const styles = StyleSheet.create({
   orderContainer: {
     flex: 1,
     width: "100%",
-    backgroundColor: Colors.primaryGreen50,
     padding: 20,
+    backgroundColor: "#fff",
     borderRadius: 12,
   },
   orderHeader: {
+    marginBottom: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 4,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 4,
   },
   orderContent: {
     width: "100%",
@@ -284,13 +288,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   orderView: {
+    width: "25%",
+    padding: 14,
     alignItems: "center",
     justifyContent: "center",
-    padding: 4,
   },
   orderTextView: {
     fontSize: 12,
-    marginTop: 4,
+    marginTop: 14,
+    fontWeight: "bold",
+    textAlign: "center",
   },
   scrollViewDetail1: {
     flexDirection: "row",

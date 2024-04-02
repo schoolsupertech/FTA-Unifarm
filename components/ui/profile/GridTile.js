@@ -1,17 +1,17 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 function GridTile({ onPress, icon, children }) {
   return (
     <TouchableOpacity style={styles.orderLineViewContent} onPress={onPress}>
       <View style={styles.orderInnerViewContent}>
         {icon}
-        <View style={{ marginLeft: 8 }}>
-          <Text style={styles.textOrder}>{children}</Text>
+        <View style={{ marginLeft: 18 }}>
+          <Text style={styles.textContent}>{children}</Text>
         </View>
       </View>
-      <AntDesign name="right" size={24} color="gray" />
+      <Ionicons name="chevron-forward" size={24} color="gray" />
     </TouchableOpacity>
   );
 }
@@ -20,21 +20,18 @@ export default GridTile;
 
 const styles = StyleSheet.create({
   orderLineViewContent: {
-    width: "100%",
-    paddingBottom: 8,
-    marginVertical: 8,
+    padding: 12,
+    marginBottom: 4,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "gray",
   },
   orderInnerViewContent: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
   },
-  textOrder: {
+  textContent: {
     fontSize: 14,
     fontWeight: "500",
   },

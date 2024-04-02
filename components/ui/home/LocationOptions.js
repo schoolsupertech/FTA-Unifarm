@@ -94,7 +94,10 @@ function LocationOptions(props) {
     <Modal visible={props.visible.isVisible} animationType="slide">
       <View style={DefaultTheme.root}>
         <View style={styles.title}>
-          <PaperText variant="headlineMedium" style={{ fontWeight: "bold" }}>
+          <PaperText
+            variant="headlineMedium"
+            style={{ fontWeight: "bold", fontSize: 20 }}
+          >
             Cập Nhật Địa Điểm
           </PaperText>
         </View>
@@ -107,9 +110,9 @@ function LocationOptions(props) {
         >
           <View style={styles.modalView}>
             <View style={styles.location}>
+              {/*
               <Searchbar
                 placeholder="Chọn ví trí chung cư"
-                elevation={3}
                 theme={DefaultTheme.searchbar}
                 icon={() => (
                   <Ionicons
@@ -120,6 +123,23 @@ function LocationOptions(props) {
                 )}
                 onChangeText={onSearchingApartmentHandler}
               />
+              */}
+              <TextInput
+                placeholder="Chọn ví trí chung cư"
+                onChangeText={onSearchingApartmentHandler}
+                style={{
+                  backgroundColor: "white",
+                  paddingLeft: 25,
+                  // borderBottomWidth: 2,
+                  // borderBottomColor: 'green'
+                }}
+                selectionColor={"green"}
+                placeholderTextColor={"grey"}
+                underlineColor="transparent"
+              />
+              <View style={{ position: "absolute", top: 15, left: 10 }}>
+                <Ionicons name="location" size={24} color={"green"} />
+              </View>
               {isApartmentSearching && (
                 <View style={styles.dropdownContainer}>
                   {searchingApartment.length ? (
@@ -151,6 +171,7 @@ function LocationOptions(props) {
               )}
             </View>
             <View style={styles.location}>
+              {/*
               <Searchbar
                 placeholder="Chọn trạm nhận hàng (station)"
                 elevation={3}
@@ -164,6 +185,23 @@ function LocationOptions(props) {
                 )}
                 onChangeText={onSearchingStationHandler}
               />
+              */}
+              <TextInput
+                placeholder="Chọn trạm nhận hàng"
+                onChangeText={onSearchingStationHandler}
+                style={{
+                  backgroundColor: "white",
+                  paddingLeft: 25,
+                  // borderBottomWidth: 2,
+                  // borderBottomColor: 'green'
+                }}
+                selectionColor={"green"}
+                placeholderTextColor={"grey"}
+                underlineColor="transparent"
+              />
+              <View style={{ position: "absolute", top: 15, left: 10 }}>
+                <Ionicons name="location" size={24} color={"green"} />
+              </View>
               {isStationSearching && (
                 <View style={styles.dropdownContainer}>
                   {searchingStation.length ? (
@@ -225,15 +263,20 @@ function LocationOptions(props) {
           <View style={styles.btnContainer}>
             <View style={[DefaultTheme.btnView, { marginRight: 4 }]}>
               <MainButton
+                styleButton={{ backgroundColor: "grey" }}
+                onPress={props.onCancel}
+              >
+                Huỷ bỏ
+              </MainButton>
+            </View>
+            <View style={[DefaultTheme.btnView, { marginLeft: 8 }]}>
+              <MainButton
                 onPress={() =>
                   props.onPress(apartmentInfo, stationInfo, isDefault)
                 }
               >
                 Lưu
               </MainButton>
-            </View>
-            <View style={[DefaultTheme.btnView, { marginLeft: 8 }]}>
-              <MainButton onPress={props.onCancel}>Huỷ bỏ</MainButton>
             </View>
           </View>
         </ScrollView>
@@ -249,15 +292,15 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     padding: 12,
     borderRadius: 20,
-    borderColor: "green",
-    borderWidth: 2,
+    // borderColor: "green",
+    // borderWidth: 2,
     alignItems: "flex-start",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 5,
   },
@@ -272,12 +315,8 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   dropdownSearching: {
-    backgroundColor: Colors.primaryGreen50,
-    padding: 8,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    backgroundColor: "white",
+    padding: 14,
     flexWrap: "wrap",
     justifyContent: "center",
     alignItems: "center",
@@ -289,11 +328,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    marginTop: 2,
   },
   dropdownItem: {
-    height: 40,
-    marginBottom: 4,
+    height: 50,
     justifyContent: "center",
   },
   dropdownText: {
@@ -307,24 +344,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
-    backgroundColor: Colors.primaryGreen50,
+    backgroundColor: "white",
   },
   dropdownNoneText: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "bold",
-    color: Colors.primaryGreen800,
+    color: "grey",
   },
   searchedContent: {
     width: "100%",
-    marginTop: 12,
     padding: 12,
     justifyContent: "center",
     alignItems: "flex-start",
-    backgroundColor: Colors.primaryGreen50,
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8,
-    borderColor: "gray",
-    borderWidth: 1,
+    backgroundColor: "#f5f5f5",
+    borderTopRightRadius: 4,
+    borderTopLeftRadius: 4,
   },
   txtInputContainer: {
     backgroundColor: DefaultTheme.btnBgColor800,
@@ -342,13 +376,17 @@ const styles = StyleSheet.create({
     padding: 2,
     marginRight: 4,
     borderRadius: 8,
-    borderWidth: 1,
     borderColor: Colors.primaryGreen700,
+    transform: [
+      {
+        scale: 0.45,
+      },
+    ],
   },
   btnContainer: {
     flexDirection: "row",
     marginHorizontal: 32,
-    marginTop: 12,
+    marginTop: 0,
     marginBottom: 20,
     justifyContent: "center",
     alignItems: "center",

@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableHighlight,
+  TouchableOpacity,
+} from "react-native";
 import { Checkbox } from "react-native-paper";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-import CardItem from "../../common/CardItem";
 import Title from "../../common/text/Title";
 import GrayLine from "../../common/text/GrayLine";
 import createAxios from "../../../utils/AxiosUtility";
@@ -11,52 +17,82 @@ import {
   removeFromCart,
   clearCart,
 } from "../../../context/redux/actions/cartActions";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 const API = createAxios();
 
 function CardCartItem({ cart, removeFromCart, clearCart }) {
-  const [prodItemsInfo, setProdItemsInfo] = useState(cart);
+  const [prodItemsInfo, setProdItemsInfo] = useState([]);
 
   console.log(
-    "Product Items Info in Cart: " + JSON.stringify(prodItemsInfo, null, 2),
+    "Product items in Cart Screen: " + JSON.stringify(prodItemsInfo, null, 2),
   );
+  console.log("cart in Cart Screen: " + JSON.stringify(cart, null, 2));
 
   useEffect(() => {
     const getReduxCart = () => {
-      const fetchProdItems = async (prodItemId) => {
-        const response = await API.get(
-          "/product/" + prodItemId + "/product-items",
-        );
-        const getProdItemInfoId = prodItemsInfo.find(
-          (item) => item.id === response.payload.id,
-        );
-        console.log(
-          "Get Product Item Info Id: " +
-            JSON.stringify(getProdItemInfoId, null, 2),
-        );
-        response.payload.map((items) => {
-          if (items.id === getProdItemInfoId.id) {
-            const updatedProdItemInfo = {
-              ...getProdItemInfoId,
-            };
-            console.log(
-              "Updated Product Item Info: " +
-                JSON.stringify(updatedProdItemInfo, null, 2),
-            );
-          }
-        });
+      const fetchProdItems = async (prodItem) => {
+        const response = await API.get("/product-item/" + prodItem.id);
+        if (prodItem.id === response.payload.id) {
+          const updatedProdItemInfo = {
+            ...prodItem,
+            ...response.payload,
+          };
+          setProdItemsInfo([...prodItemsInfo, updatedProdItemInfo]);
+        }
       };
 
-      if (cart && cart.items.length) {
-        cart.items.map((items) => {
-          console.log("Product Item Id in Cart: " + items.id);
-          fetchProdItems(items.id);
+      if (Array.isArray(cart.items) && cart.items.length !== 0) {
+        cart.items.map((item) => {
+          fetchProdItems(item);
         });
       }
     };
 
     getReduxCart();
   }, []);
+
+  function onDeleteHandler(rowKey) {
+    removeFromCart(rowKey);
+    const newData = [...prodItemsInfo];
+    const prevIndex = prodItemsInfo.findIndex((item) => item.id === rowKey);
+    newData.splice(prevIndex, 1);
+    setProdItemsInfo(newData);
+  }
+
+  function renderItem(itemData, rowMap) {
+    return (
+      <View style={styles.rowFront}>
+        <TouchableHighlight style={styles.rowFrontVisible}>
+          <View>
+            <Text style={styles.title} numberOfLines={1}>
+              {itemData.item.title}
+            </Text>
+            <Text style={styles.details} numberOfLines={1}>
+              {itemData.item.price} vnđ / {itemData.item.unit}
+            </Text>
+          </View>
+        </TouchableHighlight>
+      </View>
+    );
+  }
+
+  function renderHiddenItem(itemData, rowMap) {
+    return (
+      <View style={styles.rowBack}>
+        <TouchableOpacity
+          style={[styles.backRightBtn, styles.backRightBtnRight]}
+          onPress={() => onDeleteHandler(itemData.item.id)}
+        >
+          <MaterialCommunityIcons
+            name="trash-can-outline"
+            size={25}
+            color="#fff"
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -67,24 +103,49 @@ function CardCartItem({ cart, removeFromCart, clearCart }) {
          *
          * });
          */
-        <View style={styles.groupContainer}>
-          <View style={styles.groupItems}>
-            <View style={styles.checkbox}>
-              <Checkbox status="checked" onPress={() => {}} color="black" />
+        prodItemsInfo && prodItemsInfo.length ? (
+          <View style={styles.groupContainer}>
+            <View style={styles.groupItems}>
+              <View style={styles.checkbox}>
+                <Checkbox status="checked" onPress={() => {}} color="black" />
+              </View>
+              <View style={styles.groupTitle}>
+                <Title color="black">Tôi là ông FarmHub A</Title>
+              </View>
             </View>
-            <View style={styles.groupTitle}>
-              <Title color="black">Tôi là ông FarmHub A</Title>
-            </View>
-          </View>
-          <GrayLine />
-          {prodItemsInfo && prodItemsInfo.length ? (
-            prodItemsInfo.map((item, index) => (
+            <GrayLine />
+            {/*
+              prodItemsInfo.map((item, index) => (
               <CardItem item={item} key={index} />
             ))
-          ) : (
-            <Text>No product</Text>
-          )}
-        </View>
+            */}
+            <SwipeListView
+              data={prodItemsInfo}
+              keyExtractor={(item) => item.id}
+              renderItem={renderItem}
+              renderHiddenItem={renderHiddenItem}
+              rightOpenValue={-75}
+              disableRightSwipe
+            />
+          </View>
+        ) : (
+          <View
+            style={[
+              styles.groupContainer,
+              {
+                alignItems: "center",
+                justifyContent: "center",
+                height: 300,
+                padding: 20,
+              },
+            ]}
+          >
+            <Ionicons name="bag-remove-outline" size={100} color="gray" />
+            <Text style={styles.textEmptyCart}>
+              Bạn chưa có sản phẩm nào được thêm vào giỏ hàng
+            </Text>
+          </View>
+        )
       }
     </View>
   );
@@ -123,5 +184,66 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     borderLeftWidth: 2,
     borderLeftColor: "gray",
+  },
+  textEmptyCart: {
+    color: "gray",
+    fontSize: 18,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+  rowFront: {
+    backgroundColor: "#FFF",
+    borderRadius: 5,
+    height: 60,
+    margin: 5,
+    marginBottom: 15,
+    shadowColor: "#999",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  rowFrontVisible: {
+    backgroundColor: "#FFF",
+    borderRadius: 5,
+    height: 60,
+    padding: 10,
+    marginBottom: 15,
+  },
+  title: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: "#666",
+  },
+  details: {
+    fontSize: 12,
+    color: "#999",
+  },
+  rowBack: {
+    alignItems: "center",
+    backgroundColor: "#DDD",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft: 15,
+    margin: 5,
+    marginBottom: 15,
+    borderRadius: 5,
+  },
+  backRightBtn: {
+    alignItems: "flex-end",
+    bottom: 0,
+    justifyContent: "center",
+    position: "absolute",
+    top: 0,
+    width: 75,
+    paddingRight: 17,
+  },
+  backRightBtnRight: {
+    backgroundColor: "red",
+    right: 0,
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
   },
 });

@@ -12,24 +12,20 @@ import { Searchbar, Snackbar } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import Carousel from "react-native-snap-carousel";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-import BannerNewsLettersSlider from "../components/ui/home/BannerNewsLettersSlider";
 import TopHeader from "../components/common/headers/TopHeader";
 import LocationOptions from "../components/ui/home/LocationOptions";
-import PopularCategories from "../components/common/list/PopularCategories";
 import HeaderContent from "../components/common/HeaderContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
 import createAxios from "../utils/AxiosUtility";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { Colors } from "../constants/colors";
-import { windowWidth } from "../utils/Dimensions";
-import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
 import { AuthContext } from "../context/AuthContext";
 
 const API = createAxios();
 
-function HomeScreen() {
+function TodayScreen() {
   const navigation = useNavigation();
   const { authState } = useContext(AuthContext);
   const [searchPrd, setSearchPrd] = useState("");
@@ -40,43 +36,53 @@ function HomeScreen() {
     isVisible: false,
     status: null,
   });
-  const [categoriesRecommendsInfo, setCategoriesRecommendsInfo] =
-    useState(null);
   const [prodItemsInfo, setProdItemsInfo] = useState([]);
+  //////////////////////////////
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [datePicked, setDatePicked] = useState(new Date());
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
 
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+  const handleConfirm = (date) => {
+    setDatePicked(date);
+    hideDatePicker();
+  };
+  ///////////////////////////////////////
+
+  function formatDatePicked(datePicked) {
+    const day = datePicked.getDate();
+    const month = datePicked.getMonth() + 1;
+    const year = datePicked.getFullYear();
+    return `${day < 10 ? "0" + day : day}/${month < 10 ? "0" + month : month}/${year}`;
+  }
   useEffect(() => {
     const fetchData = async () => {
       const fetchProdItems = async (prodItemId) => {
         const prodItemsInfoResponse = await API.get(
           "/product/" + prodItemId + "/product-items",
         );
-        const isDuplicate = prodItemsInfo.some(
-          (items) =>
-            items.id ===
-            prodItemsInfoResponse.payload.map((prodId) => prodId.id),
-        );
-
-        !isDuplicate &&
-          setProdItemsInfo((oldProdItemsInfo) => [
-            ...oldProdItemsInfo,
-            ...prodItemsInfoResponse.payload,
-          ]);
+        // const newProdItemsInfo = Object.fromEntries(
+        //   Object.entries(prodItemsInfo),
+        // );
+        setProdItemsInfo((oldProdItemsInfo) => [
+          ...oldProdItemsInfo,
+          ...prodItemsInfoResponse.payload,
+        ]);
       };
 
       const catRecomResponse = await API.get("/categories-recommends");
-      setCategoriesRecommendsInfo(
-        catRecomResponse.payload.filter(
-          (category) => category.displayIndex <= 5,
-        ),
-      );
 
-      let categoryRecomId = catRecomResponse.payload.find((items) =>
-        items.name.toLowerCase().includes("nổi bật"),
-      );
+      let categoryRecomId = catRecomResponse.payload
+        .filter((items) => items.name.toLowerCase().includes("nổi bật"))
+        .map((item) => item.id);
 
       if (categoryRecomId) {
         const prodsInfoResponse = await API.get(
-          "/category/" + categoryRecomId.id + "/products",
+          "/category/" + categoryRecomId + "/products",
         );
         prodsInfoResponse.payload.map((item) => {
           fetchProdItems(item.id);
@@ -111,10 +117,6 @@ function HomeScreen() {
 
     fetchingUserLocation();
   }, []);
-
-  const renderNewsLettersBanner = ({ item, index }) => (
-    <BannerNewsLettersSlider key={index} data={item} />
-  );
 
   async function updateLocationHandler(apartmentData, stationData, isDefault) {
     if (apartmentData && stationData) {
@@ -180,24 +182,6 @@ function HomeScreen() {
     }
   }
 
-  function renderPopularCategories(item) {
-    function selectedCategoryHandler() {
-      navigation.navigate("CatListProdScreen", {
-        catRecomId: item.id,
-        catRecomName: item.name,
-      });
-    }
-
-    return (
-      <PopularCategories
-        key={item.id}
-        title={item.name}
-        image={item.image}
-        onPress={selectedCategoryHandler}
-      />
-    );
-  }
-
   function renderProdItem(item) {
     const prodItemProps = {
       id: item.id,
@@ -230,7 +214,7 @@ function HomeScreen() {
 
     return (
       <CardProdItem
-        key={prodItemProps.id}
+        key={prodItemsInfo.id}
         {...prodItemProps}
         onAddingCart={AddingCartHandler}
       />
@@ -247,7 +231,7 @@ function HomeScreen() {
   }
 
   return (
-    <SafeAreaView style={DefaultTheme.root}>
+    <SafeAreaView style={[DefaultTheme.root]}>
       <LinearGradient
         colors={["white", Colors.primaryGreen900]}
         style={styles.linearGradient}
@@ -276,10 +260,11 @@ function HomeScreen() {
                 color: Colors.primaryGreen800,
               }}
             >
-              Vị trí của bạn:{" "}
+              {" "}
             </Text>
           </View>
           <TouchableOpacity
+            style={{}}
             onPress={() =>
               authState?.authenticated &&
               setLocationModalVisible({
@@ -299,74 +284,67 @@ function HomeScreen() {
           onPress={updateLocationHandler}
           onCancel={onCancelUpdateLocationHandler}
         />
-        <Searchbar
+        {/* <View style={styles.headerMenu}>
+          <Text style={styles.textMenu}>
+            <Text style={{ fontWeight: "600" }}>
+              
+              <Text style={{ textDecorationLine: "underline" }}>
+                Ngày 26 tháng 01 năm 2024
+              </Text>
+            </Text>
+          </Text>
+        </View> */}
+        {/* <Searchbar
           placeholder="Tìm kiếm sản phẩm..."
-          elevation={2}
+          elevation={1}
           theme={DefaultTheme.searchbar}
           value={searchPrd}
           onChangeText={displaySearchPrdText}
           // onIconPress={() =>
           //   navigation.navigate("SearchScreen", { searchItem: searchPrd })
           // }
-        />
+        /> */}
         <TouchableOpacity
-          style={{ alignItems: "flex-end", marginTop: 8 }}
-          onPress={() => navigation.navigate("TodayScreen")}
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+            borderWidth: 2,
+            borderColor: "white",
+            borderRadius: 5,
+            backgroundColor: Colors.primaryGreen50,
+          }}
+          onPress={showDatePicker}
         >
-          <Text style={styles.textMenu}>
-            <Ionicons
-              name="calendar"
-              size={20}
-              color={Colors.primaryGreen100}
-            />
-            Hôm nay: Ngày 26 tháng 01 năm 2024{" "}
-            <Ionicons
-              name="arrow-forward-circle"
-              size={20}
-              color={Colors.primaryGreen100}
-            />
+          <Ionicons
+            name="calendar-outline"
+            size={25}
+            color={Colors.primaryGreen700}
+          />
+          <Text
+            style={{
+              color: Colors.primaryGreen700,
+              fontWeight: "bold",
+              fontSize: 16,
+            }}
+          >
+            {"  "}
+            {datePicked && formatDatePicked(datePicked)}
           </Text>
         </TouchableOpacity>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+          cancelTextIOS="Đóng"
+          confirmTextIOS="Xác nhận"
+          buttonTextColorIOS={Colors.primaryGreen700}
+        />
       </LinearGradient>
 
       <ScrollView style={DefaultTheme.scrollContainer}>
-        <View style={styles.contentView}>
-          <View style={{ marginBottom: 8 }}>
-            <HeaderContent>Tin tức mới</HeaderContent>
-          </View>
-          <Carousel
-            ref={(c) => {
-              this._carousel = c;
-            }}
-            data={SLIDERNEWSLETTERS}
-            renderItem={renderNewsLettersBanner}
-            sliderWidth={windowWidth - 40}
-            itemWidth={320}
-            loop={true}
-          />
-        </View>
-
-        {/* Danh mục */}
-        <View style={styles.contentView}>
-          <HeaderContent
-            onPress={selectedCategoriesStack}
-            label={"Xem tất cả"}
-            icon={true}
-          >
-            Danh mục phổ biến
-          </HeaderContent>
-          {categoriesRecommendsInfo && (
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            >
-              {categoriesRecommendsInfo.map((item) =>
-                renderPopularCategories(item),
-              )}
-            </ScrollView>
-          )}
-        </View>
-
         {/* Danh sách sản phẩm */}
         <View style={styles.contentView}>
           <View style={{ marginBottom: 8 }}>
@@ -389,7 +367,7 @@ function HomeScreen() {
   );
 }
 
-export default HomeScreen;
+export default TodayScreen;
 
 const styles = StyleSheet.create({
   // searchBar: {
@@ -410,7 +388,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "flex-start",
-    alignItems: "flex-start",
+    alignItems: "center",
     marginVertical: 12,
   },
   headerLocationContent: {
@@ -420,9 +398,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textLocation: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 15,
     color: Colors.primaryGreen800,
+    // textDecorationLine: "underline",
+    fontWeight: "bold",
   },
   headerMenu: {
     width: "100%",
@@ -436,7 +415,8 @@ const styles = StyleSheet.create({
   },
   contentView: {
     marginTop: 18,
-    marginHorizontal: 12,
+    // marginVertical: 8,
+    marginHorizontal: 10,
   },
   categoryTitle: {
     fontSize: 18,

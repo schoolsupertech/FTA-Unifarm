@@ -84,9 +84,16 @@ function CardProdItem(props) {
     );
   }
 
+  function formatCurrency(amount) {
+    return parseFloat(amount).toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VNĐ",
+    });
+  }
+
   return (
     <TouchableOpacity onPress={selectedProductDetailHandler}>
-      <Card style={styles.container}>
+      <Card style={styles.container} mode="contained">
         <Card.Content style={styles.content}>
           {prodItemImgsInfo ? (
             imgCoverHandler()
@@ -105,16 +112,21 @@ function CardProdItem(props) {
             <Title>{props.title}</Title>
             <View style={styles.titleContent}>
               <View style={DefaultTheme.flex_1}>
+                <PaperText variant="bodySmall" style={styles.listedPrice}>
+                  {/* props.listedPrice */} 50.000 VNĐ
+                </PaperText>
+                <PaperText
+                  variant="bodyLarge"
+                  style={{ fontWeight: "500", color: "green", marginBottom: 4 }}
+                >
+                  {formatCurrency(props.price)}
+                </PaperText>
                 <View style={styles.progressBarContent}>
                   <PaperText variant="bodySmall">
                     Đã bán {/* props.sold */}
                   </PaperText>
                   <ProgressBar progress={0.5} color={DefaultTheme.pgBarColor} />
                 </View>
-                <PaperText variant="bodyLarge">{props.price} Vnđ</PaperText>
-                <PaperText variant="bodySmall" style={styles.listedPrice}>
-                  {/* props.listedPrice */} Vnđ
-                </PaperText>
               </View>
               <CartBtn onCartAdded={isCartAdded} onPress={onToggleSnackBar} />
             </View>
@@ -130,8 +142,10 @@ export default CardProdItem;
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 8,
-    backgroundColor: DefaultTheme.cardBgColor,
-    marginBottom: 12,
+    backgroundColor: DefaultTheme.bgColor,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: "#EEEEEE",
   },
   content: {
     flexDirection: "row",
@@ -152,7 +166,7 @@ const styles = StyleSheet.create({
   titleContent: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 12,
+    marginTop: 4,
   },
   progressBarContent: {
     marginEnd: 32,

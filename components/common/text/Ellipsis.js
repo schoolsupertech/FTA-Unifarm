@@ -15,7 +15,7 @@ function Ellipsis({ description, numberOfLines }) {
       <Text
         variant="bodyMedium"
         numberOfLines={isCollapsed ? numberOfLines : null}
-        style={{ marginBottom: 5 }}
+        style={{ marginBottom: 4 }}
       >
         {description}
       </Text>

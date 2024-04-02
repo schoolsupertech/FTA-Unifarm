@@ -1,8 +1,8 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 
-import { AuthProvider } from "./context/AuthContext";
 import AppNav from "./navigators/AppNav";
+import { AuthProvider } from "./context/AuthContext";
 
 export default function App() {
   return (
