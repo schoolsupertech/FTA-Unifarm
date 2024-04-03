@@ -29,7 +29,7 @@ function AppStackNav() {
         headerLeft: () => (
           <Ionicons
             style={{ margin: 0, padding: 0 }}
-            icon={"chevron-back-outline"}
+            name={"chevron-back-outline"}
             size={28}
             onPress={() => {
               navigation.goBack();

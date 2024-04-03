@@ -8,8 +8,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  TextInput,
 } from "react-native";
-import { Text as PaperText, Searchbar, Checkbox } from "react-native-paper";
+import { Text as PaperText, Checkbox } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 
 import MainButton from "../../common/button/MainButton";
@@ -17,10 +18,20 @@ import createAxios from "../../../utils/AxiosUtility";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
 import { Colors } from "../../../constants/colors";
 import Title from "../../common/text/Title";
+import HeaderContent from "../../common/HeaderContent";
+import InputField from "../../common/text/InputField";
 
 const API = createAxios();
 
 function LocationOptions(props) {
+  const [userLocation, setUserLocation] = useState({
+    name: "",
+    phone: "",
+    areaId: "",
+    stationId: "",
+    apartmentId: "",
+    isDefault: false,
+  });
   const [apartmentInfo, setApartmentInfo] = useState(null);
   const [stationInfo, setStationInfo] = useState(null);
   const [isDefault, setIsDefault] = useState(false);
@@ -28,6 +39,13 @@ function LocationOptions(props) {
   const [isStationSearching, setIsStationSearching] = useState(false);
   const [searchingApartment, setSearchingApartment] = useState([]);
   const [searchingStation, setSearchingStation] = useState([]);
+
+  function inputChangingHandler(value, userField) {
+    setUserLocation({
+      ...userLocation,
+      [userField]: value,
+    });
+  }
 
   async function onSearchingApartmentHandler(value) {
     if (value) {
@@ -105,41 +123,74 @@ function LocationOptions(props) {
           style={[
             DefaultTheme.scrollContainer,
             DefaultTheme.flex_1,
-            { paddingBottom: 12 },
+            { paddingBottom: 20, marginBottom: 20 },
           ]}
         >
           <View style={styles.modalView}>
-            <View style={styles.location}>
-              {/*
-              <Searchbar
-                placeholder="Chọn ví trí chung cư"
-                theme={DefaultTheme.searchbar}
-                icon={() => (
-                  <Ionicons
-                    name="location"
-                    color={Colors.primaryGreen900}
-                    size={24}
-                  />
-                )}
-                onChangeText={onSearchingApartmentHandler}
-              />
-              */}
-              <TextInput
-                placeholder="Chọn ví trí chung cư"
-                onChangeText={onSearchingApartmentHandler}
-                style={{
-                  backgroundColor: "white",
-                  paddingLeft: 25,
-                  // borderBottomWidth: 2,
-                  // borderBottomColor: 'green'
-                }}
-                selectionColor={"green"}
-                placeholderTextColor={"grey"}
-                underlineColor="transparent"
-              />
-              <View style={{ position: "absolute", top: 15, left: 10 }}>
-                <Ionicons name="location" size={24} color={"green"} />
+            <View style={styles.locationContainer}>
+              <View style={{ marginBottom: 8 }}>
+                <HeaderContent>Liên hệ</HeaderContent>
               </View>
+              <InputField
+                label={"Tên người nhận hàng"}
+                icon={
+                  <Ionicons
+                    name="person-outline"
+                    size={20}
+                    color="grey"
+                    style={{ marginRight: 6 }}
+                  />
+                }
+                maxLength={100}
+                value={userLocation.name}
+                onChangeText={(value) => inputChangingHandler(value, "name")}
+              />
+              <InputField
+                label={"Số điện thoại liên hệ"}
+                icon={
+                  <Ionicons
+                    name="call-outline"
+                    size={20}
+                    color="grey"
+                    style={{ marginRight: 6 }}
+                  />
+                }
+                maxLength={10}
+                keyboardType={"number-pad"}
+                autoCapitalize="none"
+                autoCorrect={false}
+                value={userLocation.phone}
+                onChangeText={(value) => inputChangingHandler(value, "phone")}
+              />
+            </View>
+            <View style={styles.locationContainer}>
+              <View style={{ marginBottom: 8 }}>
+                <HeaderContent>Địa chỉ liên lạc</HeaderContent>
+              </View>
+              <InputField
+                label={"Chọn khu vực chung cư"}
+                icon={
+                  <Ionicons
+                    name="stats-chart-outline"
+                    size={20}
+                    color="grey"
+                    style={{ marginRight: 6 }}
+                  />
+                }
+              />
+              <InputField
+                label={"Chọn vị trí chung cư"}
+                icon={
+                  <Ionicons
+                    name="home-outline"
+                    size={20}
+                    color="grey"
+                    style={{ marginRight: 6 }}
+                  />
+                }
+                value={apartmentInfo && apartmentInfo.name}
+                onChangeText={onSearchingApartmentHandler}
+              />
               {isApartmentSearching && (
                 <View style={styles.dropdownContainer}>
                   {searchingApartment.length ? (
@@ -170,7 +221,23 @@ function LocationOptions(props) {
                 </View>
               )}
             </View>
-            <View style={styles.location}>
+            <View style={styles.locationContainer}>
+              <View style={{ marginBottom: 8 }}>
+                <HeaderContent>Chọn trạm nhận hàng</HeaderContent>
+              </View>
+              <InputField
+                label={"Chọn trạm nhận hàng"}
+                icon={
+                  <Ionicons
+                    name="location-outline"
+                    size={20}
+                    color="grey"
+                    style={{ marginRight: 6 }}
+                  />
+                }
+                value={stationInfo && stationInfo.name}
+                onChangeText={onSearchingStationHandler}
+              />
               {/*
               <Searchbar
                 placeholder="Chọn trạm nhận hàng (station)"
@@ -186,22 +253,6 @@ function LocationOptions(props) {
                 onChangeText={onSearchingStationHandler}
               />
               */}
-              <TextInput
-                placeholder="Chọn trạm nhận hàng"
-                onChangeText={onSearchingStationHandler}
-                style={{
-                  backgroundColor: "white",
-                  paddingLeft: 25,
-                  // borderBottomWidth: 2,
-                  // borderBottomColor: 'green'
-                }}
-                selectionColor={"green"}
-                placeholderTextColor={"grey"}
-                underlineColor="transparent"
-              />
-              <View style={{ position: "absolute", top: 15, left: 10 }}>
-                <Ionicons name="location" size={24} color={"green"} />
-              </View>
               {isStationSearching && (
                 <View style={styles.dropdownContainer}>
                   {searchingStation.length ? (
@@ -289,12 +340,13 @@ export default LocationOptions;
 
 const styles = StyleSheet.create({
   modalView: {
+    flex: 1,
     marginBottom: 4,
-    padding: 12,
-    borderRadius: 20,
+    // borderRadius: 20,
     // borderColor: "green",
     // borderWidth: 2,
-    alignItems: "flex-start",
+    alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -310,9 +362,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  location: {
+  locationContainer: {
     width: "100%",
-    marginVertical: 12,
+    padding: 12,
+    marginBottom: 20,
+    backgroundColor: "#EEEEEE",
   },
   dropdownSearching: {
     backgroundColor: "white",
@@ -356,9 +410,8 @@ const styles = StyleSheet.create({
     padding: 12,
     justifyContent: "center",
     alignItems: "flex-start",
-    backgroundColor: "#f5f5f5",
-    borderTopRightRadius: 4,
-    borderTopLeftRadius: 4,
+    backgroundColor: Colors.primaryGreen50,
+    borderRadius: 12,
   },
   txtInputContainer: {
     backgroundColor: DefaultTheme.btnBgColor800,
@@ -374,19 +427,20 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     padding: 2,
-    marginRight: 4,
+    marginRight: 2,
+    borderWidth: 0.5,
     borderRadius: 8,
     borderColor: Colors.primaryGreen700,
     transform: [
       {
-        scale: 0.45,
+        scale: 0.6,
       },
     ],
   },
   btnContainer: {
     flexDirection: "row",
     marginHorizontal: 32,
-    marginTop: 0,
+    marginTop: 12,
     marginBottom: 20,
     justifyContent: "center",
     alignItems: "center",

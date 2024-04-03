@@ -11,6 +11,7 @@ import axios from "axios";
 
 import CartBtn from "../../common/button/CartBtn";
 import Title from "../../common/text/Title";
+import currencyFormat from "../../../utils/CurrencyFormat";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
 import { BASE_URL } from "../../../api/config";
 import { AuthContext } from "../../../context/AuthContext";
@@ -84,13 +85,6 @@ function CardProdItem(props) {
     );
   }
 
-  function formatCurrency(amount) {
-    return parseFloat(amount).toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VNĐ",
-    });
-  }
-
   return (
     <TouchableOpacity onPress={selectedProductDetailHandler}>
       <Card style={styles.container} mode="contained">
@@ -113,13 +107,13 @@ function CardProdItem(props) {
             <View style={styles.titleContent}>
               <View style={DefaultTheme.flex_1}>
                 <PaperText variant="bodySmall" style={styles.listedPrice}>
-                  {/* props.listedPrice */} 50.000 VNĐ
+                  {/* props.listedPrice */} {currencyFormat(50000)}
                 </PaperText>
                 <PaperText
                   variant="bodyLarge"
                   style={{ fontWeight: "500", color: "green", marginBottom: 4 }}
                 >
-                  {formatCurrency(props.price)}
+                  {currencyFormat(props.price)}
                 </PaperText>
                 <View style={styles.progressBarContent}>
                   <PaperText variant="bodySmall">

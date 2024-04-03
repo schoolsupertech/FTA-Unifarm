@@ -262,43 +262,6 @@ function HomeScreen() {
             navigation.navigate("Notification");
           }}
         />
-        <View style={styles.headerLocation}>
-          <View style={styles.headerLocationContent}>
-            <Ionicons
-              name="location"
-              color={Colors.primaryGreen800}
-              size={20}
-            />
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "700",
-                color: Colors.primaryGreen800,
-              }}
-            >
-              Vị trí của bạn:{" "}
-            </Text>
-          </View>
-          <TouchableOpacity
-            onPress={() =>
-              authState?.authenticated &&
-              setLocationModalVisible({
-                ...locationModalVisible,
-                isVisible: true,
-                status: 0,
-              })
-            }
-          >
-            <Text style={styles.textLocation}>
-              Thủ Đức, Tp. Hồ Chí Minh <Ionicons name="arrow-down" />
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <LocationOptions
-          visible={locationModalVisible}
-          onPress={updateLocationHandler}
-          onCancel={onCancelUpdateLocationHandler}
-        />
         <Searchbar
           placeholder="Tìm kiếm sản phẩm..."
           elevation={2}
@@ -310,22 +273,42 @@ function HomeScreen() {
           // }
         />
         <TouchableOpacity
-          style={{ alignItems: "flex-end", marginTop: 8 }}
-          onPress={() => navigation.navigate("TodayScreen")}
+          onPress={() =>
+            authState?.authenticated &&
+            setLocationModalVisible({
+              ...locationModalVisible,
+              isVisible: true,
+              status: 0,
+            })
+          }
+          style={styles.headerContent}
         >
-          <Text style={styles.textMenu}>
-            <Ionicons
-              name="calendar"
-              size={20}
-              color={Colors.primaryGreen100}
-            />
-            Hôm nay: Ngày 26 tháng 01 năm 2024{" "}
-            <Ionicons
-              name="arrow-forward-circle"
-              size={20}
-              color={Colors.primaryGreen100}
-            />
+          <Ionicons name="location" size={20} color={Colors.primaryGreen800} />
+          <Text style={styles.headerText}>Thủ Đức, Tp. Hồ Chí Minh </Text>
+          <Ionicons
+            name="arrow-forward-circle"
+            size={16}
+            color={Colors.primaryGreen800}
+          />
+        </TouchableOpacity>
+        <LocationOptions
+          visible={locationModalVisible}
+          onPress={updateLocationHandler}
+          onCancel={onCancelUpdateLocationHandler}
+        />
+        <TouchableOpacity
+          onPress={() => navigation.navigate("TodayScreen")}
+          style={styles.headerContent}
+        >
+          <Ionicons name="calendar" size={20} color={Colors.primaryGreen800} />
+          <Text style={styles.headerText}>
+            Ngày 26 tháng 01 năm 2024 (Hôm nay){" "}
           </Text>
+          <Ionicons
+            name="arrow-forward-circle"
+            size={16}
+            color={Colors.primaryGreen800}
+          />
         </TouchableOpacity>
       </LinearGradient>
 
@@ -406,12 +389,17 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
   },
-  headerLocation: {
-    width: "100%",
+  headerContent: {
+    width: "auto",
+    padding: 12,
+    marginTop: 12,
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "flex-start",
-    alignItems: "flex-start",
-    marginVertical: 12,
+    backgroundColor: "rgba(220, 255, 220, 0.75)",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    borderColor: Colors.primaryGreen800,
   },
   headerLocationContent: {
     marginLeft: 8,
@@ -419,9 +407,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  textLocation: {
-    fontSize: 16,
-    fontWeight: "bold",
+  headerText: {
+    fontSize: 14,
+    fontWeight: "500",
+    marginLeft: 4,
     color: Colors.primaryGreen800,
   },
   headerMenu: {
@@ -429,10 +418,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-start",
     marginBottom: 20,
-  },
-  textMenu: {
-    fontSize: 14,
-    color: Colors.primaryGreen100,
   },
   contentView: {
     marginTop: 18,

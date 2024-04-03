@@ -125,8 +125,6 @@ function ProfileScreen() {
               </HeaderContent>
             </View>
 
-            <GrayLine />
-
             <View style={styles.orderViewContent}>
               <TouchableOpacity style={styles.orderView}>
                 <Ionicons name="file-tray-outline" size={30} color="gray" />

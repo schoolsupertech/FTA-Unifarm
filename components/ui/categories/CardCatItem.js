@@ -24,11 +24,10 @@ function CardCatItem({ title, image, onPress }) {
           ) : (
             <View
               style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
                 width: 180,
-                height: 180,
+                height: 200,
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <ActivityIndicator size={"small"} />

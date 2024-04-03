@@ -75,45 +75,46 @@ function TabNavigator() {
           ),
         }}
       />
-      <Tab.Screen
-        name="TodayScreen"
-        component={TodayScreen}
-        options={{
-          title: "Hôm nay",
-          tabBarIcon: ({ color, size }) => (
-            <View
-              style={{
-                backgroundColor: Colors.primaryGreen700,
-                borderRadius: 50,
-                padding: 20,
-                marginTop: -40,
-                shadowColor: "#7F5DF0",
-                shadowOffset: {
-                  width: 0,
-                  height: 4,
-                },
-                shadowOpacity: 0.25,
-              }}
-            >
-              <Ionicons name="flash" color="#fff" size={size} />
-            </View>
-          ),
-        }}
-      />
-      {authState?.authenticated && (
-        <Tab.Screen
-          name="Wallet"
-          component={WalletScreen}
-          options={{
-            title: "Ví",
-            tabBarIcon: ({ focused, color, size }) => (
-              <>
-                <Ionicons
-                  name={focused ? "wallet" : "wallet-outline"}
-                  color={color}
-                  size={size}
-                />
-                {/*
+      {authState?.authenticated ? (
+        <>
+          <Tab.Screen
+            name="TodayScreen"
+            component={TodayScreen}
+            options={{
+              title: "Hôm nay",
+              tabBarIcon: ({ size }) => (
+                <View
+                  style={{
+                    backgroundColor: Colors.primaryGreen700,
+                    borderRadius: 50,
+                    padding: 20,
+                    marginTop: -40,
+                    shadowColor: "#7F5DF0",
+                    shadowOffset: {
+                      width: 0,
+                      height: 4,
+                    },
+                    shadowOpacity: 0.25,
+                  }}
+                >
+                  <Ionicons name="flash" color="#fff" size={size} />
+                </View>
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Wallet"
+            component={WalletScreen}
+            options={{
+              title: "Ví",
+              tabBarIcon: ({ focused, color, size }) => (
+                <>
+                  <Ionicons
+                    name={focused ? "wallet" : "wallet-outline"}
+                    color={color}
+                    size={size}
+                  />
+                  {/*
                 <Badge
                   style={{
                     position: "absolute",
@@ -125,7 +126,23 @@ function TabNavigator() {
                   6
                 </Badge>
                 */}
-              </>
+                </>
+              ),
+            }}
+          />
+        </>
+      ) : (
+        <Tab.Screen
+          name="TodayScreen"
+          component={TodayScreen}
+          options={{
+            title: "Hôm nay",
+            tabBarIcon: ({ focused, color, size }) => (
+              <Ionicons
+                name={focused ? "flash" : "flash-outline"}
+                color={color}
+                size={size}
+              />
             ),
           }}
         />

@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Checkbox } from "react-native-paper";
-import { Ionicons } from "@expo/vector-icons";
 
-import { Colors } from "../../constants/colors";
-import { DefaultTheme } from "../../themes/DefaultTheme";
+import { Colors } from "../../../constants/colors";
+import { DefaultTheme } from "@react-navigation/native";
 
-function CardItemOrder({ item }) {
+function CardOrderItems({ item }) {
   const [count, setCount] = useState(item.qty);
 
   function addCountHandler() {
@@ -73,7 +72,7 @@ function CardItemOrder({ item }) {
   );
 }
 
-export default CardItemOrder;
+export default CardOrderItems;
 
 const styles = StyleSheet.create({
   container: {
@@ -121,14 +120,13 @@ const styles = StyleSheet.create({
   selectingQuantity: {
     height: 30,
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     // backgroundColor: Colors.primaryGreen50,
     // borderWidth: 1,
     // borderColor: Colors.primaryGreen700,
     // borderRadius: 8,
     marginVertical: 5,
-    justifyContent: "flex-start",
   },
   selectingBtn: {
     marginHorizontal: 4,

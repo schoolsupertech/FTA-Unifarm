@@ -2,11 +2,11 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Checkbox } from "react-native-paper";
 
+import CardOrderItems from "./card/CardOrderItems";
 import GrayLine from "./text/GrayLine";
 import Title from "./text/Title";
 import { cartItems } from "../../constants/cartItems";
 import { Ionicons } from "@expo/vector-icons";
-import CardItemOrder from "./CardItemOrder";
 
 function GroupItemsOrder() {
   return (
@@ -38,7 +38,7 @@ function GroupItemsOrder() {
           </View>
           <GrayLine />
           {cartItems.map((item, index) => (
-            <CardItemOrder item={item} key={index} />
+            <CardOrderItems item={item} key={index} />
           ))}
         </View>
       }

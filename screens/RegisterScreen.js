@@ -5,7 +5,6 @@ import {
   View,
   Text,
   Image,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
@@ -38,7 +37,7 @@ const RegisterScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [dobLabel, setDobLabel] = useState("Date of Birth");
 
-  function inputChangeHandler(value, userField) {
+  function inputChangingHandler(value, userField) {
     setUser({
       ...user,
       [userField]: value,
@@ -108,7 +107,7 @@ const RegisterScreen = ({ navigation }) => {
           autoCorrect={false}
           autoCapitalize="none"
           value={user.userName}
-          onChangeText={(value) => inputChangeHandler(value, "userName")}
+          onChangeText={(value) => inputChangingHandler(value, "userName")}
         />
 
         <View
@@ -131,7 +130,7 @@ const RegisterScreen = ({ navigation }) => {
             }
             style={{ width: "49%", marginRight: 12 }}
             value={user.lastName}
-            onChangeText={(value) => inputChangeHandler(value, "lastName")}
+            onChangeText={(value) => inputChangingHandler(value, "lastName")}
           />
 
           <InputField
@@ -146,7 +145,7 @@ const RegisterScreen = ({ navigation }) => {
             }
             style={{ width: "49%" }}
             value={user.firstName}
-            onChangeText={(value) => inputChangeHandler(value, "firstName")}
+            onChangeText={(value) => inputChangingHandler(value, "firstName")}
           />
         </View>
 
@@ -164,7 +163,7 @@ const RegisterScreen = ({ navigation }) => {
           autoCapitalize="none"
           autoCorrect={false}
           value={user.email}
-          onChangeText={(value) => inputChangeHandler(value, "email")}
+          onChangeText={(value) => inputChangingHandler(value, "email")}
         />
 
         <InputField
@@ -181,7 +180,7 @@ const RegisterScreen = ({ navigation }) => {
           autoCapitalize="none"
           autoCorrect={false}
           value={user.password}
-          onChangeText={(value) => inputChangeHandler(value, "password")}
+          onChangeText={(value) => inputChangingHandler(value, "password")}
         />
 
         <InputField
@@ -255,7 +254,7 @@ const RegisterScreen = ({ navigation }) => {
           autoCapitalize="none"
           autoCorrect={false}
           value={user.phoneNumber}
-          onChangeText={(value) => inputChangeHandler(value, "phoneNumber")}
+          onChangeText={(value) => inputChangingHandler(value, "phoneNumber")}
         />
 
         <View style={styles.buttonView}>

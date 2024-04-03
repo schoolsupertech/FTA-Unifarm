@@ -7,7 +7,11 @@ import { DefaultTheme } from "../../../themes/DefaultTheme";
 function PopularCategories({ title, image, onPress }) {
   return (
     <TouchableOpacity onPress={onPress}>
-      <Card style={styles.container} mode="contained">
+      <Card
+        style={styles.container}
+        mode="outlined"
+        theme={{ colors: { outline: "#EEEEEE" } }}
+      >
         <Card.Cover
           style={styles.cover}
           source={{
