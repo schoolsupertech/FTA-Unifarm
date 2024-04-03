@@ -7,8 +7,10 @@ import {
   View,
   FlatList,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+import { DefaultTheme } from "../themes/DefaultTheme";
 import { Colors } from "../constants/colors";
 
 const dataHistory = [
@@ -28,14 +30,28 @@ const dataHistory = [
 
 function WalletScreen() {
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={{ height: "auto", backgroundColor: Colors.primaryGreen700 }}>
+    <SafeAreaView style={DefaultTheme.root}>
+      <LinearGradient
+        colors={[Colors.primaryGreen700, Colors.primaryGreen200]}
+        locations={[0.8, 1]}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={{
+          height: "auto",
+          borderBottomLeftRadius: 4,
+          borderBottomRightRadius: 4,
+        }}
+      >
         <View style={styles.topHeader}>
-          <Ionicons name={"wallet-outline"} size={28} color={"white"} />
-          <Text style={styles.textHeader}>Ví</Text>
-          <Ionicons name={"person-circle-outline"} size={28} color={"white"} />
+          <Ionicons
+            name={"wallet-outline"}
+            size={28}
+            color={"white"}
+            style={{ marginRight: 4 }}
+          />
+          <Text style={styles.textHeader}>Ví Tiền</Text>
         </View>
-        <View style={{ padding: 20 }}>
+        <View style={{ padding: 20, borderTopWidth: 1, borderColor: "white" }}>
           <Text style={{ color: "white", fontWeight: "500" }}>
             Số dư ví (đ)
           </Text>
@@ -43,7 +59,8 @@ function WalletScreen() {
             style={{
               flexDirection: "row",
               alignItems: "center",
-              marginTop: 20,
+              marginTop: 4,
+              marginBottom: 12,
               justifyContent: "space-between",
             }}
           >
@@ -75,6 +92,7 @@ function WalletScreen() {
               </Text>
             </TouchableOpacity>
           </View>
+          {/*
           <TouchableOpacity
             style={{
               flexDirection: "row",
@@ -93,9 +111,10 @@ function WalletScreen() {
             </View>
             <Ionicons name={"chevron-forward"} size={20} color={"white"} />
           </TouchableOpacity>
+          */}
         </View>
-      </View>
-      <View style={{ padding: 20 }}>
+      </LinearGradient>
+      <View style={{ flex: 1, padding: 20 }}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>
           Hoạt động gần đây
         </Text>
@@ -104,17 +123,17 @@ function WalletScreen() {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={{
-                marginTop: 10,
+                marginTop: 12,
                 flexDirection: "row",
-                padding: 25,
-                backgroundColor: "white",
-                borderRadius: 5,
+                padding: 20,
+                backgroundColor: "#EEEEEE",
+                borderRadius: 8,
               }}
             >
               <Ionicons name="cash" size={40} color={Colors.primaryGreen700} />
-              <View style={{ marginLeft: 10, flex: 1 }}>
+              <View style={{ marginLeft: 8, flex: 1 }}>
                 <Text style={{ fontWeight: "600" }}>{item.title}</Text>
-                <Text style={{ fontSize: 12, marginTop: 5 }}>
+                <Text style={{ fontSize: 12, marginTop: 4 }}>
                   {item.dateTime}
                 </Text>
               </View>
@@ -144,15 +163,15 @@ const styles = StyleSheet.create({
   },
   topHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 20,
     paddingHorizontal: 20,
     backgroundColor: Colors.primaryGreen700,
-    alignItems: "center",
   },
   textHeader: {
+    fontSize: 20,
     fontWeight: "bold",
-    fontSize: 18,
     color: "white",
   },
 });

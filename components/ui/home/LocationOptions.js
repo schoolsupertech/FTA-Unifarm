@@ -189,23 +189,7 @@ function LocationOptions(props) {
                 }
                 value={apartmentInfo && apartmentInfo.name}
                 onChangeText={onSearchingApartmentHandler}
-              /> */}
-              <TextInput 
-                  placeholder="Chọn ví trí chung cư"
-                  onChangeText={onSearchingApartmentHandler}
-                  style={{
-                  backgroundColor: 'white',
-                  paddingLeft: 25,
-                  // borderBottomWidth: 2,
-                  // borderBottomColor: 'green'
-                }}
-                selectionColor={"green"}
-                placeholderTextColor={"grey"}
-                underlineColor="transparent"
               />
-              <View style={{position: 'absolute', top: 15, left: 10}}>
-                <Ionicons name="location" size={24} color={'green'}/>
-              </View>
 
               {isApartmentSearching && (
                 <View style={styles.dropdownContainer}>
@@ -268,20 +252,6 @@ function LocationOptions(props) {
                 )}
                 onChangeText={onSearchingStationHandler}
               /> */}
-              <TextInput 
-                  placeholder="Chọn trạm nhận hàng"
-                  onChangeText={onSearchingStationHandler}
-                  style={{
-                  backgroundColor: 'white',
-                  paddingLeft: 25,
-                  // borderBottomWidth: 2,
-                  // borderBottomColor: 'green'
-                }}
-                selectionColor={"green"}
-                placeholderTextColor={"grey"}
-                underlineColor="transparent"
-              />
-              */}
               {isStationSearching && (
                 <View style={styles.dropdownContainer}>
                   {searchingStation.length ? (
@@ -341,14 +311,10 @@ function LocationOptions(props) {
             </View>
           </View>
           <View style={styles.btnContainer}>
-            
-            <View style={[DefaultTheme.btnView, {  marginRight: 4 }]}>
-              <MainButton onPress={props.onCancel} styleButton={{backgroundColor: 'grey'}}>Huỷ bỏ</MainButton>
-            </View>
-            <View style={[DefaultTheme.btnView, {marginLeft: 8 }]}>
+            <View style={[DefaultTheme.btnView, { marginRight: 4 }]}>
               <MainButton
-                styleButton={{ backgroundColor: "grey" }}
                 onPress={props.onCancel}
+                styleButton={{ backgroundColor: "grey" }}
               >
                 Huỷ bỏ
               </MainButton>
@@ -462,7 +428,7 @@ const styles = StyleSheet.create({
     padding: 2,
     marginRight: 2,
     borderWidth: 0.5,
-    borderRadius: 8,
+    borderRadius: 4,
     borderColor: Colors.primaryGreen700,
     transform: [
       {

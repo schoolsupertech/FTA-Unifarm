@@ -18,7 +18,6 @@ import LogoTitle from "../themes/LogoTitle";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
-import LogoTitle from "../themes/LogoTitle";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");

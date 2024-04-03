@@ -192,7 +192,7 @@ function ProfileScreen() {
 
           <View style={styles.gridItem}>
             <MainButton
-              styleButton={{ backgroundColor: "grey" }}
+              styleButton={{ backgroundColor: "red" }}
               onPress={logout}
             >
               Đăng xuất
@@ -212,12 +212,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-  },
-  linearGradient: {
-    width: "100%",
-    padding: 20,
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
   },
   headerContainer: {
     flexDirection: "row",

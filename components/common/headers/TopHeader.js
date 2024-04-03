@@ -29,7 +29,6 @@ function TopHeader({ onCartIconPress, onNotiIconPress }) {
               position: "absolute",
               top: -6,
               right: -12,
-              backgroundColor: "#FF2929",
             }}
           >
             3

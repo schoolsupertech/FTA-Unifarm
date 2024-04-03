@@ -100,20 +100,34 @@ function ProductDetailScreen({
     }
   }
 
+  useEffect(() => {
+    console.log("Changed count: " + count);
+  }, [addCountHandler, minusCountHandler]);
+
   function addingCartHandler() {
     if (authState?.authenticated) {
-      cart.items.map((item) => {
-        console.log("Adding cart item: " + JSON.stringify(item));
-        item.id === selectedProd.id
-          ? updateCart({
-              id: selectedProd.id,
-              qty: item.qty + count,
-            })
-          : addToCart({
-              id: selectedProd.id,
-              qty: count,
+      if (Array.isArray(cart.farmhubs) && cart.farmhubs.length > 0) {
+        cart.farmhubs.map((farmhub) => {
+          console.log("Updating cart: " + JSON.stringify(farmhub, null, 2));
+          farmhub.id === selectedProd.farmHub.id &&
+            farmhub.prodItems.map((item) => {
+              item.id === selectedProd.id &&
+                updateCart({
+                  farmhubId: farmhub.id,
+                  prodId: item.id,
+                  qty: item.qty + count,
+                });
             });
-      });
+        });
+      } else {
+        addToCart({
+          ...selectedProd.farmHub,
+          prodItems: {
+            ...selectedProd,
+            qty: count,
+          },
+        });
+      }
       setVisible(true);
       setSnackbarLabel("Đã thêm vào giỏ hàng");
     } else {
@@ -145,8 +159,8 @@ function ProductDetailScreen({
                   }}
                 >
                   <PaperText
-                    variant="titleMedium"
-                    style={{ fontWeight: "500" }}
+                    variant="titleLarge"
+                    style={{ fontWeight: "500", color: Colors.primaryGreen700 }}
                   >
                     {currencyFormat(selectedProd.price)} / {selectedProd.unit}
                   </PaperText>
@@ -174,13 +188,10 @@ function ProductDetailScreen({
                     </TouchableOpacity>
                   </View>
                 </View>
-                <PaperText
-                  variant="bodyMedium"
-                  style={{ alignSelf: "flex-end" }}
-                >
-                  {/* prodItem.sold */} 99 đã bán
-                </PaperText>
                 <GrayLine />
+                <PaperText variant="titleSmall">
+                  Đã bán: 199 {/* prodItem.sold */}
+                </PaperText>
                 <PaperText variant="titleSmall">
                   Nguồn gốc: {selectedProd.productOrigin}
                 </PaperText>

@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import GrayLine from "./text/GrayLine";
 import Title from "./text/Title";
-import CardItem from "./CardItem";
+import CardItem from "./card/CardItem";
 import { cartItems } from "../../constants/cartItems";
 
 function GroupItems() {
@@ -29,7 +29,7 @@ function GroupItems() {
         <View style={styles.groupContainer}>
           <View style={styles.groupItems}>
             <View style={styles.checkbox}>
-              <Checkbox status="checked" onPress={() => {}} color="black"   />
+              <Checkbox status="checked" onPress={() => {}} color="black" />
             </View>
             <View style={styles.groupTitle}>
               <Title color="black">Tôi là ông FarmHub A</Title>
@@ -41,7 +41,6 @@ function GroupItems() {
             <CardItem item={item} key={index} />
           ))}
         </View>
-        
       }
     </View>
   );

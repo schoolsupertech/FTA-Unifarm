@@ -25,7 +25,7 @@ function CardHeaderInfo() {
             <PaperText variant="bodyMedium">
               {userInfo?.lastName} {userInfo?.firstName} -{" "}
               {userInfo?.phoneNumber}
-            </Text>
+            </PaperText>
           </View>
           <Title color={Colors.primaryGreen800}>Nhận hàng tại Station:</Title>
           <View style={styles.cardContentDetail}>
@@ -53,7 +53,7 @@ export default CardHeaderInfo;
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: "white",
-    marginBottom: 10
+    marginBottom: 10,
   },
   cardContent: {
     marginVertical: 0,

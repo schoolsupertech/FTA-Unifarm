@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TouchableHighlight,
   TouchableOpacity,
@@ -10,67 +10,82 @@ import {
 import { Checkbox } from "react-native-paper";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-import Title from "../../common/text/Title";
-import GrayLine from "../../common/text/GrayLine";
-import createAxios from "../../../utils/AxiosUtility";
-import {
-  removeFromCart,
-  clearCart,
-} from "../../../context/redux/actions/cartActions";
 import { SwipeListView } from "react-native-swipe-list-view";
+import { Colors } from "../../../constants/colors";
 
-const API = createAxios();
-
-function CardCartItem({ cart, removeFromCart, clearCart }) {
-  const [prodItemsInfo, setProdItemsInfo] = useState([]);
-
-  console.log(
-    "Product items in Cart Screen: " + JSON.stringify(prodItemsInfo, null, 2),
-  );
-  console.log("cart in Cart Screen: " + JSON.stringify(cart, null, 2));
-
-  useEffect(() => {
-    const getReduxCart = () => {
-      const fetchProdItems = async (prodItem) => {
-        const response = await API.get("/product-item/" + prodItem.id);
-        if (prodItem.id === response.payload.id) {
-          const updatedProdItemInfo = {
-            ...prodItem,
-            ...response.payload,
-          };
-          setProdItemsInfo([...prodItemsInfo, updatedProdItemInfo]);
-        }
-      };
-
-      if (Array.isArray(cart.items) && cart.items.length !== 0) {
-        cart.items.map((item) => {
-          fetchProdItems(item);
-        });
-      }
-    };
-
-    getReduxCart();
-  }, []);
-
+function CardCartItem({ data, removeFromCart, clearCart }) {
   function onDeleteHandler(rowKey) {
     removeFromCart(rowKey);
-    const newData = [...prodItemsInfo];
-    const prevIndex = prodItemsInfo.findIndex((item) => item.id === rowKey);
-    newData.splice(prevIndex, 1);
-    setProdItemsInfo(newData);
+    // const newData = [...prodItemsInfo];
+    // const prevIndex = prodItemsInfo.findIndex((item) => item.id === rowKey);
+    // newData.splice(prevIndex, 1);
+    // setProdItemsInfo(newData);
   }
 
   function renderItem(itemData, rowMap) {
     return (
       <View style={styles.rowFront}>
         <TouchableHighlight style={styles.rowFrontVisible}>
-          <View>
-            <Text style={styles.title} numberOfLines={1}>
-              {itemData.item.title}
-            </Text>
-            <Text style={styles.details} numberOfLines={1}>
-              {itemData.item.price} vnđ / {itemData.item.unit}
-            </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={{
+                uri: itemData.item.productImages.find((image) => {
+                  return image.displayIndex === 1;
+                }).imageUrl,
+              }}
+              style={styles.image}
+            />
+            <View
+              style={{
+                flex: 1,
+                marginLeft: 4,
+                alignItems: "flex-start",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={styles.title} numberOfLines={1}>
+                {itemData.item.title}
+              </Text>
+              <Text style={styles.details} numberOfLines={1}>
+                {itemData.item.price} vnđ / {itemData.item.unit}
+              </Text>
+            </View>
+            <View
+              style={{
+                alignItems: "flex-end",
+                justifyContent: "flex-end",
+              }}
+            >
+              <View style={styles.selectingQuantity}>
+                <TouchableOpacity
+                  onPress={() => {}}
+                  style={styles.selectingBtn}
+                >
+                  <Ionicons
+                    name="remove-circle-outline"
+                    size={20}
+                    color={Colors.primaryGreen700}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.quantity}>{itemData.item.qty}</Text>
+                <TouchableOpacity
+                  onPress={() => {}}
+                  style={styles.selectingBtn}
+                >
+                  <Ionicons
+                    name="add-circle-outline"
+                    size={20}
+                    color={Colors.primaryGreen700}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </TouchableHighlight>
       </View>
@@ -95,108 +110,26 @@ function CardCartItem({ cart, removeFromCart, clearCart }) {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      {
-        /*
-         * const [farmhubGroup, setFarmhubGroup] = useState({ ...farmhubGroup, orders.filter((order) => order.farmhubId === prodItem.farmhubId) });
-         * farmhubGroup.map((id) => {
-         *
-         * });
-         */
-        prodItemsInfo && prodItemsInfo.length ? (
-          <View style={styles.groupContainer}>
-            <View style={styles.groupItems}>
-              <View style={styles.checkbox}>
-                <Checkbox status="checked" onPress={() => {}} color="black" />
-              </View>
-              <View style={styles.groupTitle}>
-                <Title color="black">Tôi là ông FarmHub A</Title>
-              </View>
-            </View>
-            <GrayLine />
-            {/*
-              prodItemsInfo.map((item, index) => (
-              <CardItem item={item} key={index} />
-            ))
-            */}
-            <SwipeListView
-              data={prodItemsInfo}
-              keyExtractor={(item) => item.id}
-              renderItem={renderItem}
-              renderHiddenItem={renderHiddenItem}
-              rightOpenValue={-75}
-              disableRightSwipe
-            />
-          </View>
-        ) : (
-          <View
-            style={[
-              styles.groupContainer,
-              {
-                alignItems: "center",
-                justifyContent: "center",
-                height: 300,
-                padding: 20,
-              },
-            ]}
-          >
-            <Ionicons name="bag-remove-outline" size={100} color="gray" />
-            <Text style={styles.textEmptyCart}>
-              Bạn chưa có sản phẩm nào được thêm vào giỏ hàng
-            </Text>
-          </View>
-        )
-      }
-    </View>
+    <SwipeListView
+      data={data}
+      keyExtractor={(item) => item.id}
+      renderItem={renderItem}
+      renderHiddenItem={renderHiddenItem}
+      rightOpenValue={-75}
+      disableRightSwipe
+    />
   );
 }
 
-const mapStateToProps = (state) => ({
-  cart: state.cart,
-});
-
-const mapDispatchToProps = {
-  removeFromCart,
-  clearCart,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CardCartItem);
+export default CardCartItem;
 
 const styles = StyleSheet.create({
-  groupContainer: {
-    width: "100%",
-    marginBottom: 12,
-  },
-  groupItems: {
-    width: "100%",
-    marginHorizontal: 4,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "baseline",
-  },
-  checkbox: {
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: "black",
-  },
-  groupTitle: {
-    marginLeft: 8,
-    paddingLeft: 8,
-    borderLeftWidth: 2,
-    borderLeftColor: "gray",
-  },
-  textEmptyCart: {
-    color: "gray",
-    fontSize: 18,
-    fontWeight: "700",
-    textAlign: "center",
-  },
   rowFront: {
     backgroundColor: "#FFF",
-    borderRadius: 5,
-    height: 60,
-    margin: 5,
-    marginBottom: 15,
+    borderRadius: 8,
+    height: 80,
+    margin: 4,
+    marginBottom: 4,
     shadowColor: "#999",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
@@ -204,11 +137,13 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   rowFrontVisible: {
+    padding: 8,
     backgroundColor: "#FFF",
-    borderRadius: 5,
+    borderRadius: 8,
+  },
+  image: {
+    width: 60,
     height: 60,
-    padding: 10,
-    marginBottom: 15,
   },
   title: {
     fontSize: 14,
@@ -245,5 +180,20 @@ const styles = StyleSheet.create({
     right: 0,
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5,
+  },
+  selectingQuantity: {
+    height: 30,
+    flexDirection: "row",
+    marginVertical: 4,
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  selectingBtn: {
+    marginHorizontal: 4,
+  },
+  quantity: {
+    color: Colors.primaryGreen700,
+    fontWeight: "700",
+    fontSize: 18,
   },
 });

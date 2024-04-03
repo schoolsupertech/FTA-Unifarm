@@ -7,7 +7,7 @@ import currencyFormat from "../../../utils/CurrencyFormat";
 import { Colors } from "../../../constants/colors";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
 
-function CardFooter({ txtLabel, txtValue, onPress, btnLabel }) {
+function CardFooter({ txtLabel, value, onPress, btnLabel }) {
   return (
     <Card style={styles.cardContainer}>
       <Card.Content style={styles.cardContent}>
@@ -15,31 +15,25 @@ function CardFooter({ txtLabel, txtValue, onPress, btnLabel }) {
           <PaperText
             variant="bodyMedium"
             style={{
-              fontWeight: "bold",
+              fontWeight: "600",
               color: Colors.primaryGreen800,
             }}
           >
             {txtLabel}
           </PaperText>
           <PaperText
-            variant="bodyMedium"
+            variant="titleMedium"
             style={{
-              fontSize: 20,
               fontWeight: "bold",
-              color: Colors.primaryGreen700,
-              fontWeight: "bold",
-              fontSize: 20,
+              color: Colors.primaryGreen900,
             }}
           >
-            {currencyFormat(txtValue)}
+            {currencyFormat(value)}
           </PaperText>
         </View>
         <View style={[DefaultTheme.btnView, styles.buttonView]}>
           <MainButton onPress={onPress}>{btnLabel}</MainButton>
         </View>
-        {/* <View style={{padding: 20, backgroundColor: 'green'}}>
-          <Text>Thanh toán</Text>
-        </View> */}
       </Card.Content>
     </Card>
   );

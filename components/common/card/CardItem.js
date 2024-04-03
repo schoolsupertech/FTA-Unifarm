@@ -23,34 +23,34 @@ function CardItem({ item }) {
   }
 
   return (
-    <View style={{ borderBottomWidth: 5, borderBottomColor: 'white'}}>
-    <View style={styles.container}>
-      <View style={styles.checkboxContainer}>
-        <View style={styles.checkbox}>
-          <Checkbox status="unchecked" onPress={() => {}} color="black" />
+    <View style={{ borderBottomWidth: 5, borderBottomColor: "white" }}>
+      <View style={styles.container}>
+        <View style={styles.checkboxContainer}>
+          <View style={styles.checkbox}>
+            <Checkbox status="unchecked" onPress={() => {}} color="black" />
+          </View>
+        </View>
+        <View style={styles.itemsContainer}>
+          <View style={{ marginRight: 12 }}>
+            <Image
+              source={{
+                uri: item.productImages.find((image) => {
+                  return image.displayIndex === 1;
+                }).imageUrl,
+              }}
+              style={styles.image}
+            />
+          </View>
+          <View style={[DefaultTheme.flex_1, { marginRight: 12 }]}>
+            <Text style={styles.textName}>{item.title}</Text>
+            <Text style={styles.textPrice}>
+              {currencyFormat(item.price)} / {item.unit}
+            </Text>
+          </View>
         </View>
       </View>
-      <View style={styles.itemsContainer}>
-        <View style={{ marginRight: 12 }}>
-          <Image
-            source={{
-              uri: item.productImages.find((image) => {
-                return image.displayIndex === 1;
-              }).imageUrl,
-            }}
-            style={styles.image}
-          />
-        </View>
-        <View style={[DefaultTheme.flex_1, { marginRight: 12 }]}>
-          <Text style={styles.textName}>{item.title}</Text>
-          <Text style={styles.textPrice}>
-            {currencyFormat(item.price)} / {item.unit}
-          </Text>
-        </View>
-      </View>
-    </View>
-    <View style={{alignItems: 'flex-end',  marginTop: -15}}>
-         <View style={styles.selectingQuantity}>
+      <View style={{ alignItems: "flex-end", marginTop: -15 }}>
+        <View style={styles.selectingQuantity}>
           <TouchableOpacity
             onPress={minusCountHandler}
             style={styles.selectingBtn}
@@ -73,7 +73,7 @@ function CardItem({ item }) {
             />
           </TouchableOpacity>
         </View>
-    </View>
+      </View>
     </View>
   );
 }
@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
     borderColor: "grey",
   },
   itemsContainer: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

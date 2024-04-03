@@ -25,6 +25,8 @@ function OrderScreen() {
 
   return (
     <SafeAreaView style={DefaultTheme.root}>
+      <CardHeaderInfo />
+
       <ScrollView
         style={[
           DefaultTheme.scrollContainer,
