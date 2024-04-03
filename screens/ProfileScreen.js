@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { connect } from "react-redux";
 import {
   View,
   Text,
@@ -14,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Badge } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
+import GridTile from "../components/ui/profile/GridTile";
 import GrayLine from "../components/common/text/GrayLine";
 import HeaderContent from "../components/common/HeaderContent";
 import MainButton from "../components/common/button/MainButton";
@@ -21,22 +23,16 @@ import AuthStack from "../navigators/AuthStack";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
-import GridTile from "../components/ui/profile/GridTile";
+import { clearCart } from "../context/redux/actions/cartActions";
 import LocationOptions from "../components/ui/home/LocationOptions";
 
-function ProfileScreen() {
+function ProfileScreen({ clearCart }) {
   const navigation = useNavigation();
   const { authState, userInfo, logout } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState({
     isVisible: false,
     status: 0,
   });
-
-  function modalWalletHandler() {
-    navigation.navigate("WalletScreen", {
-      wallet: userInfo.wallet,
-    });
-  }
 
   if (authState?.authenticated) {
     return (
@@ -168,7 +164,7 @@ function ProfileScreen() {
 
             <GridTile
               icon={<Ionicons name="wallet-outline" size={28} color="grey" />}
-              onPress={() => {}}
+              onPress={() => navigation.navigate("WalletScreen")}
             >
               Ví tiền của bạn
             </GridTile>
@@ -193,7 +189,10 @@ function ProfileScreen() {
           <View style={styles.gridItem}>
             <MainButton
               styleButton={{ backgroundColor: "red" }}
-              onPress={logout}
+              onPress={() => {
+                clearCart();
+                logout();
+              }}
             >
               Đăng xuất
             </MainButton>
@@ -206,7 +205,15 @@ function ProfileScreen() {
   }
 }
 
-export default ProfileScreen;
+const mapStateToProps = (state) => ({
+  cart: state.cart,
+});
+
+const mapDispatchToProps = {
+  clearCart,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);
 
 const styles = StyleSheet.create({
   container: {

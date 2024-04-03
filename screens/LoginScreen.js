@@ -96,7 +96,6 @@ const LoginScreen = ({ navigation }) => {
                 console.log("Signed in with systemLog"),
               );
             }}
-            styleButton={{ width: "100%" }}
           >
             Đăng nhập
           </MainButton>

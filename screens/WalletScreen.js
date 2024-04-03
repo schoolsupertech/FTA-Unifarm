@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -10,8 +10,10 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { DefaultTheme } from "../themes/DefaultTheme";
+import currencyFormat from '../utils/CurrencyFormat';
 import { Colors } from "../constants/colors";
+import { AuthContext } from "../context/AuthContext";
+import { DefaultTheme } from "../themes/DefaultTheme";
 
 const dataHistory = [
   {
@@ -29,6 +31,8 @@ const dataHistory = [
 ];
 
 function WalletScreen() {
+  const { userInfo } = useContext(AuthContext);
+
   return (
     <SafeAreaView style={DefaultTheme.root}>
       <LinearGradient
@@ -71,7 +75,7 @@ function WalletScreen() {
                 fontSize: 40,
               }}
             >
-              465.000
+              {currencyFormat(userInfo.wallet.balance)}
             </Text>
             <TouchableOpacity
               style={{

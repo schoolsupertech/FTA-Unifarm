@@ -122,10 +122,12 @@ function ProductDetailScreen({
       } else {
         addToCart({
           ...selectedProd.farmHub,
-          prodItems: {
-            ...selectedProd,
-            qty: count,
-          },
+          prodItems: [
+            {
+              ...selectedProd,
+              qty: count,
+            },
+          ],
         });
       }
       setVisible(true);

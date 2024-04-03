@@ -22,7 +22,7 @@ function CardFooter({ txtLabel, value, onPress, btnLabel }) {
             {txtLabel}
           </PaperText>
           <PaperText
-            variant="titleMedium"
+            variant="titleLarge"
             style={{
               fontWeight: "bold",
               color: Colors.primaryGreen900,

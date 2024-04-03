@@ -13,13 +13,15 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { Colors } from "../../../constants/colors";
 
-function CardCartItem({ data, removeFromCart, clearCart }) {
+function CardCartItem({ data, removeFromCart }) {
+  const [prodItemsInfo, setProdItemsInfo] = useState(data);
+
   function onDeleteHandler(rowKey) {
     removeFromCart(rowKey);
-    // const newData = [...prodItemsInfo];
-    // const prevIndex = prodItemsInfo.findIndex((item) => item.id === rowKey);
-    // newData.splice(prevIndex, 1);
-    // setProdItemsInfo(newData);
+    const newData = [...prodItemsInfo];
+    const prevIndex = prodItemsInfo.findIndex((item) => item.id === rowKey);
+    newData.splice(prevIndex, 1);
+    setProdItemsInfo(newData);
   }
 
   function renderItem(itemData, rowMap) {
@@ -111,7 +113,7 @@ function CardCartItem({ data, removeFromCart, clearCart }) {
 
   return (
     <SwipeListView
-      data={data}
+      data={prodItemsInfo}
       keyExtractor={(item) => item.id}
       renderItem={renderItem}
       renderHiddenItem={renderHiddenItem}

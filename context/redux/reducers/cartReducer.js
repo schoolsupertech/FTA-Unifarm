@@ -26,28 +26,29 @@ const cartReducer = (state = initialState, action) => {
     case "UPDATE_CART":
       return {
         ...state,
-        farmhubs: state.farmhubs.map((farmhub) =>
-          farmhub.id === action.payload.farmhubId
-            ? farmhub.prodItems.map(
+        farmhubs: state.farmhubs.map(
+          (farmhub) =>
+            farmhub.id === action.payload.farmhubId && {
+              ...farmhub,
+              prodItems: farmhub.prodItems.map(
                 (item) =>
                   item.id === action.payload.prodId && {
-                    ...farmhub,
-                    prodItems: { ...item, qty: action.payload.qty },
+                    ...item,
+                    qty: action.payload.qty,
                   },
-              )
-            : farmhub,
+              ),
+            },
         ),
       };
     case "REMOVE_FROM_CART":
       return {
         ...state,
-        farmhubs: state.farmhubs.filter((item) => item.id !== action.payload),
+        farmhubs: state.farmhubs.map((farmhub) =>
+          farmhub.prodItems.filter((item) => item.id !== action.payload),
+        ),
       };
     case "CLEAR_CART":
-      return {
-        ...state,
-        farmhubs: [],
-      };
+      return (state = initialState);
     default:
       return state;
   }

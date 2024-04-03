@@ -124,6 +124,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(CartScreen);
 
 const styles = StyleSheet.create({
   groupContainer: {
+    marginTop: 12,
     borderBottomWidth: 8,
     borderColor: "#EEEEEE",
   },
