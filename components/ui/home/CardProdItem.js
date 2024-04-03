@@ -85,6 +85,12 @@ function CardProdItem(props) {
     );
   }
 
+  function formatCurrency(amount) {
+    return parseFloat(amount).toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  }
   return (
     <TouchableOpacity onPress={selectedProductDetailHandler}>
       <Card style={styles.container} mode="contained">

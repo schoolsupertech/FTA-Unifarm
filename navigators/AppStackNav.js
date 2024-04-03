@@ -63,6 +63,11 @@ function AppStackNav() {
         component={CartScreen}
         options={{
           title: "Giỏ hàng",
+          headerTintColor: "#000",
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 18,
+          },
         }}
       />
       <Stack.Screen
@@ -70,6 +75,11 @@ function AppStackNav() {
         component={OrderScreen}
         options={{
           title: "Thanh toán đơn hàng",
+          headerTintColor: "#000",
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 18,
+          },
         }}
       />
       <Stack.Screen name="SearchScreen" component={SearchScreen} />

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { IconButton, Text as PaperText } from "react-native-paper";
 
 import GrayLine from "../text/GrayLine";

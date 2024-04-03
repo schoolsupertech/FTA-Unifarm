@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 
 import CardHeaderInfo from "../components/common/card/CardHeaderInfo";
 import CardFooter from "../components/common/card/CardFooter";

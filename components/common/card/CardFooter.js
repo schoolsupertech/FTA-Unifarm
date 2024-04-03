@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { Card, Text as PaperText } from "react-native-paper";
 
 import MainButton from "../button/MainButton";
@@ -27,6 +27,8 @@ function CardFooter({ txtLabel, txtValue, onPress, btnLabel }) {
               fontSize: 20,
               fontWeight: "bold",
               color: Colors.primaryGreen700,
+              fontWeight: "bold",
+              fontSize: 20,
             }}
           >
             {currencyFormat(txtValue)}
@@ -35,6 +37,9 @@ function CardFooter({ txtLabel, txtValue, onPress, btnLabel }) {
         <View style={[DefaultTheme.btnView, styles.buttonView]}>
           <MainButton onPress={onPress}>{btnLabel}</MainButton>
         </View>
+        {/* <View style={{padding: 20, backgroundColor: 'green'}}>
+          <Text>Thanh toán</Text>
+        </View> */}
       </Card.Content>
     </Card>
   );

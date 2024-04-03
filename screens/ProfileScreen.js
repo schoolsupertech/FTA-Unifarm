@@ -284,6 +284,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 20,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 5,
   },
   orderView: {
     width: "25%",

@@ -78,7 +78,7 @@ function CategoriesScreen() {
           <Searchbar
             theme={DefaultTheme.searchbar}
             placeholder="Tìm kiếm danh mục..."
-            elevation={3}
+            elevation={2}
             value={searchPrd}
             onChangeText={(prodSearch) => setSearchPrd(prodSearch)}
           />

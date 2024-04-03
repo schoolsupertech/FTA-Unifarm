@@ -144,6 +144,16 @@ function TabNavigator() {
                 size={size}
               />
             ),
+            // headerShown: true,
+            // headerTitle: "Số dư ví",
+            // headerRight: () => (
+            //   <Ionicons
+            //     style={{ marginRight: 20, padding: 0 }}
+            //     name={"wallet-outline"}
+            //     size={24}
+
+            //   />
+            // )
           }}
         />
       )}

@@ -163,7 +163,7 @@ function CatListProdScreen({ route }) {
       {/*
       <Searchbar
         style={styles.searchbar}
-        placeholder="Tìm kiếm sản phẩm trong danh mục"
+        placeholder="Tìm kiếm sản phẩm..."
         elevation={3}
         theme={DefaultTheme.searchbar}
       />

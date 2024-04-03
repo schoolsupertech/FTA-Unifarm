@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   View,
   Text,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
@@ -19,6 +18,7 @@ import LogoTitle from "../themes/LogoTitle";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
+import LogoTitle from "../themes/LogoTitle";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -32,7 +32,6 @@ const LoginScreen = ({ navigation }) => {
       >
         <View
           style={{
-            flex: 1,
             alignItems: "center",
             justifyContent: "center",
             marginBottom: 20,
@@ -98,6 +97,7 @@ const LoginScreen = ({ navigation }) => {
                 console.log("Signed in with systemLog"),
               );
             }}
+            styleButton={{ width: "100%" }}
           >
             Đăng nhập
           </MainButton>

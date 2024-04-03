@@ -51,6 +51,7 @@ function ChipContent({ chipData, onChipSelected }) {
         textStyle={{ fontWeight: "700" }}
         style={[styles.chip, { backgroundColor: Colors.primaryGreen50 }]}
         onPress={onChipToggleHandler}
+        textStyle={{ fontWeight: "bold" }}
       >
         {item.name}
       </Chip>

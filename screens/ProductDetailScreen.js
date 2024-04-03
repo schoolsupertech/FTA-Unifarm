@@ -353,5 +353,6 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 8,
     overflow: "visible",
+    justifyContent: "center",
   },
 });
