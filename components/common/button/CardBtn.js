@@ -1,17 +1,18 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { DefaultTheme } from "../../../themes/DefaultTheme";
 
-function CardBtn({ onPress, children }) {
+function CardBtn({ onPress, icon, children }) {
   return (
     <TouchableOpacity style={styles.orderLineViewContent} onPress={onPress}>
       <View style={styles.orderInnerViewContent}>
-        <Ionicons name="pin-outline" size={28} color="black" />
-        <View style={{ marginLeft: 8 }}>
-          <Text>{children}</Text>
+        {icon}
+        <View style={{ marginLeft: 4 }}>
+          <Text style={styles.textBtn}>{children}</Text>
         </View>
       </View>
-      <AntDesign name="right" size={24} color="gray" />
+      <Ionicons name="arrow-forward-sharp" size={18} color="white" />
     </TouchableOpacity>
   );
 }
@@ -21,17 +22,21 @@ export default CardBtn;
 const styles = StyleSheet.create({
   orderLineViewContent: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "75%",
     padding: 8,
-    marginBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "gray",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: DefaultTheme.btnColor700,
+    borderRadius: 8,
   },
   orderInnerViewContent: {
+    marginRight: 8,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
+  },
+  textBtn: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "white",
   },
 });

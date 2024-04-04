@@ -3,9 +3,11 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Checkbox } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 
-import currencyFormat from "../../../utils/CurrencyFormat";
+import createFormatUtil from "../../../utils/FormatUtility";
 import { Colors } from "../../../constants/colors";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
+
+const FORMAT = createFormatUtil();
 
 function CardItem({ item }) {
   const [count, setCount] = useState(item.qty);
@@ -44,7 +46,7 @@ function CardItem({ item }) {
           <View style={[DefaultTheme.flex_1, { marginRight: 12 }]}>
             <Text style={styles.textName}>{item.title}</Text>
             <Text style={styles.textPrice}>
-              {currencyFormat(item.price)} / {item.unit}
+              {FORMAT.currencyFormat(item.price)} / {item.unit}
             </Text>
           </View>
         </View>

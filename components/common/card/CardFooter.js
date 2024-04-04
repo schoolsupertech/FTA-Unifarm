@@ -3,9 +3,11 @@ import { View, StyleSheet, Text } from "react-native";
 import { Card, Text as PaperText } from "react-native-paper";
 
 import MainButton from "../button/MainButton";
-import currencyFormat from "../../../utils/CurrencyFormat";
+import createFormatUtil from "../../../utils/FormatUtility";
 import { Colors } from "../../../constants/colors";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
+
+const FORMAT = createFormatUtil();
 
 function CardFooter({ txtLabel, value, onPress, btnLabel }) {
   return (
@@ -28,7 +30,7 @@ function CardFooter({ txtLabel, value, onPress, btnLabel }) {
               color: Colors.primaryGreen900,
             }}
           >
-            {currencyFormat(value)}
+            {FORMAT.currencyFormat(value)}
           </PaperText>
         </View>
         <View style={[DefaultTheme.btnView, styles.buttonView]}>

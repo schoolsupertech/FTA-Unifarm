@@ -10,10 +10,12 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import currencyFormat from '../utils/CurrencyFormat';
+import createFormatUtil from "../utils/FormatUtility";
 import { Colors } from "../constants/colors";
 import { AuthContext } from "../context/AuthContext";
 import { DefaultTheme } from "../themes/DefaultTheme";
+
+const FORMAT = createFormatUtil();
 
 const dataHistory = [
   {
@@ -75,7 +77,7 @@ function WalletScreen() {
                 fontSize: 40,
               }}
             >
-              {currencyFormat(userInfo.wallet.balance)}
+              {FORMAT.currencyFormat(userInfo.wallet.balance)}
             </Text>
             <TouchableOpacity
               style={{

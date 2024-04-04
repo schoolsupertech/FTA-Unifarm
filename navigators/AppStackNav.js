@@ -4,16 +4,17 @@ import { IconButton } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 
 import TabNavigator from "./TabNavigator";
+import AuthStack from "./AuthStack";
 import ProductDetailScreen from "../screens/ProductDetailScreen";
 import CatListProdScreen from "../screens/CatListProdScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import CartScreen from "../screens/CartScreen";
 import OrderScreen from "../screens/OrderScreen";
+import AddressScreen from "../screens/AddressScreen";
 import SearchScreen from "../screens/SearchScreen";
 import ReceiveInfoScreen from "../screens/ReceiveInfoScreen";
 import { DefaultTheme } from "../themes/DefaultTheme";
-import AddressScreen from "../screens/AddressScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +52,13 @@ function AppStackNav() {
         }}
       />
       <Stack.Screen
+        name="AuthScreen"
+        component={AuthStack}
+        options={{
+          title: "Đăng nhập",
+        }}
+      />
+      <Stack.Screen
         name="Notification"
         component={NotificationScreen}
         options={{ title: "Thông báo" }}
@@ -82,7 +90,13 @@ function AppStackNav() {
           },
         }}
       />
-      <Stack.Screen name="SearchScreen" component={SearchScreen} />
+      <Stack.Screen
+        name="SearchScreen"
+        component={SearchScreen}
+        options={{
+          title: "Tìm kiếm sản phẩm",
+        }}
+      />
       <Stack.Screen name="ReceiveInfoScreen" component={ReceiveInfoScreen} />
       <Stack.Screen
         name="AddressScreen"

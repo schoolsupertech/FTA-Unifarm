@@ -16,11 +16,13 @@ import Carousel from "react-native-snap-carousel";
 
 import BannerNewsLettersSlider from "../components/ui/home/BannerNewsLettersSlider";
 import TopHeader from "../components/common/headers/TopHeader";
+import TopHeaderLogin from "../components/common/headers/TopHeaderLogin";
 import LocationOptions from "../components/ui/home/LocationOptions";
 import PopularCategories from "../components/common/list/PopularCategories";
 import HeaderContent from "../components/common/HeaderContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
 import createAxios from "../utils/AxiosUtility";
+import createFormatUtil from "../utils/FormatUtility";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { Colors } from "../constants/colors";
 import { windowWidth } from "../utils/Dimensions";
@@ -28,11 +30,11 @@ import { SLIDERNEWSLETTERS } from "../data/sliderNewsLetters";
 import { AuthContext } from "../context/AuthContext";
 
 const API = createAxios();
+const FORMAT = createFormatUtil();
 
 function HomeScreen() {
   const navigation = useNavigation();
   const { authState } = useContext(AuthContext);
-  const [searchPrd, setSearchPrd] = useState("");
   const [visible, setVisible] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState("");
   const [onCartAdded, setOnCartAdded] = useState(false);
@@ -237,11 +239,6 @@ function HomeScreen() {
     );
   }
 
-  function displaySearchPrdText(prdSearch) {
-    setSearchPrd(prdSearch);
-    console.log(searchPrd);
-  }
-
   function selectedCategoriesStack() {
     navigation.navigate("CategoryTab");
   }
@@ -250,59 +247,67 @@ function HomeScreen() {
     <SafeAreaView style={DefaultTheme.root}>
       <LinearGradient
         colors={["white", Colors.primaryGreen900]}
-        style={styles.linearGradient}
+        style={DefaultTheme.linearGradient}
       >
-        <TopHeader
-          onCartIconPress={() => {
-            authState?.authenticated
-              ? navigation.navigate("CartScreen")
-              : navigation.navigate("Profile");
-          }}
-          onNotiIconPress={() => {
-            navigation.navigate("Notification");
-          }}
-        />
+        {authState?.authenticated ? (
+          <TopHeader
+            onCartIconPress={() => navigation.navigate("CartScreen")}
+            onNotiIconPress={() => {
+              navigation.navigate("Notification");
+            }}
+          />
+        ) : (
+          <TopHeaderLogin
+            onLoginPress={() => navigation.navigate("AuthScreen")}
+          />
+        )}
+
         <Searchbar
           placeholder="Tìm kiếm sản phẩm..."
           elevation={2}
           theme={DefaultTheme.searchbar}
-          value={searchPrd}
-          onChangeText={displaySearchPrdText}
-          // onIconPress={() =>
-          //   navigation.navigate("SearchScreen", { searchItem: searchPrd })
-          // }
+          onFocus={() => navigation.navigate("SearchScreen", { isFocus: true })}
         />
-        <TouchableOpacity
-          onPress={() =>
-            authState?.authenticated &&
-            setLocationModalVisible({
-              ...locationModalVisible,
-              isVisible: true,
-              status: 0,
-            })
-          }
-          style={styles.headerContent}
-        >
-          <Ionicons name="location" size={20} color={Colors.primaryGreen800} />
-          <Text style={styles.headerText}>Thủ Đức, Tp. Hồ Chí Minh </Text>
-          <Ionicons
-            name="arrow-forward-circle"
-            size={16}
-            color={Colors.primaryGreen800}
-          />
-        </TouchableOpacity>
-        <LocationOptions
-          visible={locationModalVisible}
-          onPress={updateLocationHandler}
-          onCancel={onCancelUpdateLocationHandler}
-        />
+
+        {authState?.authenticated && (
+          <>
+            <TouchableOpacity
+              onPress={() =>
+                authState?.authenticated &&
+                setLocationModalVisible({
+                  ...locationModalVisible,
+                  isVisible: true,
+                  status: 0,
+                })
+              }
+              style={styles.headerContent}
+            >
+              <Ionicons
+                name="location"
+                size={20}
+                color={Colors.primaryGreen800}
+              />
+              <Text style={styles.headerText}>Thủ Đức, Tp. Hồ Chí Minh </Text>
+              <Ionicons
+                name="arrow-forward-circle"
+                size={16}
+                color={Colors.primaryGreen800}
+              />
+            </TouchableOpacity>
+            <LocationOptions
+              visible={locationModalVisible}
+              onPress={updateLocationHandler}
+              onCancel={onCancelUpdateLocationHandler}
+            />
+          </>
+        )}
         <TouchableOpacity
           onPress={() => navigation.navigate("TodayScreen")}
           style={styles.headerContent}
         >
           <Ionicons name="calendar" size={20} color={Colors.primaryGreen800} />
           <Text style={styles.headerText}>
-            Ngày 26 tháng 01 năm 2024 (Hôm nay){" "}
+            {FORMAT.dateFormat(new Date())}{" "}
           </Text>
           <Ionicons
             name="arrow-forward-circle"
@@ -375,20 +380,6 @@ function HomeScreen() {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  // searchBar: {
-  //   flexDirection: "row",
-  //   borderColor: "#C6C6C6",
-  //   borderWidth: 1,
-  //   borderRadius: 8,
-  //   paddingHorizontal: 10,
-  //   paddingVertical: 8,
-  // },
-  linearGradient: {
-    width: "100%",
-    padding: 20,
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 4,
-  },
   headerContent: {
     width: "auto",
     padding: 12,

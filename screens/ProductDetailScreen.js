@@ -18,13 +18,14 @@ import ProdMoreInfo from "../components/common/list/ProdMoreInfo";
 import SwiperSlide from "../components/ui/product/SwiperSlide";
 import MainButton from "../components/common/button/MainButton";
 import createAxios from "../utils/AxiosUtility";
-import currencyFormat from "../utils/CurrencyFormat";
+import createFormatUtil from "../utils/FormatUtility";
 import { addToCart, updateCart } from "../context/redux/actions/cartActions";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
 
 const API = createAxios();
+const FORMAT = createFormatUtil();
 
 function ProductDetailScreen({
   route,
@@ -53,7 +54,7 @@ function ProductDetailScreen({
     navigation.setOptions({
       title: selectedProd !== null ? selectedProd.title : "Product Detail",
       headerRight: () => {
-        return (
+        authState?.authenticated && (
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               style={{ marginEnd: 16 }}
@@ -86,7 +87,7 @@ function ProductDetailScreen({
         );
       },
     });
-  }, [selectedProd, navigation]);
+  }, [selectedProd, authState, navigation]);
 
   function addCountHandler() {
     if (count < 10) {
@@ -134,7 +135,7 @@ function ProductDetailScreen({
       setSnackbarLabel("Đã thêm vào giỏ hàng");
     } else {
       Alert.alert("Bạn cần phải đăng nhập trước", [{ text: "OK" }]);
-      navigation.navigate("Profile");
+      navigation.navigate("AuthScreen");
     }
   }
 
@@ -164,7 +165,8 @@ function ProductDetailScreen({
                     variant="titleLarge"
                     style={{ fontWeight: "500", color: Colors.primaryGreen700 }}
                   >
-                    {currencyFormat(selectedProd.price)} / {selectedProd.unit}
+                    {FORMAT.currencyFormat(selectedProd.price)} /{" "}
+                    {selectedProd.unit}
                   </PaperText>
                   <View style={styles.selectingQuantity}>
                     <TouchableOpacity

@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 
 import TopHeader from "../components/common/headers/TopHeader";
+import TopHeaderLogin from "../components/common/headers/TopHeaderLogin";
 import CardCatItem from "../components/ui/categories/CardCatItem";
 import createAxios from "../utils/AxiosUtility";
 import { DefaultTheme } from "../themes/DefaultTheme";
@@ -64,16 +65,18 @@ function CategoriesScreen() {
         colors={["white", Colors.primaryGreen900]}
         style={DefaultTheme.linearGradient}
       >
-        <TopHeader
-          onCartIconPress={() => {
-            authState?.authenticated
-              ? navigation.navigate("CartScreen")
-              : navigation.navigate("Profile");
-          }}
-          onNotiIconPress={() => {
-            navigation.navigate("Notification");
-          }}
-        />
+        {authState?.authenticated ? (
+          <TopHeader
+            onCartIconPress={() => navigation.navigate("CartScreen")}
+            onNotiIconPress={() => {
+              navigation.navigate("Notification");
+            }}
+          />
+        ) : (
+          <TopHeaderLogin
+            onLoginPress={() => navigation.navigate("AuthScreen")}
+          />
+        )}
         <View style={{ marginTop: 8 }}>
           <Searchbar
             theme={DefaultTheme.searchbar}

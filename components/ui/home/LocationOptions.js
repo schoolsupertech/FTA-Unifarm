@@ -167,7 +167,7 @@ function LocationOptions(props) {
                 <HeaderContent>Địa chỉ liên lạc</HeaderContent>
               </View>
               <InputField
-                label={"Chọn khu vực chung cư"}
+                label={"Chọn khu vực"}
                 icon={
                   <Ionicons
                     name="stats-chart-outline"

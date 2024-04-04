@@ -15,15 +15,18 @@ import { useNavigation } from "@react-navigation/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import TopHeader from "../components/common/headers/TopHeader";
+import TopHeaderLogin from "../components/common/headers/TopHeaderLogin";
 import LocationOptions from "../components/ui/home/LocationOptions";
 import HeaderContent from "../components/common/HeaderContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
 import createAxios from "../utils/AxiosUtility";
+import createFormatUtil from "../utils/FormatUtility";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { Colors } from "../constants/colors";
 import { AuthContext } from "../context/AuthContext";
 
 const API = createAxios();
+const FORMAT = createFormatUtil();
 
 function TodayScreen() {
   const navigation = useNavigation();
@@ -37,13 +40,12 @@ function TodayScreen() {
     status: null,
   });
   const [prodItemsInfo, setProdItemsInfo] = useState([]);
-  //////////////////////////////
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [datePicked, setDatePicked] = useState(new Date());
+
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
-
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
@@ -51,38 +53,35 @@ function TodayScreen() {
     setDatePicked(date);
     hideDatePicker();
   };
-  ///////////////////////////////////////
 
-  function formatDatePicked(datePicked) {
-    const day = datePicked.getDate();
-    const month = datePicked.getMonth() + 1;
-    const year = datePicked.getFullYear();
-    return `${day < 10 ? "0" + day : day}/${month < 10 ? "0" + month : month}/${year}`;
-  }
   useEffect(() => {
     const fetchData = async () => {
       const fetchProdItems = async (prodItemId) => {
         const prodItemsInfoResponse = await API.get(
           "/product/" + prodItemId + "/product-items",
         );
-        // const newProdItemsInfo = Object.fromEntries(
-        //   Object.entries(prodItemsInfo),
-        // );
-        setProdItemsInfo((oldProdItemsInfo) => [
-          ...oldProdItemsInfo,
-          ...prodItemsInfoResponse.payload,
-        ]);
+        const isDuplicate = prodItemsInfo.some(
+          (items) =>
+            items.id ===
+            prodItemsInfoResponse.payload.map((prodId) => prodId.id),
+        );
+
+        !isDuplicate &&
+          setProdItemsInfo((oldProdItemsInfo) => [
+            ...oldProdItemsInfo,
+            ...prodItemsInfoResponse.payload,
+          ]);
       };
 
       const catRecomResponse = await API.get("/categories-recommends");
 
-      let categoryRecomId = catRecomResponse.payload
-        .filter((items) => items.name.toLowerCase().includes("nổi bật"))
-        .map((item) => item.id);
+      let categoryRecomId = catRecomResponse.payload.find((items) =>
+        items.name.toLowerCase().includes("nổi bật"),
+      );
 
       if (categoryRecomId) {
         const prodsInfoResponse = await API.get(
-          "/category/" + categoryRecomId + "/products",
+          "/category/" + categoryRecomId.id + "/products",
         );
         prodsInfoResponse.payload.map((item) => {
           fetchProdItems(item.id);
@@ -214,7 +213,7 @@ function TodayScreen() {
 
     return (
       <CardProdItem
-        key={prodItemsInfo.id}
+        key={prodItemProps.id}
         {...prodItemProps}
         onAddingCart={AddingCartHandler}
       />
@@ -236,111 +235,70 @@ function TodayScreen() {
         colors={["white", Colors.primaryGreen900]}
         style={styles.linearGradient}
       >
-        <TopHeader
-          onCartIconPress={() => {
-            authState?.authenticated
-              ? navigation.navigate("CartScreen")
-              : navigation.navigate("Profile");
-          }}
-          onNotiIconPress={() => {
-            navigation.navigate("Notification");
-          }}
-        />
-        <View style={styles.headerLocation}>
-          <View style={styles.headerLocationContent}>
-            <Ionicons
-              name="location"
-              color={Colors.primaryGreen800}
-              size={20}
-            />
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "700",
-                color: Colors.primaryGreen800,
+        {authState?.authenticated ? (
+          <>
+            <TopHeader
+              onCartIconPress={() => navigation.navigate("CartScreen")}
+              onNotiIconPress={() => {
+                navigation.navigate("Notification");
               }}
+            />
+            <TouchableOpacity
+              onPress={() =>
+                authState?.authenticated &&
+                setLocationModalVisible({
+                  ...locationModalVisible,
+                  isVisible: true,
+                  status: 0,
+                })
+              }
+              style={styles.headerContent}
             >
-              {" "}
-            </Text>
-          </View>
-          <TouchableOpacity
-            style={{}}
-            onPress={() =>
-              authState?.authenticated &&
-              setLocationModalVisible({
-                ...locationModalVisible,
-                isVisible: true,
-                status: 0,
-              })
-            }
-          >
-            <Text style={styles.textLocation}>
-              Thủ Đức, Tp. Hồ Chí Minh <Ionicons name="arrow-down" />
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <LocationOptions
-          visible={locationModalVisible}
-          onPress={updateLocationHandler}
-          onCancel={onCancelUpdateLocationHandler}
-        />
-        {/* <View style={styles.headerMenu}>
-          <Text style={styles.textMenu}>
-            <Text style={{ fontWeight: "600" }}>
-              
-              <Text style={{ textDecorationLine: "underline" }}>
-                Ngày 26 tháng 01 năm 2024
-              </Text>
-            </Text>
-          </Text>
-        </View> */}
-        {/* <Searchbar
-          placeholder="Tìm kiếm sản phẩm..."
-          elevation={1}
-          theme={DefaultTheme.searchbar}
-          value={searchPrd}
-          onChangeText={displaySearchPrdText}
-          // onIconPress={() =>
-          //   navigation.navigate("SearchScreen", { searchItem: searchPrd })
-          // }
-        /> */}
-        <TouchableOpacity
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 20,
-            borderWidth: 2,
-            borderColor: "white",
-            borderRadius: 5,
-            backgroundColor: Colors.primaryGreen50,
-          }}
-          onPress={showDatePicker}
-        >
-          <Ionicons
-            name="calendar-outline"
-            size={25}
-            color={Colors.primaryGreen700}
+              <Ionicons
+                name="location"
+                size={20}
+                color={Colors.primaryGreen800}
+              />
+              <Text style={styles.headerText}>Thủ Đức, Tp. Hồ Chí Minh </Text>
+              <Ionicons
+                name="arrow-forward-circle"
+                size={16}
+                color={Colors.primaryGreen800}
+              />
+            </TouchableOpacity>
+            <LocationOptions
+              visible={locationModalVisible}
+              onPress={updateLocationHandler}
+              onCancel={onCancelUpdateLocationHandler}
+            />
+          </>
+        ) : (
+          <TopHeaderLogin
+            onLoginPress={() => navigation.navigate("AuthScreen")}
           />
-          <Text
-            style={{
-              color: Colors.primaryGreen700,
-              fontWeight: "bold",
-              fontSize: 16,
-            }}
-          >
-            {"  "}
-            {datePicked && formatDatePicked(datePicked)}
+        )}
+
+        <TouchableOpacity style={styles.headerContent} onPress={showDatePicker}>
+          <Ionicons name="calendar" size={20} color={Colors.primaryGreen800} />
+          <Text style={styles.headerText}>
+            {FORMAT.dateFormat(datePicked)}{" "}
           </Text>
+          <Ionicons
+            name="arrow-forward-circle"
+            size={16}
+            color={Colors.primaryGreen800}
+          />
         </TouchableOpacity>
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"
+          minimumDate={new Date("2022-12-30")}
+          maximumDate={new Date("2029-12-30")}
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
           cancelTextIOS="Đóng"
           confirmTextIOS="Xác nhận"
-          buttonTextColorIOS={Colors.primaryGreen700}
+          buttonTextColorIOS={DefaultTheme.btnColor700}
         />
       </LinearGradient>
 
@@ -384,34 +342,29 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
   },
-  headerLocation: {
-    width: "100%",
+  headerContent: {
+    width: "auto",
+    padding: 12,
+    marginTop: 12,
     flexDirection: "row",
-    justifyContent: "flex-start",
     alignItems: "center",
-    marginVertical: 12,
+    justifyContent: "flex-start",
+    backgroundColor: "rgba(220, 255, 220, 0.75)",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    borderColor: Colors.primaryGreen800,
+  },
+  headerText: {
+    fontSize: 14,
+    fontWeight: "500",
+    marginLeft: 4,
+    color: Colors.primaryGreen800,
   },
   headerLocationContent: {
     marginLeft: 8,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-  },
-  textLocation: {
-    fontSize: 15,
-    color: Colors.primaryGreen800,
-    // textDecorationLine: "underline",
-    fontWeight: "bold",
-  },
-  headerMenu: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "flex-start",
-    marginBottom: 20,
-  },
-  textMenu: {
-    fontSize: 14,
-    color: Colors.primaryGreen100,
   },
   contentView: {
     marginTop: 18,

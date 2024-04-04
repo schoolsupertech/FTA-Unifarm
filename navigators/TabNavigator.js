@@ -61,22 +61,22 @@ function TabNavigator() {
           ),
         })}
       />
-      <Tab.Screen
-        name="CategoryTab"
-        component={CategoriesScreen}
-        options={{
-          title: "Danh mục",
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons
-              name={focused ? "layers" : "layers-outline"}
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
       {authState?.authenticated ? (
         <>
+          <Tab.Screen
+            name="CategoryTab"
+            component={CategoriesScreen}
+            options={{
+              title: "Danh mục",
+              tabBarIcon: ({ focused, color, size }) => (
+                <Ionicons
+                  name={focused ? "layers" : "layers-outline"}
+                  color={color}
+                  size={size}
+                />
+              ),
+            }}
+          />
           <Tab.Screen
             name="TodayScreen"
             component={TodayScreen}
@@ -130,47 +130,63 @@ function TabNavigator() {
               ),
             }}
           />
+          <Tab.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{
+              title: "Cá nhân",
+              tabBarIcon: ({ focused, color, size }) => (
+                <Ionicons
+                  name={focused ? "person" : "person-outline"}
+                  color={color}
+                  size={size}
+                />
+              ),
+            }}
+          />
         </>
       ) : (
-        <Tab.Screen
-          name="TodayScreen"
-          component={TodayScreen}
-          options={{
-            title: "Hôm nay",
-            tabBarIcon: ({ focused, color, size }) => (
-              <Ionicons
-                name={focused ? "flash" : "flash-outline"}
-                color={color}
-                size={size}
-              />
-            ),
-            // headerShown: true,
-            // headerTitle: "Số dư ví",
-            // headerRight: () => (
-            //   <Ionicons
-            //     style={{ marginRight: 20, padding: 0 }}
-            //     name={"wallet-outline"}
-            //     size={24}
+        <>
+          <Tab.Screen
+            name="TodayScreen"
+            component={TodayScreen}
+            options={{
+              title: "Hôm nay",
+              tabBarIcon: ({ focused, color, size }) => (
+                <Ionicons
+                  name={focused ? "flash" : "flash-outline"}
+                  color={color}
+                  size={size}
+                />
+              ),
+              // headerShown: true,
+              // headerTitle: "Số dư ví",
+              // headerRight: () => (
+              //   <Ionicons
+              //     style={{ marginRight: 20, padding: 0 }}
+              //     name={"wallet-outline"}
+              //     size={24}
 
-            //   />
-            // )
-          }}
-        />
+              //   />
+              // )
+            }}
+          />
+          <Tab.Screen
+            name="CategoryTab"
+            component={CategoriesScreen}
+            options={{
+              title: "Danh mục",
+              tabBarIcon: ({ focused, color, size }) => (
+                <Ionicons
+                  name={focused ? "layers" : "layers-outline"}
+                  color={color}
+                  size={size}
+                />
+              ),
+            }}
+          />
+        </>
       )}
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          title: "Cá nhân",
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons
-              name={focused ? "person" : "person-outline"}
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 }

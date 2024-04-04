@@ -1,12 +1,12 @@
 import React from "react";
 import { Image, StyleSheet } from "react-native";
 
-function LogoTitle() {
+function LogoTitle({ imgStyle }) {
   return (
     <Image
-      style={styles.image}
+      style={[styles.image, imgStyle]}
       source={require("../assets/images/Title_Plant_Logo.png")}
-      resizeMode="cover"
+      resizeMode="stretch"
     />
   );
 }

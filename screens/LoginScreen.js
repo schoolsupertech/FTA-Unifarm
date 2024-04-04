@@ -18,6 +18,7 @@ import LogoTitle from "../themes/LogoTitle";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
+import { width } from "deprecated-react-native-prop-types/DeprecatedImagePropType";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -31,27 +32,21 @@ const LoginScreen = ({ navigation }) => {
       >
         <View
           style={{
+            width: "100%",
+            height: 100,
             alignItems: "center",
             justifyContent: "center",
-            marginBottom: 20,
+            marginVertical: 40,
           }}
         >
+          {/*
           <Image
             source={require("../assets/toppng.com-vegetables-images-png-vegetables-1911x1320.png")}
             resizeMode="contain"
             style={{ height: 150, width: "100%" }}
           />
-          <View
-            style={{
-              height: 50,
-              width: 500,
-              marginVertical: 15,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <LogoTitle />
-          </View>
+                    */}
+          <LogoTitle imgStyle={{ width: "100%", height: "100%" }} />
         </View>
 
         <InputField
@@ -161,7 +156,7 @@ const LoginScreen = ({ navigation }) => {
             style={{
               flexDirection: "row",
               justifyContent: "center",
-              marginBottom: 30,
+              marginVertical: 30,
             }}
           >
             <Text>Bạn là khách hàng mới?</Text>

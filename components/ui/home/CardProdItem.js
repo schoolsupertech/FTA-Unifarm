@@ -11,10 +11,12 @@ import axios from "axios";
 
 import CartBtn from "../../common/button/CartBtn";
 import Title from "../../common/text/Title";
-import currencyFormat from "../../../utils/CurrencyFormat";
+import createFormatUtil from "../../../utils/FormatUtility";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
 import { BASE_URL } from "../../../api/config";
 import { AuthContext } from "../../../context/AuthContext";
+
+const FORMAT = createFormatUtil();
 
 function CardProdItem(props) {
   const navigation = useNavigation();
@@ -85,12 +87,6 @@ function CardProdItem(props) {
     );
   }
 
-  function formatCurrency(amount) {
-    return parseFloat(amount).toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-  }
   return (
     <TouchableOpacity onPress={selectedProductDetailHandler}>
       <Card style={styles.container} mode="contained">
@@ -112,14 +108,16 @@ function CardProdItem(props) {
             <Title>{props.title}</Title>
             <View style={styles.titleContent}>
               <View style={DefaultTheme.flex_1}>
+                {/*
                 <PaperText variant="bodySmall" style={styles.listedPrice}>
-                  {/* props.listedPrice */} {currencyFormat(50000)}
+                  {FORMAT.currencyFormat(50000)}
                 </PaperText>
+              */}
                 <PaperText
-                  variant="bodyLarge"
+                  variant="titleLarge"
                   style={{ fontWeight: "500", color: "green", marginBottom: 4 }}
                 >
-                  {currencyFormat(props.price)}
+                  {FORMAT.currencyFormat(props.price)}
                 </PaperText>
                 <View style={styles.progressBarContent}>
                   <PaperText variant="bodySmall">
