@@ -54,7 +54,7 @@ function ProductDetailScreen({
     navigation.setOptions({
       title: selectedProd !== null ? selectedProd.title : "Product Detail",
       headerRight: () => {
-        authState?.authenticated && (
+        return authState?.authenticated ? (
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               style={{ marginEnd: 16 }}
@@ -84,7 +84,7 @@ function ProductDetailScreen({
               </Badge>
             </TouchableOpacity>
           </View>
-        );
+        ) : null;
       },
     });
   }, [selectedProd, authState, navigation]);

@@ -4,15 +4,15 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  TouchableOpacity,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
-import { Divider, Searchbar, Picker } from "react-native-paper";
+import { Divider, Searchbar } from "react-native-paper";
 
+import CardProdItem from "../components/ui/home/CardProdItem";
 import createAxios from "../utils/AxiosUtility";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { Colors } from "../constants/colors";
-import CardProdItem from "../components/ui/home/CardProdItem";
 
 const API = createAxios();
 
@@ -22,7 +22,6 @@ const SearchScreen = ({ navigation, route }) => {
   const [isSearchingPrd, setIsSearchingPrd] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [searchedProd, setSearchedProd] = useState(null);
-  const [searchPrd, setSearchPrd] = useState(null);
   const [searchingProdItems, setSearchingProdItems] = useState(null);
 
   useEffect(() => {
@@ -31,18 +30,10 @@ const SearchScreen = ({ navigation, route }) => {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchSearchProdItems = async () => {
-      const response = await API.get(
-        "/product-items/search?SearchTerm=" + searchPrd.title,
-      );
-      response && setSearchedProd(response.payload);
-    };
-
-    if (searchPrd) {
-      fetchSearchProdItems();
-    }
-  }, [searchPrd]);
+  async function fetchSearchProdItems(data) {
+    const response = await API.get("/product-items/search?SearchTerm=" + data);
+    return response && response.payload;
+  }
 
   function onFocusHandler() {
     setIsFocus(true);
@@ -58,45 +49,50 @@ const SearchScreen = ({ navigation, route }) => {
     setSearchValue(value);
 
     if (value) {
-      const response = await API.get(
-        "/product-items/search?SearchTerm=" + value,
-      );
-      if (Array.isArray(response.payload) && response.payload.length > 0) {
-        setSearchingProdItems(response.payload);
+      const res = await fetchSearchProdItems(value);
+      if (Array.isArray(res) && res.length > 0) {
+        setSearchingProdItems(res);
       } else {
         setSearchingProdItems(null);
       }
     } else {
-      setIsSearchingPrd(false);
       setIsFocus(false);
+      setIsSearchingPrd(false);
       navigation.goBack();
     }
   }
 
   function renderSearchingProdItems(item) {
-    function onSelectSearchingProd() {
+    async function onSelectSearchingProd() {
       setIsSearchingPrd(false);
-      setSearchPrd(item);
+      const res = await fetchSearchProdItems(item.title);
+      if (Array.isArray(res) && res.length > 0) {
+        setSearchedProd(res);
+      }
     }
 
     return (
-      <TouchableOpacity
-        key={item.id}
-        onPress={onSelectSearchingProd}
-        style={styles.dropdownItem}
-      >
-        <View style={styles.dropdownSearching}>
+      <View style={styles.dropdownItem}>
+        <TouchableOpacity
+          key={item.id}
+          onPress={onSelectSearchingProd}
+          style={styles.dropdownSearching}
+        >
           <Text style={styles.dropdownText} numberOfLines={1}>
             {item.title}
           </Text>
-        </View>
-        <Divider />
-      </TouchableOpacity>
+          <Divider />
+        </TouchableOpacity>
+      </View>
     );
   }
 
-  function onSubmitEditingHandler() {
-    setSearchPrd(searchValue);
+  async function onSubmitEditingHandler() {
+    console.log("Search value: " + searchValue);
+    const res = await fetchSearchProdItems(searchValue);
+    if (Array.isArray(res) && res.length > 0) {
+      setSearchedProd(res);
+    }
     setIsSearchingPrd(false);
   }
 
@@ -141,7 +137,7 @@ const SearchScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={DefaultTheme.root}>
-      <View style={DefaultTheme.linearGradient}>
+      <View style={[DefaultTheme.linearGradient, { zIndex: 1000 }]}>
         <Searchbar
           elevation={2}
           theme={DefaultTheme.searchbar}
@@ -166,7 +162,7 @@ const SearchScreen = ({ navigation, route }) => {
           </View>
         )}
       </View>
-      <View style={DefaultTheme.flex_1}>
+      <View style={[DefaultTheme.flex_1, { zIndex: 1 }]}>
         {searchedProd && (
           <FlatList
             data={searchedProd}
@@ -191,7 +187,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderWidth: 1,
     borderColor: "black",
-    zIndex: 1,
   },
   dropdownItem: {
     height: "auto",
