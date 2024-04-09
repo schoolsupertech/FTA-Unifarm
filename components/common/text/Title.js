@@ -2,9 +2,10 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Text as PaperText } from "react-native-paper";
 
-function Title({ children, color }) {
+function Title({ children, icon, color }) {
   return (
     <View style={styles.container}>
+      {icon}
       <PaperText
         style={[styles.title, { color: color }]}
         variant="titleMedium"
@@ -20,7 +21,9 @@ export default Title;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   title: {
     fontWeight: "bold",

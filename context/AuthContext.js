@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { Alert } from "react-native";
+import * as Location from "expo-location";
 import {
   GoogleSignin,
   statusCodes,
@@ -26,21 +27,6 @@ export const AuthProvider = ({ children }) => {
       "611874810536-ea5432vg9er0nb16i4drj14tv5rv6i8v.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
   });
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const response = await API.customRequest(
-        "get",
-        "/aboutMe",
-        null,
-        authState.token,
-      );
-      setUserInfo(response);
-      AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
-    };
-
-    authState?.authenticated && fetchUserInfo();
-  }, [authState]);
-
   const register = async (user) => {
     setIsLoading(true);
     const response = await API.post("/auth/register", user);
@@ -60,7 +46,18 @@ export const AuthProvider = ({ children }) => {
       password: password,
     });
 
-    if (response) {
+    if (response && response.response) {
+      if (
+        response.response.status === 400 ||
+        response.response.status === 401
+      ) {
+        Alert.alert(
+          "Sai tên tài khoản hoặc mật khẩu",
+          "Vui lòng đăng nhập lại",
+          [{ text: "OK" }],
+        );
+      }
+    } else {
       setAuthState({
         token: response.token,
         authenticated: true,
@@ -70,6 +67,28 @@ export const AuthProvider = ({ children }) => {
         "TOKEN_KEY",
         JSON.stringify({ token: response.token, loggedIn: "systemLog" }),
       );
+
+      const userInfoRes = await API.customRequest(
+        "get",
+        "/aboutMe",
+        null,
+        response.token,
+      );
+      const userCartInfoRes = await API.customRequest(
+        "get",
+        "/carts",
+        null,
+        response.token,
+      );
+
+      if (userInfoRes && userCartInfoRes) {
+        let qtyInCart = userCartInfoRes.payload.length;
+        setUserInfo({ info: userInfoRes, qtyInCart: qtyInCart });
+        AsyncStorage.setItem(
+          "userInfo",
+          JSON.stringify({ info: userInfoRes, qtyInCart: qtyInCart }),
+        );
+      }
     }
     setIsLoading(false);
   };
@@ -143,6 +162,7 @@ export const AuthProvider = ({ children }) => {
         const userInfoJsonParse = JSON.parse(userInfo);
 
         console.log("Token storage: " + JSON.stringify(data, null, 2));
+        console.log("User info: " + JSON.stringify(userInfoJsonParse, null, 2));
 
         setAuthState({
           token: data.token,
@@ -156,6 +176,43 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
+  const getLocation = async (token) => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      } else {
+        const location = await Location.getCurrentPositionAsync();
+        console.log(JSON.stringify(location, null, 2));
+        const response = await API.customRequest(
+          "get",
+          "/apartment-station",
+          null,
+          token,
+        );
+        return response;
+      }
+    } catch (error) {
+      console.error("Error request location permission: ", error);
+    }
+  };
+
+  // const updateLocation = async (apartmentData, stationData, isDefault) => {
+  //   if (apartmentData && stationData) {
+  //     const response = await API.customRequest(
+  //       "/post",
+  //       "/apartment-station/upsert",
+  //       {
+  //         stationId: stationData.id,
+  //         apartmentId: apartmentData.id,
+  //         isDefault: isDefault,
+  //       },
+  //       authState?.token,
+  //     );
+  //     console.log("Save location: " + JSON.stringify(response, null, 2));
+  //   }
+  // };
+
   useEffect(() => {
     isLoggedIn();
   }, []);
@@ -168,6 +225,7 @@ export const AuthProvider = ({ children }) => {
     isLoading,
     authState,
     userInfo,
+    getLocation,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -43,7 +43,7 @@ function OrderScreen() {
         txtLabel="Tổng số tiền: "
         txtValue="247.990"
         onPress={onPaymentHandler}
-        btnLabel="Xác nhận"
+        btnLabel="Đặt hàng"
       />
     </SafeAreaView>
   );

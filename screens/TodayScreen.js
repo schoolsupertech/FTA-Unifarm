@@ -30,7 +30,7 @@ const FORMAT = createFormatUtil();
 
 function TodayScreen() {
   const navigation = useNavigation();
-  const { authState } = useContext(AuthContext);
+  const { authState, userInfo } = useContext(AuthContext);
   const [searchPrd, setSearchPrd] = useState("");
   const [visible, setVisible] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState("");
@@ -238,6 +238,7 @@ function TodayScreen() {
         {authState?.authenticated ? (
           <>
             <TopHeader
+              userInfo={userInfo}
               onCartIconPress={() => navigation.navigate("CartScreen")}
               onNotiIconPress={() => {
                 navigation.navigate("Notification");

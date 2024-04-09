@@ -77,7 +77,9 @@ function WalletScreen() {
                 fontSize: 40,
               }}
             >
-              {FORMAT.currencyFormat(userInfo.wallet.balance)}
+              {userInfo &&
+                userInfo.info &&
+                FORMAT.currencyFormat(userInfo.info.wallet.balance)}
             </Text>
             <TouchableOpacity
               style={{

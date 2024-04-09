@@ -19,6 +19,7 @@ const API = createAxios();
 const SearchScreen = ({ navigation, route }) => {
   const searchbarRef = useRef(null);
   const [isFocus, setIsFocus] = useState(route.params.isFocus);
+  const prodItemsInfo = route.params.searchTerm;
   const [isSearchingPrd, setIsSearchingPrd] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [searchedProd, setSearchedProd] = useState(null);
@@ -31,8 +32,8 @@ const SearchScreen = ({ navigation, route }) => {
   }, []);
 
   async function fetchSearchProdItems(data) {
-    const response = await API.get("/product-items/search?SearchTerm=" + data);
-    return response && response.payload;
+    // const response = await API.get("/product-items/search?SearchTerm=" + data);
+    // return response && response.payload;
   }
 
   function onFocusHandler() {
@@ -49,9 +50,11 @@ const SearchScreen = ({ navigation, route }) => {
     setSearchValue(value);
 
     if (value) {
-      const res = await fetchSearchProdItems(value);
-      if (Array.isArray(res) && res.length > 0) {
-        setSearchingProdItems(res);
+      const searchingResponse = prodItemsInfo.filter((item) =>
+        item.title.toLowerCase().includes(value.toLowerCase()),
+      );
+      if (searchingResponse) {
+        setSearchingProdItems(searchingResponse);
       } else {
         setSearchingProdItems(null);
       }
@@ -65,16 +68,15 @@ const SearchScreen = ({ navigation, route }) => {
   function renderSearchingProdItems(item) {
     async function onSelectSearchingProd() {
       setIsSearchingPrd(false);
-      const res = await fetchSearchProdItems(item.title);
-      if (Array.isArray(res) && res.length > 0) {
-        setSearchedProd(res);
-      }
+      // const res = await fetchSearchProdItems(item.title);
+      // if (Array.isArray(res) && res.length > 0) {
+      //   setSearchedProd(res);
+      // }
     }
 
     return (
-      <View style={styles.dropdownItem}>
+      <View key={item.id} style={styles.dropdownItem}>
         <TouchableOpacity
-          key={item.id}
           onPress={onSelectSearchingProd}
           style={styles.dropdownSearching}
         >
@@ -89,10 +91,10 @@ const SearchScreen = ({ navigation, route }) => {
 
   async function onSubmitEditingHandler() {
     console.log("Search value: " + searchValue);
-    const res = await fetchSearchProdItems(searchValue);
-    if (Array.isArray(res) && res.length > 0) {
-      setSearchedProd(res);
-    }
+    // const res = await fetchSearchProdItems(searchValue);
+    // if (Array.isArray(res) && res.length > 0) {
+    //   setSearchedProd(res);
+    // }
     setIsSearchingPrd(false);
   }
 

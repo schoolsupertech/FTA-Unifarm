@@ -1,13 +1,26 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { Divider, Text as PaperText } from "react-native-paper";
+
 import { Text } from "react-native-paper";
 import { Colors } from "../../../constants/colors";
 
-function Ellipsis({ description, numberOfLines }) {
+function Ellipsis({ description, data, numberOfLines }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   function toggleNumberOfLines() {
     setIsCollapsed(!isCollapsed);
+  }
+
+  function Bars({ viewData }) {
+    return (
+      <View style={styles.barContainer}>
+        <PaperText variant="bodyMedium" style={{ marginBottom: 4 }}>
+          {viewData}
+        </PaperText>
+        <Divider />
+      </View>
+    );
   }
 
   return (
@@ -18,15 +31,25 @@ function Ellipsis({ description, numberOfLines }) {
         style={{ marginBottom: 4 }}
       >
         {description}
+        {data && data.map((viewData) => "\n" + viewData)}
       </Text>
 
       <TouchableOpacity onPress={toggleNumberOfLines}>
-        <Text style={{ color: Colors.primaryGreen700 }}>
-          {isCollapsed ? "Đọc tiếp" : "Thu gọn"}
-        </Text>
+        <Divider />
+        <View style={styles.collapsedBtn}>
+          <Text style={{ color: Colors.primaryGreen700 }}>
+            {isCollapsed ? "Đọc tiếp" : "Thu gọn"}
+          </Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
 }
 
 export default Ellipsis;
+
+const styles = StyleSheet.create({
+  collapsedBtn: {
+    marginTop: 4,
+  },
+});

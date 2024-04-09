@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
 
-function CardBtn({ onPress, icon, children }) {
+function CardBtn({ bgStyle, textStyle, onPress, icon, children }) {
   return (
     <TouchableOpacity style={styles.orderLineViewContent} onPress={onPress}>
       <View style={styles.orderInnerViewContent}>

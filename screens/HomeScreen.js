@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
+  Alert,
   StyleSheet,
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-  Alert,
+  ImageBackground,
 } from "react-native";
 import { Searchbar, Snackbar } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
@@ -34,7 +35,7 @@ const FORMAT = createFormatUtil();
 
 function HomeScreen() {
   const navigation = useNavigation();
-  const { authState } = useContext(AuthContext);
+  const { authState, userInfo, getLocation } = useContext(AuthContext);
   const [visible, setVisible] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState("");
   const [onCartAdded, setOnCartAdded] = useState(false);
@@ -45,26 +46,10 @@ function HomeScreen() {
   const [categoriesRecommendsInfo, setCategoriesRecommendsInfo] =
     useState(null);
   const [prodItemsInfo, setProdItemsInfo] = useState([]);
+  const [currentLocation, setCurrentLocation] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchProdItems = async (prodItemId) => {
-        const prodItemsInfoResponse = await API.get(
-          "/product/" + prodItemId + "/product-items",
-        );
-        const isDuplicate = prodItemsInfo.some(
-          (items) =>
-            items.id ===
-            prodItemsInfoResponse.payload.map((prodId) => prodId.id),
-        );
-
-        !isDuplicate &&
-          setProdItemsInfo((oldProdItemsInfo) => [
-            ...oldProdItemsInfo,
-            ...prodItemsInfoResponse.payload,
-          ]);
-      };
-
       const catRecomResponse = await API.get("/categories-recommends");
       setCategoriesRecommendsInfo(
         catRecomResponse.payload.filter(
@@ -72,18 +57,16 @@ function HomeScreen() {
         ),
       );
 
-      let categoryRecomId = catRecomResponse.payload.find((items) =>
-        items.name.toLowerCase().includes("nổi bật"),
+      const prodItemsInfoResponse = await API.get(
+        "/product-items/businessday/814982CA-2092-4F0D-9720-83F064237A90/all",
       );
+      // const isDuplicate = prodItemsInfo.some(
+      //   (items) =>
+      //     items.id === prodItemsInfoResponse.payload.map((prodId) => prodId.id),
+      // );
 
-      if (categoryRecomId) {
-        const prodsInfoResponse = await API.get(
-          "/category/" + categoryRecomId.id + "/products",
-        );
-        prodsInfoResponse.payload.map((item) => {
-          fetchProdItems(item.id);
-        });
-      }
+      // !isDuplicate &&
+      setProdItemsInfo([...prodItemsInfoResponse.payload]);
     };
 
     fetchData();
@@ -91,11 +74,7 @@ function HomeScreen() {
 
   useEffect(() => {
     const fetchingUserLocation = async () => {
-      const response = await API.customRequest(
-        "get",
-        "/apartment-station",
-        authState?.token,
-      );
+      const response = await getLocation(authState?.token);
 
       if (response.response?.status == 400) {
         Alert.alert(
@@ -108,6 +87,10 @@ function HomeScreen() {
           isVisible: true,
           status: response.response.status,
         });
+      } else {
+        response.payload.map(
+          (item) => item.isDefault && setCurrentLocation(item),
+        );
       }
     };
 
@@ -182,19 +165,18 @@ function HomeScreen() {
     }
   }
 
-  function renderPopularCategories(item) {
+  function RenderPopularCategories({ catItem }) {
     function selectedCategoryHandler() {
       navigation.navigate("CatListProdScreen", {
-        catRecomId: item.id,
-        catRecomName: item.name,
+        catRecomId: catItem.id,
+        catRecomName: catItem.name,
       });
     }
 
     return (
       <PopularCategories
-        key={item.id}
-        title={item.name}
-        image={item.image}
+        title={catItem.name}
+        image={catItem.image}
         onPress={selectedCategoryHandler}
       />
     );
@@ -249,72 +231,89 @@ function HomeScreen() {
         colors={["white", Colors.primaryGreen900]}
         style={DefaultTheme.linearGradient}
       >
-        {authState?.authenticated ? (
-          <TopHeader
-            onCartIconPress={() => navigation.navigate("CartScreen")}
-            onNotiIconPress={() => {
-              navigation.navigate("Notification");
-            }}
-          />
-        ) : (
-          <TopHeaderLogin
-            onLoginPress={() => navigation.navigate("AuthScreen")}
-          />
-        )}
-
-        <Searchbar
-          placeholder="Tìm kiếm sản phẩm..."
-          elevation={2}
-          theme={DefaultTheme.searchbar}
-          onFocus={() => navigation.navigate("SearchScreen", { isFocus: true })}
-        />
-
-        {authState?.authenticated && (
-          <>
-            <TouchableOpacity
-              onPress={() =>
-                authState?.authenticated &&
-                setLocationModalVisible({
-                  ...locationModalVisible,
-                  isVisible: true,
-                  status: 0,
-                })
-              }
-              style={styles.headerContent}
-            >
-              <Ionicons
-                name="location"
-                size={20}
-                color={Colors.primaryGreen800}
-              />
-              <Text style={styles.headerText}>Thủ Đức, Tp. Hồ Chí Minh </Text>
-              <Ionicons
-                name="arrow-forward-circle"
-                size={16}
-                color={Colors.primaryGreen800}
-              />
-            </TouchableOpacity>
-            <LocationOptions
-              visible={locationModalVisible}
-              onPress={updateLocationHandler}
-              onCancel={onCancelUpdateLocationHandler}
-            />
-          </>
-        )}
-        <TouchableOpacity
-          onPress={() => navigation.navigate("TodayScreen")}
-          style={styles.headerContent}
+        <ImageBackground
+          source={require("../assets/images/backgrounds/Logo.png")}
+          resizeMode="stretch"
+          style={{ wight: "100%", height: "auto", margin: 0, padding: 0 }}
+          imageStyle={styles.bgImg}
         >
-          <Ionicons name="calendar" size={20} color={Colors.primaryGreen800} />
-          <Text style={styles.headerText}>
-            {FORMAT.dateFormat(new Date())}{" "}
-          </Text>
-          <Ionicons
-            name="arrow-forward-circle"
-            size={16}
-            color={Colors.primaryGreen800}
+          {authState?.authenticated ? (
+            <TopHeader
+              userInfo={userInfo}
+              onCartIconPress={() => navigation.navigate("CartScreen")}
+              onNotiIconPress={() => {
+                navigation.navigate("Notification");
+              }}
+            />
+          ) : (
+            <TopHeaderLogin
+              onLoginPress={() => navigation.navigate("AuthScreen")}
+            />
+          )}
+
+          <Searchbar
+            placeholder="Tìm kiếm sản phẩm..."
+            elevation={2}
+            theme={DefaultTheme.searchbar}
+            onFocus={() =>
+              navigation.navigate("SearchScreen", {
+                searchTerm: prodItemsInfo,
+                isFocus: true,
+              })
+            }
           />
-        </TouchableOpacity>
+
+          {authState?.authenticated && (
+            <>
+              <TouchableOpacity
+                onPress={() =>
+                  authState?.authenticated &&
+                  setLocationModalVisible({
+                    ...locationModalVisible,
+                    isVisible: true,
+                    status: 0,
+                  })
+                }
+                style={styles.headerContent}
+              >
+                <Ionicons
+                  name="location"
+                  size={20}
+                  color={Colors.primaryGreen800}
+                />
+                <Text style={styles.headerText}>{currentLocation}</Text>
+                <Ionicons
+                  name="arrow-forward-circle"
+                  size={16}
+                  color={Colors.primaryGreen800}
+                />
+              </TouchableOpacity>
+              <LocationOptions
+                visible={locationModalVisible}
+                onPress={updateLocationHandler}
+                onCancel={onCancelUpdateLocationHandler}
+              />
+            </>
+          )}
+          <TouchableOpacity
+            onPress={() => navigation.navigate("TodayScreen")}
+            style={styles.headerContent}
+          >
+            <Ionicons
+              name="calendar"
+              size={20}
+              color={Colors.primaryGreen800}
+            />
+            <Text style={styles.headerText}>
+              {FORMAT.dateFormat(new Date())}{" "}
+            </Text>
+            <Ionicons
+              name="arrow-forward-circle"
+              size={16}
+              color={Colors.primaryGreen800}
+            />
+          </TouchableOpacity>
+        </ImageBackground>
       </LinearGradient>
 
       <ScrollView style={DefaultTheme.scrollContainer}>
@@ -348,9 +347,9 @@ function HomeScreen() {
               horizontal={true}
               showsHorizontalScrollIndicator={false}
             >
-              {categoriesRecommendsInfo.map((item) =>
-                renderPopularCategories(item),
-              )}
+              {categoriesRecommendsInfo.map((item) => (
+                <RenderPopularCategories key={item.id} catItem={item} />
+              ))}
             </ScrollView>
           )}
         </View>
@@ -380,6 +379,11 @@ function HomeScreen() {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  bgImg: {
+    margin: 0,
+    padding: 0,
+    opacity: 0.5,
+  },
   headerContent: {
     width: "auto",
     padding: 12,

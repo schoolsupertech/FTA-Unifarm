@@ -6,6 +6,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -14,11 +15,12 @@ import FacebookSVG from "../assets/images/misc/facebook.svg";
 import TwitterSVG from "../assets/images/misc/twitter.svg";
 import InputField from "../components/common/text/InputField";
 import MainButton from "../components/common/button/MainButton";
-import LogoTitle from "../themes/LogoTitle";
+import LogoTheme from "../themes/LogoTheme";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
-import { width } from "deprecated-react-native-prop-types/DeprecatedImagePropType";
+
+const LogoImage = LogoTheme();
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -30,24 +32,7 @@ const LoginScreen = ({ navigation }) => {
       <View
         style={{ flex: 1, paddingHorizontal: 25, justifyContent: "center" }}
       >
-        <View
-          style={{
-            width: "100%",
-            height: 100,
-            alignItems: "center",
-            justifyContent: "center",
-            marginVertical: 40,
-          }}
-        >
-          {/*
-          <Image
-            source={require("../assets/toppng.com-vegetables-images-png-vegetables-1911x1320.png")}
-            resizeMode="contain"
-            style={{ height: 150, width: "100%" }}
-          />
-                    */}
-          <LogoTitle imgStyle={{ width: "100%", height: "100%" }} />
-        </View>
+        <LogoImage.LoginLogo imgStyle={{ width: "100%", height: 400 }} />
 
         <InputField
           label={"Tài khoản Email"}
@@ -88,7 +73,7 @@ const LoginScreen = ({ navigation }) => {
             styleButton={{ width: "100%" }}
             onPress={() => {
               login(email, password).then(() =>
-                console.log("Signed in with systemLog"),
+                console.log("Logged in with SystemLog"),
               );
             }}
           >

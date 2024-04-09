@@ -13,12 +13,9 @@ import { Ionicons } from "@expo/vector-icons";
 
 import InputField from "../components/common/text/InputField";
 import MainButton from "../components/common/button/MainButton";
-import createAxios from "../utils/AxiosUtility";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
-
-const API = createAxios();
 
 const RegisterScreen = ({ navigation }) => {
   const { register } = useContext(AuthContext);

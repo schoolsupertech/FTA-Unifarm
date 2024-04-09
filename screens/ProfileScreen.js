@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { connect } from "react-redux";
 import {
   View,
   Text,
@@ -22,10 +21,9 @@ import MainButton from "../components/common/button/MainButton";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
-import { clearCart } from "../context/redux/actions/cartActions";
 import LocationOptions from "../components/ui/home/LocationOptions";
 
-function ProfileScreen({ clearCart }) {
+function ProfileScreen() {
   const navigation = useNavigation();
   const { userInfo, logout } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState({
@@ -64,25 +62,23 @@ function ProfileScreen({ clearCart }) {
         </View>
         <View style={{ height: 100 }}>
           <Image
-            source={{
-              uri:
-                userInfo?.photo !== undefined
-                  ? userInfo.photo
-                  : userInfo?.avatar !== undefined
-                    ? userInfo?.avatar !== null
-                      ? userInfo?.avatar
-                      : "https://media.istockphoto.com/id/1533794626/vi/anh/bi%E1%BB%83u-c%E1%BA%A3m-vui-m%E1%BB%ABng-%E1%BA%A3nh-minh-h%E1%BB%8Da.jpg?s=2048x2048&w=is&k=20&c=VRqbg2wcGBhmm3SdmhhIc-Si_PHM-5jKBfebhTRon3Q="
-                    : "https://media.istockphoto.com/id/1533794626/vi/anh/bi%E1%BB%83u-c%E1%BA%A3m-vui-m%E1%BB%ABng-%E1%BA%A3nh-minh-h%E1%BB%8Da.jpg?s=2048x2048&w=is&k=20&c=VRqbg2wcGBhmm3SdmhhIc-Si_PHM-5jKBfebhTRon3Q=",
-            }}
+            source={
+              userInfo?.info?.photo !== undefined
+                ? { uri: userInfo.info.photo }
+                : userInfo?.info?.avatar
+                  ? { uri: userInfo.info.avatar }
+                  : require("../assets/images/istockphoto-1489487052-2048x2048.jpg")
+            }
             style={styles.avatar}
           />
         </View>
         <View style={styles.displayUserName}>
           <Text style={styles.textDisplay}>
-            {userInfo?.lastName} {userInfo?.firstName} - {userInfo?.phoneNumber}
+            {userInfo?.info?.lastName} {userInfo?.info?.firstName} -{" "}
+            {userInfo?.info?.phoneNumber}
           </Text>
           <Text style={[styles.textDisplay, { fontSize: 12, marginTop: 4 }]}>
-            {userInfo?.email}
+            {userInfo?.info?.email}
           </Text>
         </View>
       </LinearGradient>
@@ -133,9 +129,9 @@ function ProfileScreen({ clearCart }) {
 
           <GridTile
             icon={<Ionicons name="person-outline" size={28} color="grey" />}
-            onPress={() => {}}
+            onPress={() => navigation.navigate("UserInfoScreen")}
           >
-            Thông tin của bạn
+            Thông tin cách nhân
           </GridTile>
           <GridTile
             icon={<Ionicons name="location-outline" size={28} color="grey" />}
@@ -153,7 +149,7 @@ function ProfileScreen({ clearCart }) {
 
           <GridTile
             icon={<Ionicons name="wallet-outline" size={28} color="grey" />}
-            onPress={() => navigation.navigate("WalletScreen")}
+            onPress={() => navigation.navigate("Wallet")}
           >
             Ví tiền của bạn
           </GridTile>
@@ -178,10 +174,7 @@ function ProfileScreen({ clearCart }) {
         <View style={styles.gridItem}>
           <MainButton
             styleButton={{ backgroundColor: "red" }}
-            onPress={() => {
-              clearCart();
-              logout();
-            }}
+            onPress={() => logout()}
           >
             Đăng xuất
           </MainButton>
@@ -191,15 +184,7 @@ function ProfileScreen({ clearCart }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  cart: state.cart,
-});
-
-const mapDispatchToProps = {
-  clearCart,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);
+export default ProfileScreen;
 
 const styles = StyleSheet.create({
   container: {

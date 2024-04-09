@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
-import { connect } from "react-redux";
 import {
   View,
   Text,
@@ -14,12 +13,9 @@ import { Ionicons } from "@expo/vector-icons";
 
 import GrayLine from "../components/common/text/GrayLine";
 import Ellipsis from "../components/common/text/Ellipsis";
-import ProdMoreInfo from "../components/common/list/ProdMoreInfo";
 import SwiperSlide from "../components/ui/product/SwiperSlide";
-import MainButton from "../components/common/button/MainButton";
 import createAxios from "../utils/AxiosUtility";
 import createFormatUtil from "../utils/FormatUtility";
-import { addToCart, updateCart } from "../context/redux/actions/cartActions";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
@@ -27,19 +23,15 @@ import { AuthContext } from "../context/AuthContext";
 const API = createAxios();
 const FORMAT = createFormatUtil();
 
-function ProductDetailScreen({
-  route,
-  navigation,
-  cart,
-  addToCart,
-  updateCart,
-}) {
+let defaultCount = 1;
+
+function ProductDetailScreen({ route, navigation }) {
   const prodItemId = route.params.prodItemId;
   const [selectedProd, setSelectedProd] = useState(null);
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(defaultCount);
   const [visible, setVisible] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState("");
-  const { authState } = useContext(AuthContext);
+  const { authState, userInfo } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchProdItemData = async () => {
@@ -89,14 +81,29 @@ function ProductDetailScreen({
     });
   }, [selectedProd, authState, navigation]);
 
+  async function fetchAddToCart() {
+    const response = await API.post("/cart/upsert-to-cart", {
+      farmHubId: selectedProd.farmHubId,
+      stationId: "72a47835-6bef-4287-8408-00659bac2e3f",
+      businessDayId: "62fe61ba-a3f5-434a-b54c-afd06dd73488",
+      productItemId: selectedProd.id,
+      quantity: count,
+      isAddToCart: true,
+    });
+
+    console.log("Add to cart: " + JSON.stringify(response.payload));
+
+    return response.payload;
+  }
+
   function addCountHandler() {
-    if (count < 10) {
+    if (count < selectedProd.quantity) {
       setCount(count + 1);
     }
   }
 
   function minusCountHandler() {
-    if (count > 1) {
+    if (count > defaultCount) {
       setCount(count - 1);
     }
   }
@@ -107,32 +114,12 @@ function ProductDetailScreen({
 
   function addingCartHandler() {
     if (authState?.authenticated) {
-      if (Array.isArray(cart.farmhubs) && cart.farmhubs.length > 0) {
-        cart.farmhubs.map((farmhub) => {
-          console.log("Updating cart: " + JSON.stringify(farmhub, null, 2));
-          farmhub.id === selectedProd.farmHub.id &&
-            farmhub.prodItems.map((item) => {
-              item.id === selectedProd.id &&
-                updateCart({
-                  farmhubId: farmhub.id,
-                  prodId: item.id,
-                  qty: item.qty + count,
-                });
-            });
-        });
-      } else {
-        addToCart({
-          ...selectedProd.farmHub,
-          prodItems: [
-            {
-              ...selectedProd,
-              qty: count,
-            },
-          ],
-        });
+      const res = fetchAddToCart();
+      console.log("Response add to cart: " + JSON.stringify(res));
+      if (res) {
+        setVisible(true);
+        setSnackbarLabel("Đã thêm vào giỏ hàng");
       }
-      setVisible(true);
-      setSnackbarLabel("Đã thêm vào giỏ hàng");
     } else {
       Alert.alert("Bạn cần phải đăng nhập trước", [{ text: "OK" }]);
       navigation.navigate("AuthScreen");
@@ -204,28 +191,15 @@ function ProductDetailScreen({
                 </PaperText>
               </View>
             </View>
-            {/* Phần mô tả */}
             <View style={styles.descriptionContainer}>
               <PaperText
                 variant="headlineSmall"
                 style={styles.descriptionHeader}
               >
-                Mô Tả
+                Thông tin sản phẩm
               </PaperText>
               <Ellipsis
                 description={selectedProd.description}
-                numberOfLines={3}
-              />
-            </View>
-            {/* Phần thông tin thêm */}
-            <View style={styles.descriptionContainer}>
-              <PaperText
-                variant="headlineSmall"
-                style={styles.descriptionHeader}
-              >
-                Thông Tin Sản Phẩm
-              </PaperText>
-              <ProdMoreInfo
                 data={[
                   "Độ tươi: 100%",
                   "Chế độ nấu: luộc, chiên, hấp, xào,…",
@@ -233,12 +207,13 @@ function ProductDetailScreen({
                   "Ngày hết hạn: 23/04/2099",
                   "Hướng dẫn sử dụng: dùng ngay || phải thông qua kiểu chế biến và chế độ nấu phù hợp, để đạt được độ ngon nhất của món ăn phải nêm thêm các gia vị cần thiết, lưu ý bảo quản thực phẩm trong tủ lạnh,...",
                 ]}
+                numberOfLines={3}
               />
             </View>
           </ScrollView>
           <Snackbar
             visible={visible}
-            onDismiss={() => {}}
+            onDismiss={() => setVisible(false)}
             action={{
               label: "Xong",
               onPress: () => setVisible(false),
@@ -282,20 +257,7 @@ function ProductDetailScreen({
     </SafeAreaView>
   );
 }
-
-const mapStateToProps = (state) => ({
-  cart: state.cart,
-});
-
-const mapDispatchToProps = {
-  addToCart,
-  updateCart,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ProductDetailScreen);
+export default ProductDetailScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -32,8 +32,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   btn: {
-    fontWeight: "bold",
+    fontWeight: "500",
     color: DefaultTheme.btnColor700,
-    textDecorationLine: "underline",
   },
 });

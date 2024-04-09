@@ -87,8 +87,8 @@ function TabNavigator() {
                   style={{
                     backgroundColor: Colors.primaryGreen700,
                     borderRadius: 50,
-                    padding: 20,
-                    marginTop: -40,
+                    padding: 12,
+                    marginTop: -20,
                     shadowColor: "#7F5DF0",
                     shadowOffset: {
                       width: 0,

@@ -18,7 +18,7 @@ function CategoriesScreen() {
   const navigation = useNavigation();
   const [searchPrd, setSearchPrd] = useState("");
   const [categoriesInfo, setCategoriesInfo] = useState(null);
-  const { authState } = useContext(AuthContext);
+  const { authState, userInfo } = useContext(AuthContext);
 
   useEffect(() => {
     const categoriesDataResponse = async () => {
@@ -67,6 +67,7 @@ function CategoriesScreen() {
       >
         {authState?.authenticated ? (
           <TopHeader
+            userInfo={userInfo}
             onCartIconPress={() => navigation.navigate("CartScreen")}
             onNotiIconPress={() => {
               navigation.navigate("Notification");

@@ -4,6 +4,13 @@ export const DefaultTheme = {
   flex_1: { flex: 1 },
   scrollContainer: { paddingHorizontal: 10 },
 
+  // Logo
+  headerLogo: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
   // SafeAreaView
   root: { flex: 1, backgroundColor: "white" },
 
@@ -15,6 +22,7 @@ export const DefaultTheme = {
   // LinearGradient
   linearGradient: {
     width: "100%",
+    height: "auto",
     padding: 20,
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,

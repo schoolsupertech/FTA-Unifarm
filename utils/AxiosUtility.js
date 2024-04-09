@@ -41,14 +41,15 @@ const createAxios = () => {
       .post(endpoint, data)
       .then((res) => res.data)
       .catch((e) => {
-        throw new Error(
-          "POST request to " +
-            endpoint +
-            " with data: " +
-            data +
-            " failed: " +
-            e.message,
-        );
+        return e;
+        // throw new Error(
+        //   "POST request to " +
+        //     endpoint +
+        //     " with data: " +
+        //     data +
+        //     " failed: " +
+        //     e.message,
+        // );
       });
   };
 

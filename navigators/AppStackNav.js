@@ -14,6 +14,7 @@ import OrderScreen from "../screens/OrderScreen";
 import AddressScreen from "../screens/AddressScreen";
 import SearchScreen from "../screens/SearchScreen";
 import ReceiveInfoScreen from "../screens/ReceiveInfoScreen";
+import UserInfoScreen from "../screens/UserInfoScreen";
 import { DefaultTheme } from "../themes/DefaultTheme";
 
 const Stack = createNativeStackNavigator();
@@ -23,20 +24,20 @@ function AppStackNav() {
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
         headerBackTitleVisible: false,
-        headerStyle: {
-          backgroundColor: DefaultTheme.headerBgColor,
-          height: 50,
-        },
-        headerLeft: () => (
-          <Ionicons
-            style={{ margin: 0, padding: 0 }}
-            name={"chevron-back-outline"}
-            size={28}
-            onPress={() => {
-              navigation.goBack();
-            }}
-          />
-        ),
+        // headerStyle: {
+        //   backgroundColor: DefaultTheme.headerBgColor,
+        //   height: 50,
+        // },
+        // headerLeft: () => (
+        //   <Ionicons
+        //     style={{ margin: 0, padding: 0 }}
+        //     name={"chevron-back-outline"}
+        //     size={28}
+        //     onPress={() => {
+        //       navigation.goBack();
+        //     }}
+        //   />
+        // ),
         headerTintColor: "#000",
         headerTitleStyle: {
           fontSize: 18,
@@ -71,11 +72,6 @@ function AppStackNav() {
         component={CartScreen}
         options={{
           title: "Giỏ hàng",
-          headerTintColor: "#000",
-          headerTitleStyle: {
-            fontWeight: "bold",
-            fontSize: 18,
-          },
         }}
       />
       <Stack.Screen
@@ -83,11 +79,6 @@ function AppStackNav() {
         component={OrderScreen}
         options={{
           title: "Thanh toán đơn hàng",
-          headerTintColor: "#000",
-          headerTitleStyle: {
-            fontWeight: "bold",
-            fontSize: 18,
-          },
         }}
       />
       <Stack.Screen
@@ -102,6 +93,13 @@ function AppStackNav() {
         name="AddressScreen"
         component={AddressScreen}
         options={{ title: "Địa chỉ" }}
+      />
+      <Stack.Screen
+        name="UserInfoScreen"
+        component={UserInfoScreen}
+        options={{
+          title: "Thông tin cá nhân",
+        }}
       />
     </Stack.Navigator>
   );
