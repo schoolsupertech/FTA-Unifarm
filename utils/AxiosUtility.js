@@ -88,7 +88,7 @@ const createAxios = () => {
           url: endpoint,
           data: data,
           headers: {
-            Authorization: "Bearer: " + token,
+            Authorization: "Bearer " + token,
           },
         })
         .then((res) => res.data)

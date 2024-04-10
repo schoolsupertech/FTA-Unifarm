@@ -76,7 +76,7 @@ function HomeScreen() {
     const fetchingUserLocation = async () => {
       const response = await getLocation(authState?.token);
 
-      if (response.response?.status == 400) {
+      if (response.response && response.response.status === 400) {
         Alert.alert(
           "Lần đầu đăng nhập?",
           "Bạn cần phải chọn vị trí của bạn để chúng tôi giao hàng cho bạn.",
@@ -85,10 +85,10 @@ function HomeScreen() {
         setLocationModalVisible({
           ...locationModalVisible,
           isVisible: true,
-          status: response.response.status,
+          status: response.response?.status,
         });
       } else {
-        response.payload.map(
+        response.payload?.map(
           (item) => item.isDefault && setCurrentLocation(item),
         );
       }
@@ -281,9 +281,11 @@ function HomeScreen() {
                   size={20}
                   color={Colors.primaryGreen800}
                 />
-                <Text style={styles.headerText}>{currentLocation}</Text>
+                <Text style={styles.headerText}>
+                  {currentLocation && currentLocation?.station?.name}{" "}
+                </Text>
                 <Ionicons
-                  name="arrow-forward-circle"
+                  name="arrow-forward-circle-outline"
                   size={16}
                   color={Colors.primaryGreen800}
                 />
@@ -308,7 +310,7 @@ function HomeScreen() {
               {FORMAT.dateFormat(new Date())}{" "}
             </Text>
             <Ionicons
-              name="arrow-forward-circle"
+              name="arrow-forward-circle-outline"
               size={16}
               color={Colors.primaryGreen800}
             />

@@ -4,10 +4,10 @@
     "slug": "FTA-Unifarm-Project_Base",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/toppng.com-vegetables-images-png-vegetables-1911x1320.png",
+    "icon": "./assets/images/backgrounds/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/toppng.com-vegetables-images-png-vegetables-1911x1320.png",
+      "image": "./assets/images/backgrounds/LogoWithTitle.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

@@ -1,137 +1,148 @@
-import React, { useContext } from "react";
-import { StyleSheet, ScrollView, SafeAreaView, View } from "react-native";
+import React, { useContext, useState } from "react";
+import {
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  View,
+  Button,
+} from "react-native";
 import { Divider, Text as PaperText } from "react-native-paper";
+import Modal from "react-native-modal";
 import { Ionicons } from "@expo/vector-icons";
 
-import InputField from "../components/common/text/InputField";
-import CardBtn from "../components/common/button/CardBtn";
+import GridTileModal from "../components/ui/profile/GridTileModal";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
+import InputField from "../components/common/text/InputField";
 import Title from "../components/common/text/Title";
 
 function UserInfoScreen() {
   const { userInfo } = useContext(AuthContext);
+  const [visible, setVisible] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [modalLabel, setModalLabel] = useState("");
+
+  function onChangingInfoHandler(label) {
+    setVisible(true);
+    setModalLabel(label);
+  }
+  function onChangingPasswordHandler() {
+    setVisible(true);
+    setChangingPassword(true);
+  }
 
   return (
     <SafeAreaView style={DefaultTheme.root}>
       <ScrollView style={[DefaultTheme.scrollContainer, { paddingTop: 8 }]}>
         <View style={styles.container}>
-          <View style={styles.avtContent}>
-            <Title
-              icon={
-                <Ionicons
-                  name="person-circle"
-                  size={20}
-                  color="grey"
-                  style={styles.icon}
+          <GridTileModal onPress={() => onChangingInfoHandler("Họ")} label="Họ">
+            {userInfo.info.lastName}
+          </GridTileModal>
+          <GridTileModal
+            onPress={() => onChangingInfoHandler("Tên")}
+            label="Tên"
+          >
+            {userInfo.info.firstName}
+          </GridTileModal>
+          <GridTileModal
+            onPress={() => onChangingInfoHandler("Email")}
+            label="Email"
+          >
+            {userInfo.info.email}
+          </GridTileModal>
+          <GridTileModal
+            onPress={() => onChangingInfoHandler("Số địen thoại")}
+            label="Số điện thoại"
+          >
+            {userInfo.info.phoneNumber}
+          </GridTileModal>
+          <GridTileModal
+            onPress={() => onChangingInfoHandler("Địa chỉ")}
+            label="Địa chỉ"
+          >
+            {userInfo.info.address}
+          </GridTileModal>
+          <GridTileModal
+            onPress={() => onChangingPasswordHandler("Mật khẩu")}
+            label="Mật khẩu"
+          />
+          <Modal
+            isVisible={visible}
+            onBackdropPress={() => setVisible(false)}
+            style={styles.bottomModal}
+          >
+            <View style={styles.modalContent}>
+              {changingPassword ? (
+                <>
+                  <View style={{ marginBottom: 20 }}>
+                    <Title
+                      icon={
+                        <Ionicons
+                          name="key"
+                          size={20}
+                          style={{ marginRight: 8 }}
+                        />
+                      }
+                    >
+                      Thay đổi mật khẩu
+                    </Title>
+                  </View>
+                  <InputField
+                    label="Mật khẩu hiện tại"
+                    inputType="password"
+                    maxLength={100}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                  <InputField
+                    label="Nhập mật khẩu mới"
+                    inputType="password"
+                    maxLength={100}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                  <InputField
+                    label="Nhập lại mật khẩu mới"
+                    inputType="password"
+                    maxLength={100}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                </>
+              ) : (
+                <>
+                  <View style={{ marginBottom: 20 }}>
+                    <Title
+                      icon={
+                        <Ionicons
+                          name="person-sharp"
+                          size={20}
+                          style={{ marginRight: 8 }}
+                        />
+                      }
+                    >
+                      Thay đổi {modalLabel.toLowerCase()}
+                    </Title>
+                  </View>
+                  <InputField
+                    label={"Nhập " + modalLabel.toLowerCase() + " của bạn"}
+                  />
+                </>
+              )}
+              <View style={styles.modalBtn}>
+                <Button
+                  onPress={() => setVisible(false)}
+                  title="Huỷ bỏ"
+                  color="red"
                 />
-              }
-            >
-              Avatar
-            </Title>
-            <CardBtn onPress={() => {}}>Upload</CardBtn>
-          </View>
-
-          <Title
-            icon={
-              <Ionicons
-                name="person"
-                size={20}
-                color="grey"
-                style={styles.icon}
-              />
-            }
-          >
-            Họ
-          </Title>
-          <View style={{ marginHorizontal: 28 }}>
-            <InputField
-              label={"Họ"}
-              maxLength={100}
-              value={userInfo.info.lastName}
-            />
-          </View>
-
-          <Title
-            icon={
-              <Ionicons
-                name="person"
-                size={20}
-                color="grey"
-                style={styles.icon}
-              />
-            }
-          >
-            Tên
-          </Title>
-          <View style={{ marginHorizontal: 32 }}>
-            <InputField
-              label={"Tên"}
-              maxLength={100}
-              value={userInfo.info.firstName}
-            />
-          </View>
-
-          <Title
-            icon={
-              <Ionicons name="at" size={20} color="grey" style={styles.icon} />
-            }
-          >
-            Email
-          </Title>
-          <View style={{ marginHorizontal: 28 }}>
-            <InputField
-              label={"Email"}
-              maxLength={100}
-              value={userInfo.info.email}
-            />
-          </View>
-
-          <Title
-            icon={
-              <Ionicons
-                name="call"
-                size={20}
-                color="grey"
-                style={styles.icon}
-              />
-            }
-          >
-            Số điện thoại
-          </Title>
-          <View style={{ marginHorizontal: 28 }}>
-            <InputField
-              label={"Số điện thoại"}
-              maxLength={10}
-              keyboardType={"number-pad"}
-              autoCapitalize="none"
-              autoCorrect={false}
-              value={userInfo.info.phoneNumber}
-            />
-          </View>
-
-          <Title
-            icon={
-              <Ionicons
-                name="call"
-                size={20}
-                color="grey"
-                style={styles.icon}
-              />
-            }
-          >
-            Địa chỉ
-          </Title>
-          <View style={{ marginHorizontal: 28 }}>
-            <InputField
-              label={"Địa chỉ"}
-              maxLength={10}
-              keyboardType={"number-pad"}
-              autoCapitalize="none"
-              autoCorrect={false}
-              value={userInfo.info.address}
-            />
-          </View>
+                <Button
+                  onPress={() => setVisible(false)}
+                  title="Lưu"
+                  color="green"
+                />
+              </View>
+            </View>
+          </Modal>
         </View>
         <View style={styles.footer}>
           <PaperText>Đã tham gia từ ngày {userInfo.info.createdAt}</PaperText>
@@ -166,6 +177,20 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 6,
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 4,
+  },
+  modalBtn: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingBottom: 12,
+  },
+  bottomModal: {
+    justifyContent: "flex-end",
+    margin: 0,
   },
   footer: {
     marginHorizontal: 20,

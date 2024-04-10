@@ -28,8 +28,9 @@ function CartScreen() {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [cart, setCart] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
-  const { authState } = useContext(AuthContext);
+  const { authState, getLocation } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -44,8 +45,17 @@ function CartScreen() {
       setCart(response.payload);
       setIsLoading(false);
     };
+    const fetchLocationData = async () => {
+      const response = await getLocation(authState?.token);
+      response &&
+        response.payload &&
+        response.payload?.map(
+          (item) => item.isDefault && setCurrentLocation(item.stationId),
+        );
+    };
 
     fetchCart();
+    fetchLocationData();
   }, []);
 
   useEffect(() => {
@@ -115,7 +125,11 @@ function CartScreen() {
                       </Title>
                     </View>
                   </View>
-                  <CardCartItem data={farmhub.orderDetailResponse} />
+                  <CardCartItem
+                    data={farmhub.orderDetailResponse}
+                    authState={authState}
+                    stationId={currentLocation}
+                  />
                 </View>
               );
             })}

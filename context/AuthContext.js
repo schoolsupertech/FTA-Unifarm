@@ -176,6 +176,8 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
+  // const updateProfile = () => {};
+
   const getLocation = async (token) => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -183,12 +185,17 @@ export const AuthProvider = ({ children }) => {
         console.log("Permission to access location was denied");
       } else {
         const location = await Location.getCurrentPositionAsync();
-        console.log(JSON.stringify(location, null, 2));
+        console.log(
+          "Access location data: " + JSON.stringify(location, null, 2),
+        );
         const response = await API.customRequest(
           "get",
           "/apartment-station",
           null,
           token,
+        );
+        console.log(
+          "Location info: " + JSON.stringify(response.payload, null, 2),
         );
         return response;
       }

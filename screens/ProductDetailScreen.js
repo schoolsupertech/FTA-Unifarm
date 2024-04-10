@@ -28,18 +28,28 @@ let defaultCount = 1;
 function ProductDetailScreen({ route, navigation }) {
   const prodItemId = route.params.prodItemId;
   const [selectedProd, setSelectedProd] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const [count, setCount] = useState(defaultCount);
   const [visible, setVisible] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState("");
-  const { authState, userInfo } = useContext(AuthContext);
+  const { authState, userInfo, getLocation } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchProdItemData = async () => {
       const response = await API.get("/product-item/" + prodItemId);
       response && setSelectedProd(response.payload);
     };
+    const fetchLocationData = async () => {
+      const response = await getLocation(authState?.token);
+      response &&
+        response.payload &&
+        response.payload?.map(
+          (item) => item.isDefault && setCurrentLocation(item.stationId),
+        );
+    };
 
     fetchProdItemData();
+    fetchLocationData();
   }, []);
 
   useLayoutEffect(() => {
@@ -47,54 +57,77 @@ function ProductDetailScreen({ route, navigation }) {
       title: selectedProd !== null ? selectedProd.title : "Product Detail",
       headerRight: () => {
         return authState?.authenticated ? (
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              style={{ marginEnd: 16 }}
-              onPress={() => {
-                navigation.navigate("CartScreen");
-              }}
-            >
-              <Ionicons
-                name="cart-outline"
-                color={Colors.primaryGreen700}
-                size={24}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ marginEnd: 4 }}
-              onPress={() => {
-                navigation.navigate("Notification");
-              }}
-            >
-              <Ionicons
-                name="notifications"
-                color={Colors.primaryGreen700}
-                size={24}
-              />
-              <Badge style={{ position: "absolute", top: -6, right: -12 }}>
-                3
-              </Badge>
-            </TouchableOpacity>
-          </View>
+          <>
+            {userInfo && userInfo.qtyInCart ? (
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  style={{ marginEnd: 16 }}
+                  onPress={() => navigation.navigate("CartScreen")}
+                >
+                  <Ionicons
+                    name="cart"
+                    color={Colors.primaryGreen700}
+                    size={24}
+                  />
+                  <Badge
+                    style={{
+                      position: "absolute",
+                      top: -6,
+                      right: -12,
+                    }}
+                  >
+                    {userInfo.qtyInCart}
+                  </Badge>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ marginEnd: 4 }}
+                  onPress={() => navigation.navigate("Notification")}
+                >
+                  <Ionicons
+                    name="notifications"
+                    color={Colors.primaryGreen700}
+                    size={24}
+                  />
+                  <Badge
+                    style={{
+                      position: "absolute",
+                      top: -6,
+                      right: -12,
+                    }}
+                  >
+                    {userInfo.qtyInCart}
+                  </Badge>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  style={{ marginEnd: 16 }}
+                  onPress={() => navigation.navigate("CartScreen")}
+                >
+                  <Ionicons
+                    name="cart-outline"
+                    color={Colors.primaryGreen700}
+                    size={24}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ marginEnd: 4 }}
+                  onPress={() => navigation.navigate("Notification")}
+                >
+                  <Ionicons
+                    name="notifications-outline"
+                    color={Colors.primaryGreen700}
+                    size={24}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+          </>
         ) : null;
       },
     });
   }, [selectedProd, authState, navigation]);
-
-  async function fetchAddToCart() {
-    const response = await API.post("/cart/upsert-to-cart", {
-      farmHubId: selectedProd.farmHubId,
-      stationId: "72a47835-6bef-4287-8408-00659bac2e3f",
-      businessDayId: "62fe61ba-a3f5-434a-b54c-afd06dd73488",
-      productItemId: selectedProd.id,
-      quantity: count,
-      isAddToCart: true,
-    });
-
-    console.log("Add to cart: " + JSON.stringify(response.payload));
-
-    return response.payload;
-  }
 
   function addCountHandler() {
     if (count < selectedProd.quantity) {
@@ -112,10 +145,34 @@ function ProductDetailScreen({ route, navigation }) {
     console.log("Changed count: " + count);
   }, [addCountHandler, minusCountHandler]);
 
-  function addingCartHandler() {
+  async function fetchAddToCart() {
+    const response = await API.customRequest(
+      "post",
+      "/cart/upsert-to-cart",
+      {
+        farmHubId: selectedProd.farmHubId,
+        stationId: currentLocation,
+        businessDayId: "814982CA-2092-4F0D-9720-83F064237A90",
+        productItemId: selectedProd.id,
+        quantity: count,
+        isAddToCart: true,
+      },
+      authState?.token,
+    );
+
+    if (response.response && response.response.status === 400) {
+      console.log(
+        "Fetch error at fetchAddToCart: " +
+          JSON.stringify(response.response, null, 2),
+      );
+    } else {
+      return response.payload;
+    }
+  }
+
+  async function addingCartHandler() {
     if (authState?.authenticated) {
-      const res = fetchAddToCart();
-      console.log("Response add to cart: " + JSON.stringify(res));
+      const res = await fetchAddToCart();
       if (res) {
         setVisible(true);
         setSnackbarLabel("Đã thêm vào giỏ hàng");

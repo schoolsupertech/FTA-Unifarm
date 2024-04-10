@@ -8,15 +8,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Checkbox } from "react-native-paper";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import createFormatUtil from "../../../utils/FormatUtility";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { Colors } from "../../../constants/colors";
+import CardCartProdItems from "./CardCartProdItems";
 
-const FORMAT = createFormatUtil();
-
-function CardCartItem({ data }) {
+function CardCartItem({ data, authState, stationId }) {
   const [prodItemsInfo, setProdItemsInfo] = useState(data);
 
   function onDeleteHandler(rowKey) {
@@ -27,78 +25,35 @@ function CardCartItem({ data }) {
   }
 
   function renderItem(itemData, rowMap) {
+    const props = {
+      orderId: itemData.item.orderId,
+      productItemId: itemData.item.productItemId,
+      quantity: itemData.item.quantity,
+      unitPrice: itemData.item.unitPrice,
+      unit: itemData.item.unit,
+      totalPrice: itemData.item.totalPrice,
+      productItemResponse: {
+        id: itemData.item.productItemResponse.id,
+        productId: itemData.item.productItemResponse.productId,
+        farmHubId: itemData.item.productItemResponse.farmHubId,
+        title: itemData.item.productItemResponse.title,
+        description: itemData.item.productItemResponse.description,
+        specialTag: itemData.item.productItemResponse.specialTag,
+        storageType: itemData.item.productItemResponse.storageType,
+        outOfStock: itemData.item.productItemResponse.outOfStock,
+        unit: itemData.item.productItemResponse.unit,
+        status: itemData.item.productItemResponse.status,
+        productOrigin: itemData.item.productItemResponse.productOrigin,
+      },
+    };
+
     return (
-      <View style={styles.rowFront}>
-        <TouchableHighlight style={styles.rowFrontVisible}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image
-              source={{
-                // source={{uri: itemData.item.productImages.find((image) => {
-                //   return image.displayIndex === 1;
-                // }).imageUrl,
-                uri: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?q=80&w=1680&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-              }}
-              style={styles.image}
-            />
-            <View
-              style={{
-                flex: 1,
-                marginLeft: 4,
-                alignItems: "flex-start",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={styles.title} numberOfLines={1}>
-                {itemData.item.productItemResponse.title}
-              </Text>
-              <Text style={styles.details} numberOfLines={1}>
-                {FORMAT.currencyFormat(itemData.item.unitPrice)} /{" "}
-                {itemData.item.productItemResponse.unit}
-              </Text>
-            </View>
-            <View
-              style={{
-                alignItems: "flex-end",
-                justifyContent: "flex-end",
-              }}
-            >
-              <View style={styles.selectingQuantity}>
-                <TouchableOpacity
-                  onPress={() => {}}
-                  style={styles.selectingBtn}
-                >
-                  <Ionicons
-                    name="remove-circle-outline"
-                    size={20}
-                    color={Colors.primaryGreen700}
-                  />
-                </TouchableOpacity>
-                <Text style={styles.quantity}>{itemData.item.quantity}</Text>
-                <TouchableOpacity
-                  onPress={() => {}}
-                  style={styles.selectingBtn}
-                >
-                  <Ionicons
-                    name="add-circle-outline"
-                    size={20}
-                    color={Colors.primaryGreen700}
-                  />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.quantity}>
-                <Text style={{ fontSize: 14, color: "gray" }}>Tạm tính: </Text>
-                {FORMAT.currencyFormat(itemData.item.totalPrice)}
-              </Text>
-            </View>
-          </View>
-        </TouchableHighlight>
-      </View>
+      <CardCartProdItems
+        key={itemData.item.id}
+        {...props}
+        authState={authState}
+        stationId={stationId}
+      />
     );
   }
 
@@ -122,7 +77,8 @@ function CardCartItem({ data }) {
   return (
     <SwipeListView
       data={prodItemsInfo}
-      keyExtractor={(item) => item.id}
+      key={(item) => item.orderId}
+      keyExtractor={(item) => item.orderId}
       renderItem={renderItem}
       renderHiddenItem={renderHiddenItem}
       rightOpenValue={-75}
@@ -134,37 +90,6 @@ function CardCartItem({ data }) {
 export default CardCartItem;
 
 const styles = StyleSheet.create({
-  rowFront: {
-    backgroundColor: "#FFF",
-    borderRadius: 8,
-    height: 80,
-    margin: 4,
-    marginBottom: 4,
-    shadowColor: "#999",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  rowFrontVisible: {
-    padding: 8,
-    backgroundColor: "#FFF",
-    borderRadius: 8,
-  },
-  image: {
-    width: 60,
-    height: 60,
-  },
-  title: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginBottom: 5,
-    color: "#666",
-  },
-  details: {
-    fontSize: 12,
-    color: "#999",
-  },
   rowBack: {
     alignItems: "center",
     backgroundColor: "#DDD",
@@ -190,20 +115,5 @@ const styles = StyleSheet.create({
     right: 0,
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5,
-  },
-  selectingQuantity: {
-    height: 30,
-    flexDirection: "row",
-    marginVertical: 4,
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  selectingBtn: {
-    marginHorizontal: 4,
-  },
-  quantity: {
-    color: Colors.primaryGreen700,
-    fontWeight: "700",
-    fontSize: 18,
   },
 });
