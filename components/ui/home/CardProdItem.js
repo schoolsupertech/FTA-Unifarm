@@ -7,13 +7,11 @@ import {
 } from "react-native";
 import { Card, Text as PaperText, ProgressBar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
 
 import CartBtn from "../../common/button/CartBtn";
 import Title from "../../common/text/Title";
 import createFormatUtil from "../../../utils/FormatUtility";
 import { DefaultTheme } from "../../../themes/DefaultTheme";
-import { BASE_URL } from "../../../api/config";
 import { AuthContext } from "../../../context/AuthContext";
 
 const FORMAT = createFormatUtil();
@@ -21,34 +19,34 @@ const FORMAT = createFormatUtil();
 function CardProdItem(props) {
   const navigation = useNavigation();
   const [isCartAdded, setIsCartAdded] = useState(false);
-  const [prodItemImgsInfo, setProdItemImgsInfo] = useState(null);
+  // const [prodItemImgsInfo, setProdItemImgsInfo] = useState(null);
   const { authState } = useContext(AuthContext);
 
   function selectedProductDetailHandler() {
     navigation.navigate("ProductDetail", {
-      prodItemId: props.id,
+      prodItemId: props.productItem.id,
     });
   }
 
-  useLayoutEffect(() => {
-    const fetchProdItemImgs = async () => {
-      await axios
-        .get(BASE_URL + "/product-item/" + props.id + "/product-images")
-        .then((res) => {
-          let prodItemImgsInfo = res.data;
-          setProdItemImgsInfo(prodItemImgsInfo.payload);
-        })
-        .catch((e) => {
-          console.log(
-            "An error occurred while loading API-product-item/{id}/product-images" +
-              e,
-          );
-          console.log("Message: " + e.response.status);
-        });
-    };
-
-    fetchProdItemImgs();
-  }, []);
+  // useLayoutEffect(() => {
+  //   const fetchProdItemImgs = async () => {
+  //     await axios
+  //       .get(BASE_URL + "/product-item/" + props.id + "/product-images")
+  //       .then((res) => {
+  //         let prodItemImgsInfo = res.data;
+  //         setProdItemImgsInfo(prodItemImgsInfo.payload);
+  //       })
+  //       .catch((e) => {
+  //         console.log(
+  //           "An error occurred while loading API-product-item/{id}/product-images" +
+  //             e,
+  //         );
+  //         console.log("Message: " + e.response.status);
+  //       });
+  //   };
+  //
+  //   fetchProdItemImgs();
+  // }, []);
 
   useLayoutEffect(() => {
     isCartAdded && props.onAddingCart(isCartAdded);
@@ -63,26 +61,28 @@ function CardProdItem(props) {
   }
 
   function imgCoverHandler() {
-    const coverImg =
-      prodItemImgsInfo.length > 0
-        ? prodItemImgsInfo.filter((firstIndex) => firstIndex.displayIndex === 1)
-        : null;
-
-    if (coverImg !== null) {
-      return coverImg.map((img) => (
-        <Card.Cover
-          key={img.id}
-          style={styles.cover}
-          source={{
-            uri: img.imageUrl,
-          }}
-        />
-      ));
+    if (
+      Array.isArray(props.productItem?.productImages) &&
+      props.productItem?.productImages?.length > 0
+    ) {
+      return props.productItem.productImages.map(
+        (item) =>
+          item.displayIndex === 1 && (
+            <Card.Cover
+              key={item.id}
+              style={styles.cover}
+              source={{
+                uri: item.imageUrl,
+              }}
+            />
+          ),
+      );
     }
+
     return (
       <Card.Cover
         style={styles.cover}
-        source={require("../../../assets/favicon.png")}
+        source={require("../../../assets/images/plant_logo.png")}
       />
     );
   }
@@ -91,38 +91,22 @@ function CardProdItem(props) {
     <TouchableOpacity onPress={selectedProductDetailHandler}>
       <Card style={styles.container} mode="contained">
         <Card.Content style={styles.content}>
-          {prodItemImgsInfo ? (
-            imgCoverHandler()
-          ) : (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <ActivityIndicator size={"small"} />
-            </View>
-          )}
+          {imgCoverHandler()}
           <Card.Content style={styles.textContent}>
-            <Title>{props.title}</Title>
+            <Title>{props.productItem.title}</Title>
             <View style={styles.titleContent}>
               <View style={DefaultTheme.flex_1}>
-                {/*
                 <PaperText variant="bodySmall" style={styles.listedPrice}>
-                  {FORMAT.currencyFormat(50000)}
+                  {FORMAT.currencyFormat(props.salePrice * 9)}
                 </PaperText>
-              */}
                 <PaperText
                   variant="titleLarge"
                   style={{ fontWeight: "500", color: "green", marginBottom: 4 }}
                 >
-                  {FORMAT.currencyFormat(props.price)}
+                  {FORMAT.currencyFormat(props.salePrice)}
                 </PaperText>
                 <View style={styles.progressBarContent}>
-                  <PaperText variant="bodySmall">
-                    Đã bán {/* props.sold */}
-                  </PaperText>
+                  <PaperText variant="bodySmall">Đã bán {props.sold}</PaperText>
                   <ProgressBar progress={0.5} color={DefaultTheme.pgBarColor} />
                 </View>
               </View>

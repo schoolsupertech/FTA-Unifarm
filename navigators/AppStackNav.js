@@ -16,6 +16,7 @@ import SearchScreen from "../screens/SearchScreen";
 import ReceiveInfoScreen from "../screens/ReceiveInfoScreen";
 import UserInfoScreen from "../screens/UserInfoScreen";
 import { DefaultTheme } from "../themes/DefaultTheme";
+import HistoryOrderScreen from "../screens/HistoryOrderScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -88,7 +89,6 @@ function AppStackNav() {
           title: "Tìm kiếm sản phẩm",
         }}
       />
-      <Stack.Screen name="ReceiveInfoScreen" component={ReceiveInfoScreen} />
       <Stack.Screen
         name="AddressScreen"
         component={AddressScreen}
@@ -99,6 +99,20 @@ function AppStackNav() {
         component={UserInfoScreen}
         options={{
           title: "Thông tin cá nhân",
+        }}
+      />
+      <Stack.Screen
+        name="ReceiveInfoScreen"
+        component={ReceiveInfoScreen}
+        options={{
+          title: "Thông tin đơn hàng",
+        }}
+      />
+      <Stack.Screen
+        name="HistoryOrderScreen"
+        component={HistoryOrderScreen}
+        options={{
+          title: "Lịch sử đơn hàng",
         }}
       />
     </Stack.Navigator>

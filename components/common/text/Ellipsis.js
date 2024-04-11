@@ -12,30 +12,18 @@ function Ellipsis({ description, data, numberOfLines }) {
     setIsCollapsed(!isCollapsed);
   }
 
-  function Bars({ viewData }) {
-    return (
-      <View style={styles.barContainer}>
-        <PaperText variant="bodyMedium" style={{ marginBottom: 4 }}>
-          {viewData}
-        </PaperText>
-        <Divider />
-      </View>
-    );
-  }
-
   return (
     <View>
       <Text
         variant="bodyMedium"
         numberOfLines={isCollapsed ? numberOfLines : null}
-        style={{ marginBottom: 4 }}
+        style={{ marginBottom: 2 }}
       >
         {description}
         {data && data.map((viewData) => "\n" + viewData)}
       </Text>
 
       <TouchableOpacity onPress={toggleNumberOfLines}>
-        <Divider />
         <View style={styles.collapsedBtn}>
           <Text style={{ color: Colors.primaryGreen700 }}>
             {isCollapsed ? "Đọc tiếp" : "Thu gọn"}
@@ -50,6 +38,6 @@ export default Ellipsis;
 
 const styles = StyleSheet.create({
   collapsedBtn: {
-    marginTop: 4,
+    marginTop: 2,
   },
 });

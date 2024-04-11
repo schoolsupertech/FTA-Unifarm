@@ -102,7 +102,10 @@ function CartScreen() {
         </View>
 
         {Array.isArray(cart) && cart.length > 0 ? (
-          <ScrollView style={DefaultTheme.scrollContainer}>
+          <ScrollView
+            style={DefaultTheme.scrollContainer}
+            contentContainerStyle={{ paddingBottom: 80 }}
+          >
             {cart.map((farmhub) => {
               return (
                 <View key={farmhub.farmHubId} style={styles.groupContainer}>

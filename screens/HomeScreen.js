@@ -45,20 +45,22 @@ function HomeScreen() {
   });
   const [categoriesRecommendsInfo, setCategoriesRecommendsInfo] =
     useState(null);
-  const [prodItemsInfo, setProdItemsInfo] = useState([]);
+  const [prodItemsInfo, setProdItemsInfo] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCatData = async () => {
       const catRecomResponse = await API.get("/categories-recommends");
       setCategoriesRecommendsInfo(
         catRecomResponse.payload.filter(
           (category) => category.displayIndex <= 5,
         ),
       );
+    };
 
+    const fetchProdData = async () => {
       const prodItemsInfoResponse = await API.get(
-        "/product-items/businessday/814982CA-2092-4F0D-9720-83F064237A90/all",
+        "/product-items/all-in-businessday",
       );
       // const isDuplicate = prodItemsInfo.some(
       //   (items) =>
@@ -66,10 +68,11 @@ function HomeScreen() {
       // );
 
       // !isDuplicate &&
-      setProdItemsInfo([...prodItemsInfoResponse.payload]);
+      setProdItemsInfo(prodItemsInfoResponse.payload);
     };
 
-    fetchData();
+    fetchCatData();
+    fetchProdData();
   }, []);
 
   useEffect(() => {
@@ -183,22 +186,6 @@ function HomeScreen() {
   }
 
   function renderProdItem(item) {
-    const prodItemProps = {
-      id: item.id,
-      title: item.title,
-      // sold: item.sold,
-      // openDate: item.openDate,
-      source: item.productOrigin,
-      description: item.description,
-      // moreInfo: item.moreInfo,
-      price: item.price,
-      // listedPrice: item.listedPrice,
-      unit: item.unit,
-      outOfStock: item.outOfStock,
-      quantity: item.quantity,
-      // gallery: item.gallery,
-    };
-
     function AddingCartHandler(cartAdded) {
       if (authState?.authenticated) {
         setVisible(true);
@@ -213,11 +200,7 @@ function HomeScreen() {
     }
 
     return (
-      <CardProdItem
-        key={prodItemProps.id}
-        {...prodItemProps}
-        onAddingCart={AddingCartHandler}
-      />
+      <CardProdItem key={item.id} {...item} onAddingCart={AddingCartHandler} />
     );
   }
 

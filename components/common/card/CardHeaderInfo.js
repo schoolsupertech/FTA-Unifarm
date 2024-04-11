@@ -1,44 +1,49 @@
 import React, { useContext } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { Card, Text as PaperText } from "react-native-paper";
+import { Card, Divider, Text as PaperText } from "react-native-paper";
 
 import HeaderContent from "../../common/HeaderContent";
 import Title from "../../common/text/Title";
-import GrayLine from "../../common/text/GrayLine";
 import Ellipsis from "../../common/text/Ellipsis";
 import { Colors } from "../../../constants/colors";
 import { AuthContext } from "../../../context/AuthContext";
-import { DefaultTheme } from "../../../themes/DefaultTheme";
 
-function CardHeaderInfo() {
+function CardHeaderInfo({ navigation, location }) {
   const { userInfo } = useContext(AuthContext);
 
   return (
     <Card style={styles.cardContainer} mode="contained">
       <Card.Content style={styles.cardContent}>
-        <HeaderContent onPress={() => {}} label={"Thay đổi"} icon={true}>
+        <HeaderContent
+          onPress={() => navigation.navigate("AddressScreen")}
+          label={"Thay đổi"}
+          icon={true}
+        >
           Thông tin nhận hàng
         </HeaderContent>
         <View style={styles.headerContent}>
-          <Title color={Colors.primaryGreen800}>Người nhận hàng:</Title>
           <View style={styles.cardContentDetail}>
-            <PaperText variant="bodyMedium">
-              {userInfo?.lastName} {userInfo?.firstName} -{" "}
-              {userInfo?.phoneNumber}
+            <Title color={styles.info.color}>Người nhận: </Title>
+            <PaperText variant="bodyMedium" style={styles.info}>
+              {userInfo?.info?.lastName} {userInfo?.info?.firstName} -{" "}
+              {userInfo?.info?.phoneNumber}
             </PaperText>
           </View>
-          <Title color={Colors.primaryGreen800}>Nhận hàng tại Station:</Title>
-          <View style={styles.cardContentDetail}>
+          <Divider />
+          <View style={{ marginBottom: 4 }}>
+            <Title color={styles.info.color}>Trạm lấy hàng: </Title>
             <Ellipsis
-              description={
-                "Trạm nhận hàng số A-01, hầm 01, toà A, Chung cư Vinhomes Royal, Khu nhà giày, Phường Long Thạn Mỹ, Quận Thủ Đức, Thành phố Hồ Chí Minh."
-              }
+              description={location?.station?.address}
               numberOfLines={1}
             />
           </View>
+          <Divider />
           <Title color={Colors.primaryGreen800}>
             Thời gian nhận:{" "}
-            <PaperText variant="titleSmall" style={{ color: "black" }}>
+            <PaperText
+              variant="titleSmall"
+              style={{ color: Colors.primaryGreen800 }}
+            >
               Từ 16h, ngày mai (20/03)
             </PaperText>
           </Title>
@@ -53,15 +58,23 @@ export default CardHeaderInfo;
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: "white",
-    marginBottom: 10,
+    marginBottom: 4,
   },
   cardContent: {
     marginVertical: 0,
-    paddingVertical: 16,
+    paddingVertical: 8,
   },
   cardContentDetail: {
-    marginTop: 8,
-    marginBottom: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginBottom: 4,
   },
-  headerContent: {},
+  info: {
+    color: "#303030",
+  },
+  headerContent: {
+    padding: 0,
+    margin: 0,
+  },
 });

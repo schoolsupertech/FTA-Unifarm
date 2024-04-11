@@ -2,7 +2,7 @@ import { Colors } from "../constants/colors";
 
 export const DefaultTheme = {
   flex_1: { flex: 1 },
-  scrollContainer: { paddingHorizontal: 10 },
+  scrollContainer: { paddingHorizontal: 10, paddingBottom: 20 },
 
   // Logo
   headerLogo: {

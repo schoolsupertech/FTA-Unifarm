@@ -101,7 +101,11 @@ function ProfileScreen() {
               paddingBottom: 4,
             }}
           >
-            <HeaderContent onPress={() => {}} label={"Xem tất cả"} icon={true}>
+            <HeaderContent
+              onPress={() => navigation.navigate("HistoryOrderScreen")}
+              label={"Xem tất cả"}
+              icon={true}
+            >
               Đơn hàng của bạn
             </HeaderContent>
           </View>
@@ -165,7 +169,7 @@ function ProfileScreen() {
             icon={
               <MaterialCommunityIcons name="history" size={28} color="grey" />
             }
-            onPress={() => {}}
+            onPress={() => navigation.navigate("HistoryOrderScreen")}
           >
             Lịch sử mua hàng
           </GridTile>
