@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator, Divider } from "react-native-paper";
 
 import CardHeaderInfo from "../components/common/card/CardHeaderInfo";
 import CardFooter from "../components/common/card/CardFooter";
@@ -116,7 +116,9 @@ function OrderScreen() {
           contentContainerStyle={{ paddingBottom: 80 }}
           showsVerticalScrollIndicator={false}
         >
-          <GroupOrderItems />
+          {Array.isArray(cart) &&
+            cart.length > 0 &&
+            cart.map((item) => <GroupOrderItems key={item.id} order={item} />)}
         </ScrollView>
 
         <CardFooter

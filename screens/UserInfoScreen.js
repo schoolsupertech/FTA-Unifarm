@@ -6,58 +6,95 @@ import {
   View,
   Button,
 } from "react-native";
-import { Divider, Text as PaperText } from "react-native-paper";
+import { Text as PaperText } from "react-native-paper";
 import Modal from "react-native-modal";
 import { Ionicons } from "@expo/vector-icons";
 
 import GridTileModal from "../components/ui/profile/GridTileModal";
-import { DefaultTheme } from "../themes/DefaultTheme";
-import { AuthContext } from "../context/AuthContext";
 import InputField from "../components/common/text/InputField";
 import Title from "../components/common/text/Title";
+import { DefaultTheme } from "../themes/DefaultTheme";
+import { AuthContext } from "../context/AuthContext";
+
+const initialUser = {
+  email: "",
+  password: "",
+  phoneNumber: "",
+  firstName: "",
+  lastName: "",
+  address: "",
+  role: "Customer",
+};
 
 function UserInfoScreen() {
-  const { userInfo } = useContext(AuthContext);
+  const [user, setUser] = useState(initialUser);
+  const { userInfo, updateProfile } = useContext(AuthContext);
+  const formattedDate = new Date(
+    userInfo?.info?.createdAt,
+  ).toLocaleDateString();
   const [visible, setVisible] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
   const [modalLabel, setModalLabel] = useState("");
+  const [currentInputField, setCurrentInputField] = useState("");
 
-  function onChangingInfoHandler(label) {
+  function onChangingInfoHandler(label, field) {
     setVisible(true);
     setModalLabel(label);
+    setCurrentInputField(field);
   }
+
   function onChangingPasswordHandler() {
     setVisible(true);
     setChangingPassword(true);
+  }
+
+  function inputChangingHandler(value, userField) {
+    setUser({
+      ...user,
+      [userField]: value,
+    });
+  }
+
+  async function onSavedHandler() {
+    const res = await updateProfile(user);
+    console.log("Response: " + JSON.stringify(res, null, 2));
+    setVisible(false);
+    setChangingPassword(false);
+    setUser(initialUser);
   }
 
   return (
     <SafeAreaView style={DefaultTheme.root}>
       <ScrollView style={[DefaultTheme.scrollContainer, { paddingTop: 8 }]}>
         <View style={styles.container}>
-          <GridTileModal onPress={() => onChangingInfoHandler("Họ")} label="Họ">
+          <GridTileModal
+            onPress={() => onChangingInfoHandler("Họ", "lastName")}
+            label="Họ"
+          >
             {userInfo.info.lastName}
           </GridTileModal>
           <GridTileModal
-            onPress={() => onChangingInfoHandler("Tên")}
+            onPress={() => onChangingInfoHandler("Tên", "firstName")}
             label="Tên"
           >
             {userInfo.info.firstName}
           </GridTileModal>
           <GridTileModal
-            onPress={() => onChangingInfoHandler("Email")}
+            onPress={() => onChangingInfoHandler("Email", "email")}
             label="Email"
           >
             {userInfo.info.email}
           </GridTileModal>
           <GridTileModal
-            onPress={() => onChangingInfoHandler("Số địen thoại")}
+            onPress={() =>
+              onChangingInfoHandler("Số địen thoại", "phoneNumber")
+            }
             label="Số điện thoại"
           >
             {userInfo.info.phoneNumber}
           </GridTileModal>
           <GridTileModal
-            onPress={() => onChangingInfoHandler("Địa chỉ")}
+            onPress={() => onChangingInfoHandler("Địa chỉ", "address")}
             label="Địa chỉ"
           >
             {userInfo.info.address}
@@ -68,7 +105,11 @@ function UserInfoScreen() {
           />
           <Modal
             isVisible={visible}
-            onBackdropPress={() => setVisible(false)}
+            onBackdropPress={() => {
+              setVisible(false);
+              setChangingPassword(false);
+              setUser(initialUser);
+            }}
             style={styles.bottomModal}
           >
             <View style={styles.modalContent}>
@@ -126,26 +167,32 @@ function UserInfoScreen() {
                   </View>
                   <InputField
                     label={"Nhập " + modalLabel.toLowerCase() + " của bạn"}
+                    onChangeText={(value) =>
+                      inputChangingHandler(value, currentInputField)
+                    }
                   />
                 </>
               )}
               <View style={styles.modalBtn}>
                 <Button
-                  onPress={() => setVisible(false)}
+                  onPress={() => {
+                    setVisible(false);
+                    setChangingPassword(false);
+                    setUser(initialUser);
+                  }}
                   title="Huỷ bỏ"
                   color="red"
                 />
-                <Button
-                  onPress={() => setVisible(false)}
-                  title="Lưu"
-                  color="green"
-                />
+                <Button onPress={onSavedHandler} title="Lưu" color="green" />
               </View>
             </View>
           </Modal>
         </View>
         <View style={styles.footer}>
-          <PaperText>Đã tham gia từ ngày {userInfo.info.createdAt}</PaperText>
+          <PaperText>
+            Đã tham gia từ{" "}
+            <PaperText style={{ color: "red" }}>{formattedDate}</PaperText>
+          </PaperText>
         </View>
       </ScrollView>
     </SafeAreaView>

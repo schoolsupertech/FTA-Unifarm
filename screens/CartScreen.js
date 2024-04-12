@@ -124,7 +124,7 @@ function CartScreen() {
                         style={{ marginRight: 4 }}
                       />
                       <Title color="black">
-                        {farmhub.farmHubResponse.name}
+                        {farmhub.farmHubResponse?.name}
                       </Title>
                     </View>
                   </View>
@@ -178,12 +178,14 @@ function CartScreen() {
           </View>
         )}
 
+        {/* Array.isArray(cart) && cart.length > 0 && ( */}
         <CardFooter
           txtLabel="Tổng tiền:"
           value={totalPrice}
           onPress={() => navigation.navigate("OrderScreen")}
           btnLabel="Thanh toán"
         />
+        {/* ) */}
       </SafeAreaView>
     );
   }
@@ -194,8 +196,10 @@ export default CartScreen;
 const styles = StyleSheet.create({
   groupContainer: {
     marginTop: 12,
-    borderBottomWidth: 8,
     borderColor: "#EEEEEE",
+    borderBottomWidth: 8,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
   },
   groupItems: {
     flexDirection: "row",

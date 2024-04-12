@@ -5,14 +5,17 @@ import { Card, Divider, Text as PaperText } from "react-native-paper";
 import HeaderContent from "../../common/HeaderContent";
 import Title from "../../common/text/Title";
 import Ellipsis from "../../common/text/Ellipsis";
+import createFormatUtil from "../../../utils/FormatUtility";
 import { Colors } from "../../../constants/colors";
 import { AuthContext } from "../../../context/AuthContext";
+
+const FORMAT = createFormatUtil();
 
 function CardHeaderInfo({ navigation, location }) {
   const { userInfo } = useContext(AuthContext);
 
   return (
-    <Card style={styles.cardContainer} mode="contained">
+    <Card style={styles.cardContainer}>
       <Card.Content style={styles.cardContent}>
         <HeaderContent
           onPress={() => navigation.navigate("AddressScreen")}
@@ -23,7 +26,7 @@ function CardHeaderInfo({ navigation, location }) {
         </HeaderContent>
         <View style={styles.headerContent}>
           <View style={styles.cardContentDetail}>
-            <Title color={styles.info.color}>Người nhận: </Title>
+            <Title color="grey">Người nhận: </Title>
             <PaperText variant="bodyMedium" style={styles.info}>
               {userInfo?.info?.lastName} {userInfo?.info?.firstName} -{" "}
               {userInfo?.info?.phoneNumber}
@@ -31,20 +34,17 @@ function CardHeaderInfo({ navigation, location }) {
           </View>
           <Divider />
           <View style={{ marginBottom: 4 }}>
-            <Title color={styles.info.color}>Trạm lấy hàng: </Title>
+            <Title color="grey">Trạm lấy hàng: </Title>
             <Ellipsis
               description={location?.station?.address}
               numberOfLines={1}
             />
           </View>
           <Divider />
-          <Title color={Colors.primaryGreen800}>
-            Thời gian nhận:{" "}
-            <PaperText
-              variant="titleSmall"
-              style={{ color: Colors.primaryGreen800 }}
-            >
-              Từ 16h, ngày mai (20/03)
+          <Title color="grey">
+            Dự kiến nhận:{" "}
+            <PaperText variant="titleSmall" style={styles.info}>
+              {FORMAT.dateFormat(new Date())}
             </PaperText>
           </Title>
         </View>
@@ -58,10 +58,9 @@ export default CardHeaderInfo;
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: "white",
-    marginBottom: 4,
+    marginBottom: 8,
   },
   cardContent: {
-    marginVertical: 0,
     paddingVertical: 8,
   },
   cardContentDetail: {
@@ -71,10 +70,10 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   info: {
-    color: "#303030",
+    color: Colors.primaryGreen600,
   },
   headerContent: {
-    padding: 0,
-    margin: 0,
+    // padding: 0,
+    // margin: 0,
   },
 });

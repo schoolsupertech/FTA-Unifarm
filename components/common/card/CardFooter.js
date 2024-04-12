@@ -49,22 +49,20 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: 110,
-    paddingBottom: 16,
+    height: 100,
   },
   cardContent: {
+    marginBottom: 12,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-end",
+    justifyContent: "space-evenly",
   },
   leftContent: {
-    marginRight: 22,
-    paddingBottom: 8,
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
+    marginRight: 32,
+    justifyContent: "center",
+    alignItems: "flex-start",
   },
   buttonView: {
-    marginBottom: 12,
     borderRadius: 8,
   },
 });

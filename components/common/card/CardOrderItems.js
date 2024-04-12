@@ -1,72 +1,34 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import { Checkbox } from "react-native-paper";
 
+import createFormatUtil from "../../../utils/FormatUtility";
 import { Colors } from "../../../constants/colors";
-import { DefaultTheme } from "@react-navigation/native";
+
+const FORMAT = createFormatUtil();
 
 function CardOrderItems({ item }) {
-  const [count, setCount] = useState(item.qty);
-
-  function addCountHandler() {
-    if (count < 10) {
-      setCount(count + 1);
-    }
-  }
-
-  function minusCountHandler() {
-    if (count > 1) {
-      setCount(count - 1);
-    }
-  }
-  function formatCurrency(amount) {
-    return parseFloat(amount).toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-  }
   return (
-    <View style={{ borderBottomWidth: 5, borderBottomColor: "white" }}>
-      <View style={styles.container}>
-        <View style={styles.checkboxContainer}>
-          <View style={styles.checkbox}>
-            <Checkbox status="unchecked" onPress={() => {}} color="black" />
-          </View>
+    <View style={styles.container}>
+      <View style={styles.itemsContainer}>
+        <View style={{ marginRight: 12 }}>
+          <Image
+            source={{
+              // item.productItemResponse.imageUrl
+              uri: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?q=80&w=1680&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            }}
+            style={styles.image}
+          />
         </View>
-        <View style={styles.itemsContainer}>
-          <View style={{ marginRight: 12 }}>
-            <Image source={item.image} style={styles.image} />
-          </View>
-          <View style={[DefaultTheme.flex_1, { marginRight: 12 }]}>
-            <Text style={styles.textName}>{item.name}</Text>
-            <Text style={styles.textPrice}>{formatCurrency(30000)} / quả</Text>
-          </View>
+        <View>
+          <Text style={styles.textName}>{item.productItemResponse.title}</Text>
+          <Text style={styles.textPrice}>
+            {FORMAT.currencyFormat(item.unitPrice)} /{" "}
+            {item.productItemResponse.unit}
+          </Text>
         </View>
       </View>
-      <View style={{ alignItems: "flex-end", marginTop: -15 }}>
-        <View style={styles.selectingQuantity}>
-          {/* <TouchableOpacity
-            onPress={minusCountHandler}
-            style={styles.selectingBtn}
-          >
-            <Ionicons
-              name="remove-circle-outline"
-              size={20}
-              color={Colors.primaryGreen700}
-            />
-          </TouchableOpacity> */}
-          <Text style={styles.quantity}>x{item.qty}</Text>
-          {/* <TouchableOpacity
-            onPress={addCountHandler}
-            style={styles.selectingBtn}
-          >
-            <Ionicons
-              name="add-circle-outline"
-              size={20}
-              color={Colors.primaryGreen700}
-            />
-          </TouchableOpacity> */}
-        </View>
+      <View style={styles.totalQuantityContainer}>
+        <Text style={styles.quantity}>x{item.quantity}</Text>
       </View>
     </View>
   );
@@ -76,32 +38,32 @@ export default CardOrderItems;
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 20,
-    marginTop: 10,
+    marginTop: 4,
+    marginHorizontal: 28,
     flexDirection: "row",
   },
-  checkboxContainer: {
-    transform: [
-      {
-        scale: 0.5,
-      },
-    ],
-    marginRight: 0,
-    paddingRight: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    // borderRightWidth: 1,
-    // borderColor: "gray",
-  },
-  checkbox: {
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: "grey",
-  },
+  // checkboxContainer: {
+  //   transform: [
+  //     {
+  //       scale: 0.5,
+  //     },
+  //   ],
+  //   marginRight: 0,
+  //   paddingRight: 12,
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   // borderRightWidth: 1,
+  //   // borderColor: "gray",
+  // },
+  // checkbox: {
+  //   borderRadius: 8,
+  //   borderWidth: 2,
+  //   borderColor: "grey",
+  // },
   itemsContainer: {
-    flex: 1,
+    width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   image: {
@@ -117,23 +79,28 @@ const styles = StyleSheet.create({
     color: Colors.primaryGreen700,
     fontWeight: "500",
   },
-  selectingQuantity: {
-    height: 30,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    // backgroundColor: Colors.primaryGreen50,
-    // borderWidth: 1,
-    // borderColor: Colors.primaryGreen700,
-    // borderRadius: 8,
-    marginVertical: 5,
-  },
-  selectingBtn: {
-    marginHorizontal: 4,
+  // selectingQuantity: {
+  //   height: 30,
+  //   flexDirection: "row",
+  //   justifyContent: "flex-start",
+  //   alignItems: "center",
+  //   // backgroundColor: Colors.primaryGreen50,
+  //   // borderWidth: 1,
+  //   // borderColor: Colors.primaryGreen700,
+  //   // borderRadius: 8,
+  //   marginVertical: 5,
+  // },
+  // selectingBtn: {
+  //   marginHorizontal: 4,
+  // },
+  totalQuantityContainer: {
+    marginLeft: -12,
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
   },
   quantity: {
     color: Colors.primaryGreen700,
     fontWeight: "700",
-    fontSize: 15,
+    fontSize: 16,
   },
 });

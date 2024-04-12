@@ -63,28 +63,18 @@ export const AuthProvider = ({ children }) => {
         authenticated: true,
       });
 
-      AsyncStorage.setItem(
+      await AsyncStorage.setItem(
         "TOKEN_KEY",
         JSON.stringify({ token: response.token, loggedIn: "systemLog" }),
       );
 
-      const userInfoRes = await API.customRequest(
-        "get",
-        "/aboutMe",
-        null,
-        response.token,
-      );
-      const userCartInfoRes = await API.customRequest(
-        "get",
-        "/carts",
-        null,
-        response.token,
-      );
+      const userInfoRes = await getProfile();
+      const userCartInfoRes = await getCartQuantity();
 
       if (userInfoRes && userCartInfoRes) {
         let qtyInCart = userCartInfoRes.payload.length;
         setUserInfo({ info: userInfoRes, qtyInCart: qtyInCart });
-        AsyncStorage.setItem(
+        await AsyncStorage.setItem(
           "userInfo",
           JSON.stringify({ info: userInfoRes, qtyInCart: qtyInCart }),
         );
@@ -106,11 +96,11 @@ export const AuthProvider = ({ children }) => {
         token: userInfo.idToken,
         authenticated: true,
       });
-      AsyncStorage.setItem(
+      await AsyncStorage.setItem(
         "TOKEN_KEY",
         JSON.stringify({ token: userInfo.idToken, loggedIn: "google" }),
       );
-      AsyncStorage.setItem("userInfo", JSON.stringify(userInfo.user));
+      await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo.user));
       // switch(account.role) {
       //   case "unknown":
       //     const signUp_Response = API.post("/signup", {
@@ -176,7 +166,25 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
-  // const updateProfile = () => {};
+  const getCartQuantity = async (token) => {
+    const response = API.customRequest("get", "/carts", null, token);
+    return response;
+  };
+
+  const getProfile = async (token) => {
+    const response = await API.customRequest("get", "/aboutMe", null, token);
+    return response;
+  };
+
+  const updateProfile = async (user) => {
+    const response = await API.customRequest(
+      "put",
+      "/update-profile",
+      user,
+      authState?.token,
+    );
+    return response;
+  };
 
   const getLocation = async (token) => {
     try {
@@ -221,6 +229,33 @@ export const AuthProvider = ({ children }) => {
   // };
 
   useEffect(() => {
+    const resetUserInfo = async () => {
+      const profileResponse = await getProfile(authState?.token);
+      const cartQuantityResponse = await getCartQuantity(authState?.token);
+      const userInfo = await AsyncStorage.getItem("userInfo");
+
+      if (userInfo !== null) {
+        const userInfoJsonParse = JSON.parse(userInfo);
+        let qtyInCart = cartQuantityResponse.payload.length;
+
+        console.log("User info: " + JSON.stringify(userInfoJsonParse, null, 2));
+
+        userInfoJsonParse.info = profileResponse;
+        userInfoJsonParse.qty = qtyInCart;
+
+        setUserInfo(userInfoJsonParse);
+        await AsyncStorage.setItem(
+          "userInfo",
+          JSON.stringify(userInfoJsonParse),
+        );
+      }
+    };
+
+    resetUserInfo();
+    setIsLoading(false);
+  }, [updateProfile]);
+
+  useEffect(() => {
     isLoggedIn();
   }, []);
 
@@ -232,6 +267,7 @@ export const AuthProvider = ({ children }) => {
     isLoading,
     authState,
     userInfo,
+    updateProfile,
     getLocation,
   };
 

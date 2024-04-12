@@ -301,7 +301,11 @@ function HomeScreen() {
         </ImageBackground>
       </LinearGradient>
 
-      <ScrollView style={DefaultTheme.scrollContainer}>
+      <ScrollView
+        style={DefaultTheme.scrollContainer}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.contentView}>
           <View style={{ marginBottom: 8 }}>
             <HeaderContent>Tin tức mới</HeaderContent>

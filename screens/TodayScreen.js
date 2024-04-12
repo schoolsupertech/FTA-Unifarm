@@ -31,7 +31,6 @@ const FORMAT = createFormatUtil();
 function TodayScreen() {
   const navigation = useNavigation();
   const { authState, userInfo } = useContext(AuthContext);
-  const [searchPrd, setSearchPrd] = useState("");
   const [visible, setVisible] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState("");
   const [onCartAdded, setOnCartAdded] = useState(false);
@@ -56,37 +55,22 @@ function TodayScreen() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchProdItems = async (prodItemId) => {
-        const prodItemsInfoResponse = await API.get(
-          "/product/" + prodItemId + "/product-items",
-        );
-        const isDuplicate = prodItemsInfo.some(
-          (items) =>
-            items.id ===
-            prodItemsInfoResponse.payload.map((prodId) => prodId.id),
-        );
-
-        !isDuplicate &&
-          setProdItemsInfo((oldProdItemsInfo) => [
-            ...oldProdItemsInfo,
-            ...prodItemsInfoResponse.payload,
-          ]);
-      };
-
-      const catRecomResponse = await API.get("/categories-recommends");
-
-      let categoryRecomId = catRecomResponse.payload.find((items) =>
-        items.name.toLowerCase().includes("nổi bật"),
+      const prodItemsInfoResponse = await API.get(
+        "/product-items/all-in-businessday",
       );
 
-      if (categoryRecomId) {
-        const prodsInfoResponse = await API.get(
-          "/category/" + categoryRecomId.id + "/products",
-        );
-        prodsInfoResponse.payload.map((item) => {
-          fetchProdItems(item.id);
-        });
-      }
+      // const isDuplicate = prodItemsInfo.some(
+      //   (items) =>
+      //     items.id ===
+      //     prodItemsInfoResponse.payload.map((prodId) => prodId.id),
+      // );
+
+      // !isDuplicate &&
+      // setProdItemsInfo((oldProdItemsInfo) => [
+      //   ...oldProdItemsInfo,
+      //   ...prodItemsInfoResponse.payload,
+      // ]);
+      prodItemsInfoResponse && setProdItemsInfo(prodItemsInfoResponse.payload);
     };
 
     fetchData();
@@ -220,15 +204,6 @@ function TodayScreen() {
     );
   }
 
-  function displaySearchPrdText(prdSearch) {
-    setSearchPrd(prdSearch);
-    console.log(searchPrd);
-  }
-
-  function selectedCategoriesStack() {
-    navigation.navigate("CategoryTab");
-  }
-
   return (
     <SafeAreaView style={[DefaultTheme.root]}>
       <LinearGradient
@@ -306,9 +281,6 @@ function TodayScreen() {
       <ScrollView style={DefaultTheme.scrollContainer}>
         {/* Danh sách sản phẩm */}
         <View style={styles.contentView}>
-          <View style={{ marginBottom: 8 }}>
-            <HeaderContent>Sản phẩm khuyên dùng</HeaderContent>
-          </View>
           {prodItemsInfo?.map((item) => renderProdItem(item))}
         </View>
       </ScrollView>

@@ -49,7 +49,7 @@ function CardCartItem({ data, authState, stationId }) {
 
     return (
       <CardCartProdItems
-        key={itemData.item.id}
+        key={itemData.item.orderId}
         {...props}
         authState={authState}
         stationId={stationId}
