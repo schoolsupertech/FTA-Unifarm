@@ -24,6 +24,11 @@ import { AuthContext } from "../context/AuthContext";
 const API = createAxios();
 const FORMAT = createFormatUtil();
 
+const initialCheckCart = {
+  orderId: null,
+  orderDetailIds: [],
+};
+
 function CartScreen() {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +36,7 @@ function CartScreen() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const { authState, getLocation } = useContext(AuthContext);
+  const [toggleCart, setToggleCart] = useState([initialCheckCart]);
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -67,6 +73,24 @@ function CartScreen() {
 
     cart && onPlusTotalPriceHanler();
   }, [cart]);
+
+  function onToggleGroupCartHandler(id, ordDtIds) {
+    if (toggleCart.map((item) => item.orderId === id)) {
+      // if (toggleCart.map((item) => item.orderDetailIds === ordDtIds)) {
+      setToggleCart(toggleCart.filter((item) => item.orderId !== id));
+      // } else {
+      //   setToggleCart([
+      //     ...toggleCart,
+      //     { orderId: id, orderDetailIds: ordDtIds },
+      //   ]);
+      // }
+    } else {
+      setToggleCart([
+        ...toggleCart,
+        { orderId: id, orderDetailIds: [ordDtIds] },
+      ]);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -106,36 +130,52 @@ function CartScreen() {
             style={DefaultTheme.scrollContainer}
             contentContainerStyle={{ paddingBottom: 80 }}
           >
-            {cart.map((farmhub) => {
-              return (
-                <View key={farmhub.farmHubId} style={styles.groupContainer}>
-                  <View style={styles.groupItems}>
-                    <View style={styles.checkbox}>
+            {cart.map((farmhub) => (
+              <View key={farmhub.farmHubId} style={styles.groupContainer}>
+                <View style={styles.groupItems}>
+                  <View style={styles.checkbox}>
+                    {toggleCart.length > 0 &&
+                    toggleCart.includes(farmhub.id) ? (
                       <Checkbox
-                        status="checked"
-                        onPress={() => {}}
+                        status={"checked"}
+                        onPress={() =>
+                          onToggleGroupCartHandler(
+                            farmhub.id,
+                            farmhub.orderDetailResponse.id,
+                          )
+                        }
                         color="black"
                       />
-                    </View>
-                    <View style={styles.groupTitle}>
-                      <Ionicons
-                        name="storefront-outline"
-                        size={24}
-                        style={{ marginRight: 4 }}
+                    ) : (
+                      <Checkbox
+                        status={"unchecked"}
+                        onPress={() =>
+                          onToggleGroupCartHandler(
+                            farmhub.id,
+                            farmhub.orderDetailResponse.id,
+                          )
+                        }
+                        color="black"
                       />
-                      <Title color="black">
-                        {farmhub.farmHubResponse?.name}
-                      </Title>
-                    </View>
+                    )}
                   </View>
-                  <CardCartItem
-                    data={farmhub.orderDetailResponse}
-                    authState={authState}
-                    stationId={currentLocation}
-                  />
+                  <View style={styles.groupTitle}>
+                    <Ionicons
+                      name="storefront-outline"
+                      size={24}
+                      style={{ marginRight: 4 }}
+                    />
+                    <Title color="black">{farmhub.farmHubResponse?.name}</Title>
+                  </View>
                 </View>
-              );
-            })}
+                <CardCartItem
+                  data={farmhub.orderDetailResponse}
+                  authState={authState}
+                  stationId={currentLocation}
+                  toggleCheckbox={toggleCart}
+                />
+              </View>
+            ))}
           </ScrollView>
         ) : (
           <View
@@ -178,14 +218,14 @@ function CartScreen() {
           </View>
         )}
 
-        {/* Array.isArray(cart) && cart.length > 0 && ( */}
-        <CardFooter
-          txtLabel="Tổng tiền:"
-          value={totalPrice}
-          onPress={() => navigation.navigate("OrderScreen")}
-          btnLabel="Thanh toán"
-        />
-        {/* ) */}
+        {Array.isArray(cart) && cart.length > 0 && (
+          <CardFooter
+            txtLabel="Tổng tiền:"
+            value={totalPrice}
+            onPress={() => navigation.navigate("OrderScreen")}
+            btnLabel="Thanh toán"
+          />
+        )}
       </SafeAreaView>
     );
   }
@@ -213,7 +253,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
     transform: [
       {
-        scale: 0.75,
+        scale: 0.65,
       },
     ],
   },

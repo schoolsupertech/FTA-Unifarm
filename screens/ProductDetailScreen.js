@@ -152,7 +152,7 @@ function ProductDetailScreen({ route, navigation }) {
       {
         farmHubId: selectedProd.farmHubId,
         stationId: currentLocation,
-        businessDayId: "814982CA-2092-4F0D-9720-83F064237A90",
+        businessDayId: "2183b66d-597d-4c12-8c91-c7c3e599973b",
         productItemId: selectedProd.id,
         quantity: count,
         isAddToCart: true,

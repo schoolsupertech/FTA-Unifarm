@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import createAxios from "../../../utils/AxiosUtility";
 import createFormatUtil from "../../../utils/FormatUtility";
 import { Colors } from "../../../constants/colors";
+import { Checkbox } from "react-native-paper";
 
 const API = createAxios();
 const FORMAT = createFormatUtil();
@@ -22,7 +23,17 @@ let maxQuantity = 10;
 
 function CardCartProdItems(props) {
   const [count, setCount] = useState(props.quantity);
-  // const maxQuantity = useState(10);
+  const limitQuantity = useState(5);
+  const [isMaxed, setIsMaxed] = useState(false);
+  const [isChecked, setIsChecked] = useState(props.toggleCheckbox);
+
+  useEffect(() => {
+    setIsMaxed(count > limitQuantity);
+  }, []);
+
+  useEffect(() => {
+    setIsChecked(props.toggleCheckbox);
+  }, [props.toggleCheckbox]);
 
   async function fetchAddToCart(count) {
     const response = await API.customRequest(
@@ -73,6 +84,10 @@ function CardCartProdItems(props) {
     }
   }
 
+  function onToggleCheckboxHandler() {
+    setIsChecked(!isChecked);
+  }
+
   return (
     <View style={styles.rowFront}>
       <TouchableHighlight style={styles.rowFrontVisible}>
@@ -83,12 +98,18 @@ function CardCartProdItems(props) {
             justifyContent: "center",
           }}
         >
+          <View style={styles.checkbox}>
+            <Checkbox
+              status={isChecked ? "checked" : "unchecked"}
+              onPress={onToggleCheckboxHandler}
+              color="black"
+            />
+          </View>
           <Image
             source={{
-              // source={{uri: itemData.item.productImages.find((image) => {
-              //   return image.displayIndex === 1;
-              // }).imageUrl,
-              uri: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?q=80&w=1680&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              uri: props.productItemResponse.imageUrl
+                ? props.productItemResponse.imageUrl
+                : "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?q=80&w=1680&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             }}
             style={styles.image}
           />
@@ -144,6 +165,11 @@ function CardCartProdItems(props) {
           </View>
         </View>
       </TouchableHighlight>
+      {isMaxed && (
+        <View>
+          <Text style={{ color: "red" }}>Đã đạt số lần tối đa</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -167,6 +193,16 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: "#FFF",
     borderRadius: 8,
+  },
+  checkbox: {
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: "black",
+    transform: [
+      {
+        scale: 0.45,
+      },
+    ],
   },
   image: {
     width: 60,

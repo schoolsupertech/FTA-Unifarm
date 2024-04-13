@@ -25,9 +25,8 @@ function OrderScreen() {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [cart, setCart] = useState(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
-  const { authState, getLocation } = useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -36,23 +35,14 @@ function OrderScreen() {
         "get",
         "/carts",
         null,
-        authState.token,
+        authState?.token,
       );
 
       setCart(response.payload);
       setIsLoading(false);
     };
-    const fetchLocationData = async () => {
-      const response = await getLocation(authState?.token);
-      response &&
-        response.payload &&
-        response.payload?.map(
-          (item) => item.isDefault && setCurrentLocation(item),
-        );
-    };
 
     fetchCart();
-    fetchLocationData();
   }, []);
 
   useEffect(() => {
@@ -66,38 +56,25 @@ function OrderScreen() {
   }, [cart]);
 
   async function onPaymentHandler() {
-    // const props = {
-    //   businessDayId: cart.businessDayId,
-    //   stationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    //   apartmentId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    //   famHubAndProduct: [
-    //     {
-    //       farmHubId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    //       orderDetail: [
-    //         {
-    //           productItemId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    //           quantity: 0,
-    //           unitPrice: 0,
-    //           unit: "string",
-    //           totalPrice: 0,
-    //         },
-    //       ],
-    //       totalFarmHubPrice: 0,
-    //     },
-    //   ],
-    //   totalAmount: 0,
-    //   paymentStatus: "string",
-    //   paymentAmount: 0,
-    //   shipNote: "string",
-    // };
-    //
-    // const res = await API.customRequest(
-    //   "post",
-    //   "/order/create",
-    //   props,
-    //   authState.token,
-    // );
-    // navigation.navigate("ReceiveInfoScreen");
+    const props = {
+      stationId: cart[0].stationResponse.id,
+      fullName: cart[0].fullName,
+      phoneNumber: cart[0].phoneNumber,
+      orders: [
+        {
+          orderId: cart[0].id,
+          orderDetailIds: [cart[0].orderDetailResponse[0].id],
+        },
+      ],
+    };
+
+    const res = await API.customRequest(
+      "post",
+      "/order/Checkout",
+      props,
+      authState?.token,
+    );
+    navigation.navigate("ReceiveInfoScreen", { paidItem: res[0] });
   }
 
   if (isLoading) {
@@ -109,7 +86,10 @@ function OrderScreen() {
   } else {
     return (
       <SafeAreaView style={DefaultTheme.root}>
-        <CardHeaderInfo navigation={navigation} location={currentLocation} />
+        <CardHeaderInfo
+          navigation={navigation}
+          location={cart && cart[0].stationResponse}
+        />
 
         <ScrollView
           style={DefaultTheme.scrollContainer}

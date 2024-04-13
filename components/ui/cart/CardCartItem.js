@@ -14,7 +14,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import { Colors } from "../../../constants/colors";
 import CardCartProdItems from "./CardCartProdItems";
 
-function CardCartItem({ data, authState, stationId }) {
+function CardCartItem({ data, authState, stationId, toggleCheckbox }) {
   const [prodItemsInfo, setProdItemsInfo] = useState(data);
 
   function onDeleteHandler(rowKey) {
@@ -44,17 +44,31 @@ function CardCartItem({ data, authState, stationId }) {
         unit: itemData.item.productItemResponse.unit,
         status: itemData.item.productItemResponse.status,
         productOrigin: itemData.item.productItemResponse.productOrigin,
+        imageUrl: itemData.item.productItemResponse.imageUrl,
       },
     };
 
-    return (
-      <CardCartProdItems
-        key={itemData.item.orderId}
-        {...props}
-        authState={authState}
-        stationId={stationId}
-      />
-    );
+    if (toggleCheckbox.includes(itemData.item.productItemResponse.farmHubId)) {
+      return (
+        <CardCartProdItems
+          key={itemData.item.orderId}
+          {...props}
+          authState={authState}
+          stationId={stationId}
+          toggleCheckbox={true}
+        />
+      );
+    } else {
+      return (
+        <CardCartProdItems
+          key={itemData.item.orderId}
+          {...props}
+          authState={authState}
+          stationId={stationId}
+          toggleCheckbox={false}
+        />
+      );
+    }
   }
 
   function renderHiddenItem(itemData, rowMap) {

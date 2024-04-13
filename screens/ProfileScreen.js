@@ -135,7 +135,7 @@ function ProfileScreen() {
             icon={<Ionicons name="person-outline" size={28} color="grey" />}
             onPress={() => navigation.navigate("UserInfoScreen")}
           >
-            Thông tin cách nhân
+            Thông tin cá nhân
           </GridTile>
           <GridTile
             icon={<Ionicons name="location-outline" size={28} color="grey" />}

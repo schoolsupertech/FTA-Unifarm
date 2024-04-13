@@ -228,32 +228,33 @@ export const AuthProvider = ({ children }) => {
   //   }
   // };
 
-  useEffect(() => {
-    const resetUserInfo = async () => {
-      const profileResponse = await getProfile(authState?.token);
-      const cartQuantityResponse = await getCartQuantity(authState?.token);
-      const userInfo = await AsyncStorage.getItem("userInfo");
-
-      if (userInfo !== null) {
-        const userInfoJsonParse = JSON.parse(userInfo);
-        let qtyInCart = cartQuantityResponse.payload.length;
-
-        console.log("User info: " + JSON.stringify(userInfoJsonParse, null, 2));
-
-        userInfoJsonParse.info = profileResponse;
-        userInfoJsonParse.qty = qtyInCart;
-
-        setUserInfo(userInfoJsonParse);
-        await AsyncStorage.setItem(
-          "userInfo",
-          JSON.stringify(userInfoJsonParse),
-        );
-      }
-    };
-
-    resetUserInfo();
-    setIsLoading(false);
-  }, [updateProfile]);
+  // useEffect(() => {
+  //   const resetUserInfo = async () => {
+  //     const profileResponse = await getProfile(authState?.token);
+  //     const cartQuantityResponse = await getCartQuantity(authState?.token);
+  //     const userInfo = await AsyncStorage.getItem("userInfo");
+  //
+  //     if (userInfo !== null) {
+  //       const userInfoJsonParse = JSON.parse(userInfo);
+  //       let qtyInCart = 0;
+  //
+  //       if (cartQuantityResponse.payload)
+  //         qtyInCart = cartQuantityResponse.payload.length;
+  //
+  //       userInfoJsonParse.info = profileResponse;
+  //       userInfoJsonParse.qtyInCart = qtyInCart;
+  //
+  //       setUserInfo(userInfoJsonParse);
+  //       await AsyncStorage.setItem(
+  //         "userInfo",
+  //         JSON.stringify(userInfoJsonParse),
+  //       );
+  //     }
+  //   };
+  //
+  //   resetUserInfo();
+  //   setIsLoading(false);
+  // }, [updateProfile]);
 
   useEffect(() => {
     isLoggedIn();
