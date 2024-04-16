@@ -9,7 +9,7 @@ import { DefaultTheme } from "../../../themes/DefaultTheme";
 
 const FORMAT = createFormatUtil();
 
-function CardFooter({ txtLabel, value, onPress, btnLabel }) {
+function CardFooter({ txtLabel, value, onPress, btnLabel, disabled }) {
   return (
     <Card style={styles.cardContainer}>
       <Card.Content style={styles.cardContent}>
@@ -34,7 +34,9 @@ function CardFooter({ txtLabel, value, onPress, btnLabel }) {
           </PaperText>
         </View>
         <View style={[DefaultTheme.btnView, styles.buttonView]}>
-          <MainButton onPress={onPress}>{btnLabel}</MainButton>
+          <MainButton onPress={onPress} disabled={disabled}>
+            {btnLabel}
+          </MainButton>
         </View>
       </Card.Content>
     </Card>

@@ -21,60 +21,59 @@ import { AuthContext } from "../context/AuthContext";
 
 const API = createAxios();
 
-function OrderScreen() {
+function OrderScreen({ route }) {
   const navigation = useNavigation();
+  const selectedCheckoutProdItems = route.params.payload;
   const [isLoading, setIsLoading] = useState(false);
-  const [cart, setCart] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
-  const { authState } = useContext(AuthContext);
+  const { authState, userInfo } = useContext(AuthContext);
 
-  useEffect(() => {
-    const fetchCart = async () => {
-      setIsLoading(true);
-      const response = await API.customRequest(
-        "get",
-        "/carts",
-        null,
-        authState?.token,
-      );
-
-      setCart(response.payload);
-      setIsLoading(false);
-    };
-
-    fetchCart();
-  }, []);
+  // useEffect(() => {
+  //   const fetchselectedCheckoutProdItems = async () => {
+  //     setIsLoading(true);
+  //     const response = await API.customRequest(
+  //       "get",
+  //       "/selectedCheckoutProdItemss",
+  //       null,
+  //       authState?.token,
+  //     );
+  //
+  //     setselectedCheckoutProdItems(response.payload);
+  //     setIsLoading(false);
+  //   };
+  //
+  //   fetchselectedCheckoutProdItems();
+  // }, []);
 
   useEffect(() => {
     const onPlusTotalPriceHanler = () => {
       let price = 0;
-      cart.forEach((order) => (price += order.totalAmount));
+      selectedCheckoutProdItems.forEach(
+        (order) => (price += order.totalAmount),
+      );
       setTotalPrice(price);
     };
 
-    cart && onPlusTotalPriceHanler();
-  }, [cart]);
+    selectedCheckoutProdItems && onPlusTotalPriceHanler();
+  }, [selectedCheckoutProdItems]);
 
   async function onPaymentHandler() {
     const props = {
-      stationId: cart[0].stationResponse.id,
-      fullName: cart[0].fullName,
-      phoneNumber: cart[0].phoneNumber,
-      orders: [
-        {
-          orderId: cart[0].id,
-          orderDetailIds: [cart[0].orderDetailResponse[0].id],
-        },
-      ],
+      stationId: userInfo.location?.station.id,
+      fullName: selectedCheckoutProdItems[0].fullName,
+      phoneNumber: selectedCheckoutProdItems[0].phoneNumber,
+      orders: selectedCheckoutProdItems.map((orders) => {
+        return {
+          orderId: orders.id,
+          orderDetailIds: orders.orderDetailResponse.map(
+            (orderDetail) => orderDetail.id,
+          ),
+        };
+      }),
     };
 
-    const res = await API.customRequest(
-      "post",
-      "/order/Checkout",
-      props,
-      authState?.token,
-    );
-    navigation.navigate("ReceiveInfoScreen", { paidItem: res[0] });
+    console.log("Properties: " + JSON.stringify(props, null, 2));
+    navigation.navigate("ReceiveInfoScreen", { payItems: props });
   }
 
   if (isLoading) {
@@ -86,19 +85,18 @@ function OrderScreen() {
   } else {
     return (
       <SafeAreaView style={DefaultTheme.root}>
-        <CardHeaderInfo
-          navigation={navigation}
-          location={cart && cart[0].stationResponse}
-        />
+        <CardHeaderInfo navigation={navigation} />
 
         <ScrollView
           style={DefaultTheme.scrollContainer}
           contentContainerStyle={{ paddingBottom: 80 }}
           showsVerticalScrollIndicator={false}
         >
-          {Array.isArray(cart) &&
-            cart.length > 0 &&
-            cart.map((item) => <GroupOrderItems key={item.id} order={item} />)}
+          {Array.isArray(selectedCheckoutProdItems) &&
+            selectedCheckoutProdItems.length > 0 &&
+            selectedCheckoutProdItems.map((item) => (
+              <GroupOrderItems key={item.id} order={item} />
+            ))}
         </ScrollView>
 
         <CardFooter

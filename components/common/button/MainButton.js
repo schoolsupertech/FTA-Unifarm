@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 
 import { Colors } from "../../../constants/colors";
 
-function MainButton({ children, onPress, styleButton }) {
+function MainButton({ children, onPress, disabled, styleButton }) {
   return (
     <Pressable
       android_ripple={{ color: "#ccc" }}
@@ -12,9 +12,25 @@ function MainButton({ children, onPress, styleButton }) {
         pressed ? styles.buttonPressed : null,
       ]}
       onPress={onPress}
+      disabled={disabled}
     >
-      <View style={[styles.innerContainer, styleButton]}>
-        <Text style={styles.btnText}>{children}</Text>
+      <View
+        style={[
+          disabled
+            ? [styles.innerContainer, styles.innerContainerDisabled]
+            : styles.innerContainer,
+          styleButton,
+        ]}
+      >
+        <Text
+          style={[
+            disabled
+              ? [styles.btnText, styles.btnTextDisabled]
+              : styles.btnText,
+          ]}
+        >
+          {children}
+        </Text>
       </View>
     </Pressable>
   );
@@ -37,9 +53,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.primaryGreen700,
   },
+  innerContainerDisabled: {
+    backgroundColor: "gray",
+  },
   btnText: {
     fontWeight: "bold",
     fontSize: 18,
     color: Colors.primaryGreen50,
+  },
+  btnTextDisabled: {
+    color: Colors.primaryGreen100,
   },
 });

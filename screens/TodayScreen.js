@@ -166,22 +166,6 @@ function TodayScreen() {
   }
 
   function renderProdItem(item) {
-    const prodItemProps = {
-      id: item.id,
-      title: item.title,
-      // sold: item.sold,
-      // openDate: item.openDate,
-      source: item.productOrigin,
-      description: item.description,
-      // moreInfo: item.moreInfo,
-      price: item.price,
-      // listedPrice: item.listedPrice,
-      unit: item.unit,
-      outOfStock: item.outOfStock,
-      quantity: item.quantity,
-      // gallery: item.gallery,
-    };
-
     function AddingCartHandler(cartAdded) {
       if (authState?.authenticated) {
         setVisible(true);
@@ -196,11 +180,7 @@ function TodayScreen() {
     }
 
     return (
-      <CardProdItem
-        key={prodItemProps.id}
-        {...prodItemProps}
-        onAddingCart={AddingCartHandler}
-      />
+      <CardProdItem key={item.id} {...item} onAddingCart={AddingCartHandler} />
     );
   }
 

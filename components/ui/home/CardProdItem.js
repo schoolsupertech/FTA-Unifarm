@@ -25,6 +25,7 @@ function CardProdItem(props) {
   function selectedProductDetailHandler() {
     navigation.navigate("ProductDetail", {
       prodItemId: props.productItem.id,
+      businessDayId: props.businessDayId,
     });
   }
 

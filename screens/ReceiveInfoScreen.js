@@ -1,47 +1,99 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
+import HeaderProcessPayment from "../components/common/process/HeaderProcessPayment";
 import GroupOrderItems from "../components/common/GroupOrderItems";
 import { Colors } from "../constants/colors";
+import { AuthContext } from "../context/AuthContext";
+import createAxios from "../utils/AxiosUtility";
+import { Divider } from "react-native-paper";
+import { DefaultTheme } from "../themes/DefaultTheme";
+
+const API = createAxios();
 
 function ReceiveInfoScreen({ route }) {
-  const paidItem = route.params.paidItem;
+  const payItems = route.params.payItems;
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [paidItem, setPaidItem] = useState(null);
+  const [processed, setProcessed] = useState({
+    isSuccess: false,
+    message: "",
+  });
+  const { authState, updateCartQty } = useContext(AuthContext);
 
-  console.log("Paid item: " + JSON.stringify(paidItem, null, 2));
+  useEffect(() => {
+    const fetchCheckoutHandler = async () => {
+      setIsLoading(true);
+
+      const res = await API.customRequest(
+        "post",
+        "/order/Checkout",
+        payItems,
+        authState?.token,
+      );
+
+      if (res) {
+        setProcessed({
+          ...processed,
+          isSuccess: true,
+          message: "Thanh toán thành công",
+        });
+        setPaidItem(res);
+        updateCartQty(authState?.token);
+      } else {
+        setProcessed({
+          ...processed,
+          isSuccess: false,
+          message: "Thanh toán thất bại",
+        });
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchCheckoutHandler();
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <Text>Successfully paid</Text>
-      <GroupOrderItems order={paidItem} />
+    <SafeAreaView style={DefaultTheme.root}>
+      <View style={styles.container}>
+        {isLoading ? (
+          <HeaderProcessPayment processing={isLoading} />
+        ) : (
+          <HeaderProcessPayment processing={isLoading} processed={processed} />
+        )}
+      </View>
+      <Divider />
+      <ScrollView style={DefaultTheme.scrollContainer}>
+        {Array.isArray(paidItem) &&
+          paidItem.length > 0 &&
+          paidItem.map((item) => (
+            <GroupOrderItems key={item.id} order={item} />
+          ))}
+      </ScrollView>
+      <Divider />
       <TouchableOpacity
-        style={{
-          marginTop: 8,
-          flexDirection: "row",
-          alignSelf: "center",
-          justifyContent: "center",
-          borderBottomWidth: 0.5,
-          borderColor: Colors.primaryGreen700,
-        }}
+        style={styles.btn}
         onPress={() => navigation.navigate("Home")}
       >
-        <Text
-          style={{
-            fontSize: 18,
-            color: Colors.primaryGreen700,
-          }}
-        >
-          Quay lại trang chủ
-        </Text>
+        <Text style={styles.btnText}>Quay lại trang chủ</Text>
         <Ionicons
           name="arrow-forward"
           size={18}
           color={Colors.primaryGreen700}
         />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -49,8 +101,19 @@ export default ReceiveInfoScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  btn: {
+    marginTop: 8,
+    flexDirection: "row",
+    alignSelf: "center",
+    justifyContent: "center",
+    borderBottomWidth: 0.5,
+    borderColor: Colors.primaryGreen900,
+  },
+  btnText: {
+    fontSize: 18,
+    color: Colors.primaryGreen900,
   },
 });

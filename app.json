@@ -4,7 +4,7 @@
     "slug": "FTA-Unifarm-Project_Base",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/backgrounds/icon.png",
+    "icon": "./assets/images/backgrounds/Logo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/images/backgrounds/LogoWithTitle.png",

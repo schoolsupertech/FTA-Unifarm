@@ -68,15 +68,24 @@ export const AuthProvider = ({ children }) => {
         JSON.stringify({ token: response.token, loggedIn: "systemLog" }),
       );
 
-      const userInfoRes = await getProfile();
-      const userCartInfoRes = await getCartQuantity();
+      const userInfoRes = await getProfile(response.token);
+      const qtyInCartRes = await getCartQuantity(response.token);
+      const userLocationRes = await getLocation(response.token);
 
-      if (userInfoRes && userCartInfoRes) {
-        let qtyInCart = userCartInfoRes.payload.length;
-        setUserInfo({ info: userInfoRes, qtyInCart: qtyInCart });
+      if (userInfoRes && userLocationRes && qtyInCartRes !== null) {
+        const location = userLocationRes.payload.find((item) => item.isDefault);
+        setUserInfo({
+          info: userInfoRes,
+          qtyInCart: qtyInCartRes,
+          location: location,
+        });
         await AsyncStorage.setItem(
           "userInfo",
-          JSON.stringify({ info: userInfoRes, qtyInCart: qtyInCart }),
+          JSON.stringify({
+            info: userInfoRes,
+            qtyInCart: qtyInCartRes,
+            location: location,
+          }),
         );
       }
     }
@@ -159,6 +168,7 @@ export const AuthProvider = ({ children }) => {
           authenticated: true,
         });
         setUserInfo(userInfoJsonParse);
+        updateCartQty(data.token);
       }
     } catch (e) {
       console.log(`Error occurred at: isLoggedIn error: ${e}`);
@@ -167,8 +177,28 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getCartQuantity = async (token) => {
-    const response = API.customRequest("get", "/carts", null, token);
-    return response;
+    const response = await API.customRequest("get", "/carts", null, token);
+    let qtyInCart = response.payload ? response.payload.length : 0;
+    console.log("get cart qty: " + JSON.stringify(qtyInCart, null, 2));
+    return qtyInCart;
+  };
+
+  const updateCartQty = async (token) => {
+    const qtyRes = await getCartQuantity(token);
+    const userInfo = await AsyncStorage.getItem("userInfo");
+
+    if (qtyRes && userInfo !== null) {
+      const userInfoJsonParse = JSON.parse(userInfo);
+
+      userInfoJsonParse.qtyInCart = qtyRes;
+
+      console.log(
+        "Qty after updating: " + JSON.stringify(userInfoJsonParse, null, 2),
+      );
+
+      setUserInfo(userInfoJsonParse);
+      await AsyncStorage.setItem("userInfo", JSON.stringify(userInfoJsonParse));
+    }
   };
 
   const getProfile = async (token) => {
@@ -183,7 +213,28 @@ export const AuthProvider = ({ children }) => {
       user,
       authState?.token,
     );
-    return response;
+
+    if (response) {
+      const getInfoRes = await getProfile(authState?.token);
+      const userInfo = await AsyncStorage.getItem("userInfo");
+
+      if (getInfoRes && userInfo !== null) {
+        const userInfoJsonParse = JSON.parse(userInfo);
+
+        userInfoJsonParse.info = getInfoRes;
+
+        console.log(
+          "User info after updating: " +
+            JSON.stringify(userInfoJsonParse, null, 2),
+        );
+
+        setUserInfo(userInfoJsonParse);
+        await AsyncStorage.setItem(
+          "userInfo",
+          JSON.stringify(userInfoJsonParse),
+        );
+      }
+    }
   };
 
   const getLocation = async (token) => {
@@ -228,36 +279,12 @@ export const AuthProvider = ({ children }) => {
   //   }
   // };
 
-  // useEffect(() => {
-  //   const resetUserInfo = async () => {
-  //     const profileResponse = await getProfile(authState?.token);
-  //     const cartQuantityResponse = await getCartQuantity(authState?.token);
-  //     const userInfo = await AsyncStorage.getItem("userInfo");
-  //
-  //     if (userInfo !== null) {
-  //       const userInfoJsonParse = JSON.parse(userInfo);
-  //       let qtyInCart = 0;
-  //
-  //       if (cartQuantityResponse.payload)
-  //         qtyInCart = cartQuantityResponse.payload.length;
-  //
-  //       userInfoJsonParse.info = profileResponse;
-  //       userInfoJsonParse.qtyInCart = qtyInCart;
-  //
-  //       setUserInfo(userInfoJsonParse);
-  //       await AsyncStorage.setItem(
-  //         "userInfo",
-  //         JSON.stringify(userInfoJsonParse),
-  //       );
-  //     }
-  //   };
-  //
-  //   resetUserInfo();
-  //   setIsLoading(false);
-  // }, [updateProfile]);
-
   useEffect(() => {
     isLoggedIn();
+    if (authState?.authenticated) {
+      updateCartQty(authState?.token);
+      updateProfile(authState?.token);
+    }
   }, []);
 
   const value = {
@@ -269,6 +296,7 @@ export const AuthProvider = ({ children }) => {
     authState,
     userInfo,
     updateProfile,
+    updateCartQty,
     getLocation,
   };
 

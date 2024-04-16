@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    height: 55,
-    width: 55,
+    height: 60,
+    width: 60,
   },
   textName: {
     color: "black",

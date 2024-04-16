@@ -24,45 +24,32 @@ import { AuthContext } from "../context/AuthContext";
 const API = createAxios();
 const FORMAT = createFormatUtil();
 
-const initialCheckCart = {
-  orderId: null,
-  orderDetailIds: [],
-};
-
 function CartScreen() {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [cart, setCart] = useState(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
-  const { authState, getLocation } = useContext(AuthContext);
-  const [toggleCart, setToggleCart] = useState([initialCheckCart]);
+  const { authState } = useContext(AuthContext);
+  const [toggleCart, setToggleCart] = useState([]);
+
+  console.log("Toggle cart: " + JSON.stringify(toggleCart, null, 2));
 
   useEffect(() => {
-    const fetchCart = async () => {
-      setIsLoading(true);
-      const response = await API.customRequest(
-        "get",
-        "/carts",
-        null,
-        authState.token,
-      );
-
-      setCart(response.payload);
-      setIsLoading(false);
-    };
-    const fetchLocationData = async () => {
-      const response = await getLocation(authState?.token);
-      response &&
-        response.payload &&
-        response.payload?.map(
-          (item) => item.isDefault && setCurrentLocation(item.stationId),
-        );
-    };
-
     fetchCart();
-    fetchLocationData();
   }, []);
+
+  const fetchCart = async () => {
+    setIsLoading(true);
+    const response = await API.customRequest(
+      "get",
+      "/carts",
+      null,
+      authState.token,
+    );
+
+    response && setCart(response.payload);
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     const onPlusTotalPriceHanler = () => {
@@ -74,22 +61,55 @@ function CartScreen() {
     cart && onPlusTotalPriceHanler();
   }, [cart]);
 
-  function onToggleGroupCartHandler(id, ordDtIds) {
-    if (toggleCart.map((item) => item.orderId === id)) {
-      // if (toggleCart.map((item) => item.orderDetailIds === ordDtIds)) {
-      setToggleCart(toggleCart.filter((item) => item.orderId !== id));
-      // } else {
-      //   setToggleCart([
-      //     ...toggleCart,
-      //     { orderId: id, orderDetailIds: ordDtIds },
-      //   ]);
-      // }
+  function onToggleGroupCartHandler(id) {
+    if (
+      toggleCart.length > 0 &&
+      toggleCart.map((orders) => orders.orderId === id)
+    ) {
+      setToggleCart(toggleCart.filter((orders) => orders.orderId !== id));
     } else {
       setToggleCart([
         ...toggleCart,
-        { orderId: id, orderDetailIds: [ordDtIds] },
+        {
+          orderId: id,
+          // orderDetailIds: toggleCart.map((orderDetailId) => [
+          //   ...orderDetailId.orderDetailIds,
+          //   cart.map((item) => item.orderDetailResponse.id),
+          // ]),
+          orderDetailIds: cart.map(
+            (item) =>
+              item.id === id &&
+              item.orderDetailResponse
+                .map((orderDetail) => orderDetail.id)
+                .join(""),
+          ),
+        },
       ]);
     }
+  }
+
+  async function onDeleteHandler(orderDetailId) {
+    const response = await API.customRequest(
+      "put",
+      "/cart/update-quantity",
+      {
+        orderDetailId: orderDetailId,
+        quantity: 0,
+      },
+      authState?.token,
+    );
+    response && fetchCart();
+  }
+
+  async function onCheckoutHandler() {
+    const response = await API.customRequest(
+      "post",
+      "/carts/before-checkout",
+      toggleCart,
+      authState?.token,
+    );
+    response &&
+      navigation.navigate("OrderScreen", { payload: response.payload });
   }
 
   if (isLoading) {
@@ -135,26 +155,18 @@ function CartScreen() {
                 <View style={styles.groupItems}>
                   <View style={styles.checkbox}>
                     {toggleCart.length > 0 &&
-                    toggleCart.includes(farmhub.id) ? (
+                    toggleCart.map((orders) =>
+                      orders.orderId.includes(farmhub.id),
+                    ) ? (
                       <Checkbox
                         status={"checked"}
-                        onPress={() =>
-                          onToggleGroupCartHandler(
-                            farmhub.id,
-                            farmhub.orderDetailResponse.id,
-                          )
-                        }
+                        onPress={() => onToggleGroupCartHandler(farmhub.id)}
                         color="black"
                       />
                     ) : (
                       <Checkbox
                         status={"unchecked"}
-                        onPress={() =>
-                          onToggleGroupCartHandler(
-                            farmhub.id,
-                            farmhub.orderDetailResponse.id,
-                          )
-                        }
+                        onPress={() => onToggleGroupCartHandler(farmhub.id)}
                         color="black"
                       />
                     )}
@@ -171,8 +183,9 @@ function CartScreen() {
                 <CardCartItem
                   data={farmhub.orderDetailResponse}
                   authState={authState}
-                  stationId={currentLocation}
+                  stationId={farmhub.stationResponse.id}
                   toggleCheckbox={toggleCart}
+                  onDelete={onDeleteHandler}
                 />
               </View>
             ))}
@@ -218,11 +231,19 @@ function CartScreen() {
           </View>
         )}
 
-        {Array.isArray(cart) && cart.length > 0 && (
+        {Array.isArray(toggleCart) && toggleCart.length > 0 ? (
           <CardFooter
             txtLabel="Tổng tiền:"
             value={totalPrice}
-            onPress={() => navigation.navigate("OrderScreen")}
+            onPress={onCheckoutHandler}
+            btnLabel="Thanh toán"
+          />
+        ) : (
+          <CardFooter
+            txtLabel="Tổng tiền:"
+            value={totalPrice}
+            onPress={() => {}}
+            disabled={true}
             btnLabel="Thanh toán"
           />
         )}

@@ -14,18 +14,25 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import { Colors } from "../../../constants/colors";
 import CardCartProdItems from "./CardCartProdItems";
 
-function CardCartItem({ data, authState, stationId, toggleCheckbox }) {
+function CardCartItem({
+  data,
+  authState,
+  stationId,
+  toggleCheckbox,
+  onDelete,
+}) {
   const [prodItemsInfo, setProdItemsInfo] = useState(data);
 
-  function onDeleteHandler(rowKey) {
-    const newData = [...prodItemsInfo];
-    const prevIndex = prodItemsInfo.findIndex((item) => item.id === rowKey);
-    newData.splice(prevIndex, 1);
-    setProdItemsInfo(newData);
-  }
+  // function onDeleteHandler(rowKey) {
+  //   const newData = [...prodItemsInfo];
+  //   const prevIndex = prodItemsInfo.findIndex((item) => item.id === rowKey);
+  //   newData.splice(prevIndex, 1);
+  //   setProdItemsInfo(newData);
+  // }
 
   function renderItem(itemData, rowMap) {
     const props = {
+      id: itemData.item.id,
       orderId: itemData.item.orderId,
       productItemId: itemData.item.productItemId,
       quantity: itemData.item.quantity,
@@ -48,10 +55,16 @@ function CardCartItem({ data, authState, stationId, toggleCheckbox }) {
       },
     };
 
-    if (toggleCheckbox.includes(itemData.item.productItemResponse.farmHubId)) {
+    if (
+      Array.isArray(toggleCheckbox) &&
+      toggleCheckbox.length > 0 &&
+      toggleCheckbox.filter(
+        (orders) => orders.orderId === itemData.item.orderId,
+      )
+    ) {
       return (
         <CardCartProdItems
-          key={itemData.item.orderId}
+          key={itemData.item.id}
           {...props}
           authState={authState}
           stationId={stationId}
@@ -61,7 +74,7 @@ function CardCartItem({ data, authState, stationId, toggleCheckbox }) {
     } else {
       return (
         <CardCartProdItems
-          key={itemData.item.orderId}
+          key={itemData.item.id}
           {...props}
           authState={authState}
           stationId={stationId}
@@ -76,7 +89,7 @@ function CardCartItem({ data, authState, stationId, toggleCheckbox }) {
       <View style={styles.rowBack}>
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backRightBtnRight]}
-          onPress={() => onDeleteHandler(itemData.item.id)}
+          onPress={() => onDelete(itemData.item.id)}
         >
           <MaterialCommunityIcons
             name="trash-can-outline"
@@ -108,16 +121,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#DDD",
     flex: 1,
+    // height: 79,
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingLeft: 15,
-    margin: 5,
-    marginBottom: 15,
-    borderRadius: 5,
+    paddingLeft: 12,
+    margin: 4,
+    // marginBottom: 15,
+    borderRadius: 8,
   },
   backRightBtn: {
     alignItems: "flex-end",
     bottom: 0,
+    height: 79,
     justifyContent: "center",
     position: "absolute",
     top: 0,
@@ -127,7 +142,7 @@ const styles = StyleSheet.create({
   backRightBtnRight: {
     backgroundColor: "red",
     right: 0,
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
   },
 });

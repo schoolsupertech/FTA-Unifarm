@@ -79,7 +79,8 @@ function AppStackNav() {
         name="OrderScreen"
         component={OrderScreen}
         options={{
-          title: "Thanh toán đơn hàng",
+          title: "Thông tin đơn hàng",
+          headerLeft: () => null,
         }}
       />
       <Stack.Screen
@@ -105,7 +106,7 @@ function AppStackNav() {
         name="ReceiveInfoScreen"
         component={ReceiveInfoScreen}
         options={{
-          title: "Thông tin đơn hàng",
+          title: "Thanh toán",
         }}
       />
       <Stack.Screen

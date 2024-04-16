@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 import createAxios from "../../../utils/AxiosUtility";
 import createFormatUtil from "../../../utils/FormatUtility";
@@ -22,6 +23,7 @@ let defaultCount = 1;
 let maxQuantity = 10;
 
 function CardCartProdItems(props) {
+  const navigation = useNavigation();
   const [count, setCount] = useState(props.quantity);
   const limitQuantity = useState(5);
   const [isMaxed, setIsMaxed] = useState(false);
@@ -35,17 +37,13 @@ function CardCartProdItems(props) {
     setIsChecked(props.toggleCheckbox);
   }, [props.toggleCheckbox]);
 
-  async function fetchAddToCart(count) {
+  async function fetchUpdateQuantity(updateQuantity) {
     const response = await API.customRequest(
-      "post",
-      "/cart/upsert-to-cart",
+      "put",
+      "/cart/update-quantity",
       {
-        farmHubId: props.productItemResponse.farmHubId,
-        stationId: props.stationId,
-        businessDayId: "814982CA-2092-4F0D-9720-83F064237A90",
-        productItemId: props.productItemResponse.id,
-        quantity: count,
-        isAddToCart: false,
+        orderDetailId: props.id,
+        quantity: updateQuantity,
       },
       props.authState?.token,
     );
@@ -54,12 +52,12 @@ function CardCartProdItems(props) {
 
   async function addCountHandler() {
     if (count < maxQuantity) {
-      const res = await fetchAddToCart(count + 1);
+      const res = await fetchUpdateQuantity(count + 1);
       if (res.statusCode && res.statusCode === 200) {
         res.payload.orderDetailResponse.map((item) => setCount(item.quantity));
       } else {
         console.log(
-          "Fetch error at fetchAddToCart: " + JSON.stringify(res, null, 2),
+          "Fetch error at fetchUpdateQuantity: " + JSON.stringify(res, null, 2),
         );
       }
     } else {
@@ -72,15 +70,35 @@ function CardCartProdItems(props) {
   }
 
   async function minusCountHandler() {
-    if (count > defaultCount) {
-      const res = await fetchAddToCart(count - 1);
+    let countAfterMinus = count - 1;
+    if (countAfterMinus >= defaultCount) {
+      const res = await fetchUpdateQuantity(countAfterMinus);
       if (res.statusCode && res.statusCode === 200) {
-        res.payload.orderDetailResponse.map((item) => setCount(item.quantity));
+        res.payload.orderDetailResponse.map(
+          (item) => item.id === props.id && setCount(item.quantity),
+        );
       } else {
         console.log(
-          "Fetch error at fetchAddToCart: " + JSON.stringify(res, null, 2),
+          "Fetch error at fetchUpdateQuantity: " + JSON.stringify(res, null, 2),
         );
       }
+    } else if (countAfterMinus === 0) {
+      Alert.alert(
+        "Xoá khỏi giỏ hàng",
+        "Bạn có chắc chắn muốn xoá sản phẩm khỏi giỏ hàng?",
+        [
+          { text: "Huỷ bỏ" },
+          {
+            text: "Xoá",
+            style: "destructive",
+            onPress: () => {
+              const res = fetchUpdateQuantity(countAfterMinus);
+              res && navigation.goBack();
+              console.log("Order detail id: " + props.id + " has been deleted");
+            },
+          },
+        ],
+      );
     }
   }
 

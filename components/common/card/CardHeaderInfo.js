@@ -11,7 +11,7 @@ import { AuthContext } from "../../../context/AuthContext";
 
 const FORMAT = createFormatUtil();
 
-function CardHeaderInfo({ navigation, location }) {
+function CardHeaderInfo({ navigation }) {
   const { userInfo } = useContext(AuthContext);
 
   return (
@@ -36,7 +36,7 @@ function CardHeaderInfo({ navigation, location }) {
           <View style={{ marginBottom: 4 }}>
             <Title color="grey">Trạm lấy hàng: </Title>
             <Ellipsis
-              description={location?.station?.address}
+              description={userInfo?.location?.station?.address}
               numberOfLines={1}
             />
           </View>
@@ -44,7 +44,7 @@ function CardHeaderInfo({ navigation, location }) {
           <Title color="grey">
             Dự kiến nhận:{" "}
             <PaperText variant="titleSmall" style={styles.info}>
-              {FORMAT.dateFormat(new Date())}
+              {FORMAT.nextDateFormat()}
             </PaperText>
           </Title>
         </View>
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   info: {
-    color: Colors.primaryGreen600,
+    color: Colors.primaryGreen700,
   },
   headerContent: {
     // padding: 0,

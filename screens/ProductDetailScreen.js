@@ -27,29 +27,20 @@ let defaultCount = 1;
 
 function ProductDetailScreen({ route, navigation }) {
   const prodItemId = route.params.prodItemId;
+  const businessDayId = route.params.businessDayId;
   const [selectedProd, setSelectedProd] = useState(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
   const [count, setCount] = useState(defaultCount);
   const [visible, setVisible] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState("");
-  const { authState, userInfo, getLocation } = useContext(AuthContext);
+  const { authState, userInfo, updateCartQty } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchProdItemData = async () => {
       const response = await API.get("/product-item/" + prodItemId);
       response && setSelectedProd(response.payload);
     };
-    const fetchLocationData = async () => {
-      const response = await getLocation(authState?.token);
-      response &&
-        response.payload &&
-        response.payload?.map(
-          (item) => item.isDefault && setCurrentLocation(item.stationId),
-        );
-    };
 
     fetchProdItemData();
-    fetchLocationData();
   }, []);
 
   useLayoutEffect(() => {
@@ -151,8 +142,8 @@ function ProductDetailScreen({ route, navigation }) {
       "/cart/upsert-to-cart",
       {
         farmHubId: selectedProd.farmHubId,
-        stationId: currentLocation,
-        businessDayId: "2183b66d-597d-4c12-8c91-c7c3e599973b",
+        stationId: userInfo.location?.station.id,
+        businessDayId: businessDayId,
         productItemId: selectedProd.id,
         quantity: count,
         isAddToCart: true,
@@ -166,6 +157,7 @@ function ProductDetailScreen({ route, navigation }) {
           JSON.stringify(response.response, null, 2),
       );
     } else {
+      updateCartQty(authState?.token);
       return response.payload;
     }
   }

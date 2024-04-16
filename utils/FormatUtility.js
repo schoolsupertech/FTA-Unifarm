@@ -23,9 +23,21 @@ const createFormatUtil = () => {
     }
   }
 
+  function nextDateFormat() {
+    const currentDate = new Date();
+    const nextDate = new Date(currentDate);
+    nextDate.setDate(currentDate.getDate() + 1);
+    const nextDay = nextDate.getDate();
+    const currentMonth = nextDate.getMonth() + 1;
+    const currentYear = nextDate.getFullYear();
+
+    return `Ngày ${nextDay < 10 ? "0" + nextDay : nextDay} tháng ${currentMonth < 10 ? "0" + currentMonth : currentMonth} năm ${currentYear}`;
+  }
+
   return {
     currencyFormat,
     dateFormat,
+    nextDateFormat,
   };
 };
 
