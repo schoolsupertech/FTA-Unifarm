@@ -13,8 +13,20 @@ const AuthStack = () => {
       {/*
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       */}
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{
+          title: "Đăng nhập",
+        }}
+      />
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{
+          title: "Đăng ký",
+        }}
+      />
     </Stack.Navigator>
   );
 };

@@ -13,8 +13,11 @@ function CardOrderItems({ item }) {
         <View style={{ marginRight: 12 }}>
           <Image
             source={{
-              // item.productItemResponse.imageUrl
-              uri: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?q=80&w=1680&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              uri:
+                item.productItemResponse?.imageUrl !== null &&
+                item.productItemResponse?.imageUrl.includes("https://")
+                  ? item.productItemResponse.imageUrl
+                  : "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?q=80&w=1680&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             }}
             style={styles.image}
           />

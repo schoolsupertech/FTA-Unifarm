@@ -9,17 +9,11 @@ function HeaderprocessingPayment({ processing, processed }) {
   if (processing) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color={Colors.primaryGreen700} />
-        <PaperText
-          variant="headlineMedium"
-          style={{ color: Colors.primaryGreen700 }}
-        >
+        <ActivityIndicator size="large" color="gray" />
+        <PaperText variant="headlineMedium" style={{ color: "gray" }}>
           Đơn hàng của bạn đang được xử lý
         </PaperText>
-        <PaperText
-          variant="headlineSmall"
-          style={{ color: Colors.primaryGreen900 }}
-        >
+        <PaperText variant="headlineSmall" style={{ color: "gray" }}>
           Vui lòng chờ trong giây lát...
         </PaperText>
       </View>

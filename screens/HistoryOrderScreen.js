@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 
 import createAxios from "../utils/AxiosUtility";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
+import GroupOrderItems from "../components/common/GroupOrderItems";
 
 const API = createAxios();
 
@@ -14,32 +15,37 @@ function HistoryOrderScreen() {
   console.log("History orders: " + JSON.stringify(orders, null, 2));
 
   useEffect(() => {
-    API.customRequest("get", "/orders/get-all", null, authState?.token).then(
-      (response) => {
-        if (response) {
-          if (response.response) {
-            console.log(
-              "Fetch error: " + JSON.stringify(response.response, null, 2),
-            );
-          } else {
-            setOrders(response);
-          }
+    API.customRequest(
+      "get",
+      "/orders/get-all?status=PickedUp",
+      null,
+      authState?.token,
+    ).then((response) => {
+      if (response) {
+        if (response.response) {
+          console.log(
+            "Fetch error: " + JSON.stringify(response.response, null, 2),
+          );
         } else {
-          console.log("No data");
+          setOrders(response);
         }
-      },
-    );
+      } else {
+        console.log("No data");
+      }
+    });
   }, []);
 
   return (
     <SafeAreaView style={DefaultTheme.root}>
-      {orders &&
-        orders.map((item) => (
-          <View key={item.id}>
-            <Text>{item.id}</Text>
-            <Text>{item.code}</Text>
-          </View>
-        ))}
+      <ScrollView
+        style={DefaultTheme.scrollContainer}
+        contentContainerStyle={{ paddingBottom: 80 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {Array.isArray(orders) &&
+          orders.length > 0 &&
+          orders.map((item) => <GroupOrderItems key={item.id} order={item} />)}
+      </ScrollView>
     </SafeAreaView>
   );
 }

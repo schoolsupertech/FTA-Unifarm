@@ -18,18 +18,24 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.FTAUnifarm"
+        }
       ]
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "google.author.FTA"
+      "bundleIdentifier": "com.googleusercontent.apps.FTAUnifarm"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "google.author.FTA"
+      "package": "com.googleusercontent.apps.FTAUnifarm"
     },
     "web": {
       "favicon": "./assets/favicon.png"

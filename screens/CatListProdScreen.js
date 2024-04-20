@@ -98,7 +98,7 @@ function CatListProdScreen({ route }) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: catRecomName,
+      title: "Danh mục " + catRecomName,
       // headerSearchBarOptions: {
       //   onChangeText: (event) => console.log(event.nativeEvent.text),
       //   onSearchButtonPress: (event) =>
@@ -126,28 +126,11 @@ function CatListProdScreen({ route }) {
   }
 
   function renderProdItem(itemData) {
-    const item = itemData.item;
-    const prodItemProps = {
-      id: item.id,
-      title: item.title,
-      // sold: item.sold,
-      // openDate: item.openDate,
-      source: item.productOrigin,
-      description: item.description,
-      // moreInfo: item.moreInfo,
-      price: item.price,
-      // listedPrice: item.listedPrice,
-      unit: item.unit,
-      outOfStock: item.outOfStock,
-      quantity: item.quantity,
-      // gallery: item.gallery,
-    };
-
     function addingCartHandler(cartAdded) {
       setOnCartAdded(cartAdded);
     }
 
-    return <CardProdItem {...prodItemProps} onAddingCart={addingCartHandler} />;
+    return <CardProdItem {...itemData.item} onAddingCart={addingCartHandler} />;
   }
 
   function onToggleSnackBar() {

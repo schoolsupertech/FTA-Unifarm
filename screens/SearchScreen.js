@@ -32,8 +32,8 @@ const SearchScreen = ({ navigation, route }) => {
   }, []);
 
   async function fetchSearchProdItems(data) {
-    // const response = await API.get("/product-items/search?SearchTerm=" + data);
-    // return response && response.payload;
+    const response = await API.get("/product-items/search?SearchTerm=" + data);
+    return response && response.payload;
   }
 
   function onFocusHandler() {
@@ -51,7 +51,7 @@ const SearchScreen = ({ navigation, route }) => {
 
     if (value) {
       const searchingResponse = prodItemsInfo.filter((item) =>
-        item.title.toLowerCase().includes(value.toLowerCase()),
+        item.productItem.title.toLowerCase().includes(value.toLowerCase()),
       );
       if (searchingResponse) {
         setSearchingProdItems(searchingResponse);
@@ -68,10 +68,10 @@ const SearchScreen = ({ navigation, route }) => {
   function renderSearchingProdItems(item) {
     async function onSelectSearchingProd() {
       setIsSearchingPrd(false);
-      // const res = await fetchSearchProdItems(item.title);
-      // if (Array.isArray(res) && res.length > 0) {
-      //   setSearchedProd(res);
-      // }
+      const res = await fetchSearchProdItems(item.productItem.title);
+      if (Array.isArray(res) && res.length > 0) {
+        setSearchedProd(res);
+      }
     }
 
     return (
@@ -81,7 +81,7 @@ const SearchScreen = ({ navigation, route }) => {
           style={styles.dropdownSearching}
         >
           <Text style={styles.dropdownText} numberOfLines={1}>
-            {item.title}
+            {item.productItem.title}
           </Text>
           <Divider />
         </TouchableOpacity>
@@ -91,30 +91,14 @@ const SearchScreen = ({ navigation, route }) => {
 
   async function onSubmitEditingHandler() {
     console.log("Search value: " + searchValue);
-    // const res = await fetchSearchProdItems(searchValue);
-    // if (Array.isArray(res) && res.length > 0) {
-    //   setSearchedProd(res);
-    // }
+    const res = await fetchSearchProdItems(searchValue);
+    if (Array.isArray(res) && res.length > 0) {
+      setSearchedProd(res);
+    }
     setIsSearchingPrd(false);
   }
 
   function renderSearchProdItems(itemData) {
-    const prodItemProps = {
-      id: itemData.item.id,
-      title: itemData.item.title,
-      // sold: item.sold,
-      // openDate: item.openDate,
-      source: itemData.item.productOrigin,
-      description: itemData.item.description,
-      // moreInfo: item.moreInfo,
-      price: itemData.item.price,
-      // listedPrice: item.listedPrice,
-      unit: itemData.item.unit,
-      outOfStock: itemData.item.outOfStock,
-      quantity: itemData.item.quantity,
-      // gallery: item.gallery,
-    };
-
     // function AddingCartHandler(cartAdded) {
     //   if (authState?.authenticated) {
     //     setVisible(true);
@@ -130,8 +114,8 @@ const SearchScreen = ({ navigation, route }) => {
 
     return (
       <CardProdItem
-        key={prodItemProps.id}
-        {...prodItemProps}
+        key={itemData.item.id}
+        {...itemData.item}
         // onAddingCart={AddingCartHandler}
       />
     );

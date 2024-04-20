@@ -26,7 +26,7 @@ function Ellipsis({ description, data, numberOfLines }) {
       <TouchableOpacity onPress={toggleNumberOfLines}>
         <View style={styles.collapsedBtn}>
           <Text style={{ color: Colors.primaryGreen700 }}>
-            {isCollapsed ? "Đọc tiếp" : "Thu gọn"}
+            {isCollapsed ? "Xem tiếp" : "Thu gọn"}
           </Text>
         </View>
       </TouchableOpacity>

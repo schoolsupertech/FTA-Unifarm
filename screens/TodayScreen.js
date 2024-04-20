@@ -1,24 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   ScrollView,
   SafeAreaView,
-  TouchableOpacity,
   Alert,
+  ImageBackground,
 } from "react-native";
 import { Searchbar, Snackbar } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import TopHeader from "../components/common/headers/TopHeader";
 import TopHeaderLogin from "../components/common/headers/TopHeaderLogin";
-import LocationOptions from "../components/ui/home/LocationOptions";
-import HeaderContent from "../components/common/HeaderContent";
 import CardProdItem from "../components/ui/home/CardProdItem";
+import Calendar from "../components/common/list/Calendar";
 import createAxios from "../utils/AxiosUtility";
 import createFormatUtil from "../utils/FormatUtility";
 import { DefaultTheme } from "../themes/DefaultTheme";
@@ -39,19 +35,7 @@ function TodayScreen() {
     status: null,
   });
   const [prodItemsInfo, setProdItemsInfo] = useState([]);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [datePicked, setDatePicked] = useState(new Date());
-
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-  const handleConfirm = (date) => {
-    setDatePicked(date);
-    hideDatePicker();
-  };
+  const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,70 +85,6 @@ function TodayScreen() {
     fetchingUserLocation();
   }, []);
 
-  async function updateLocationHandler(apartmentData, stationData, isDefault) {
-    if (apartmentData && stationData) {
-      const response = await API.customRequest(
-        "/post",
-        "/apartment-station/upsert",
-        {
-          stationId: stationData.id,
-          apartmentId: apartmentData.id,
-          isDefault: isDefault,
-        },
-        authState?.token,
-      );
-      console.log("Save location: " + JSON.stringify(response, null, 2));
-      if (response) {
-        Alert.alert("Cập nhật vị trí thành công", [
-          {
-            text: "OK",
-          },
-        ]);
-        setLocationModalVisible({
-          ...locationModalVisible,
-          isVisible: false,
-          status: null,
-        });
-      }
-    } else {
-      Alert.alert("Xin quý khách hãy nhập đầy đủ thông tin", [
-        {
-          text: "OK",
-        },
-      ]);
-    }
-  }
-
-  function onCancelUpdateLocationHandler() {
-    if (locationModalVisible.status === 400) {
-      Alert.alert(
-        "Quý khách chưa chọn địa điểm",
-        "Quý khách chắc chắn muốn thoát?",
-        [
-          {
-            text: "Có",
-            style: "cancel",
-            onPress: () =>
-              setLocationModalVisible({
-                ...locationModalVisible,
-                isVisible: false,
-                status: null,
-              }),
-          },
-          {
-            text: "Huỷ bỏ",
-          },
-        ],
-      );
-    } else {
-      setLocationModalVisible({
-        ...locationModalVisible,
-        isVisible: false,
-        status: null,
-      });
-    }
-  }
-
   function renderProdItem(item) {
     function AddingCartHandler(cartAdded) {
       if (authState?.authenticated) {
@@ -185,13 +105,18 @@ function TodayScreen() {
   }
 
   return (
-    <SafeAreaView style={[DefaultTheme.root]}>
+    <SafeAreaView style={DefaultTheme.root}>
       <LinearGradient
         colors={["white", Colors.primaryGreen900]}
-        style={styles.linearGradient}
+        style={DefaultTheme.linearGradient}
       >
-        {authState?.authenticated ? (
-          <>
+        <ImageBackground
+          source={require("../assets/images/backgrounds/Logo.png")}
+          resizeMode="stretch"
+          style={DefaultTheme.imgBg}
+          imageStyle={DefaultTheme.bgImg}
+        >
+          {authState?.authenticated ? (
             <TopHeader
               userInfo={userInfo}
               onCartIconPress={() => navigation.navigate("CartScreen")}
@@ -199,63 +124,26 @@ function TodayScreen() {
                 navigation.navigate("Notification");
               }}
             />
-            <TouchableOpacity
-              onPress={() =>
-                authState?.authenticated &&
-                setLocationModalVisible({
-                  ...locationModalVisible,
-                  isVisible: true,
-                  status: 0,
-                })
-              }
-              style={styles.headerContent}
-            >
-              <Ionicons
-                name="location"
-                size={20}
-                color={Colors.primaryGreen800}
-              />
-              <Text style={styles.headerText}>Thủ Đức, Tp. Hồ Chí Minh </Text>
-              <Ionicons
-                name="arrow-forward-circle"
-                size={16}
-                color={Colors.primaryGreen800}
-              />
-            </TouchableOpacity>
-            <LocationOptions
-              visible={locationModalVisible}
-              onPress={updateLocationHandler}
-              onCancel={onCancelUpdateLocationHandler}
+          ) : (
+            <TopHeaderLogin
+              onLoginPress={() => navigation.navigate("AuthScreen")}
             />
-          </>
-        ) : (
-          <TopHeaderLogin
-            onLoginPress={() => navigation.navigate("AuthScreen")}
-          />
-        )}
+          )}
 
-        <TouchableOpacity style={styles.headerContent} onPress={showDatePicker}>
-          <Ionicons name="calendar" size={20} color={Colors.primaryGreen800} />
-          <Text style={styles.headerText}>
-            {FORMAT.dateFormat(datePicked)}{" "}
-          </Text>
-          <Ionicons
-            name="arrow-forward-circle"
-            size={16}
-            color={Colors.primaryGreen800}
+          <Searchbar
+            placeholder="Tìm kiếm sản phẩm..."
+            elevation={2}
+            theme={DefaultTheme.searchbar}
+            onFocus={() =>
+              navigation.navigate("SearchScreen", {
+                searchTerm: prodItemsInfo,
+                isFocus: true,
+              })
+            }
           />
-        </TouchableOpacity>
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          mode="date"
-          minimumDate={new Date("2022-12-30")}
-          maximumDate={new Date("2029-12-30")}
-          onConfirm={handleConfirm}
-          onCancel={hideDatePicker}
-          cancelTextIOS="Đóng"
-          confirmTextIOS="Xác nhận"
-          buttonTextColorIOS={DefaultTheme.btnColor700}
-        />
+
+          <Calendar onSelectDate={setSelectedDate} selected={selectedDate} />
+        </ImageBackground>
       </LinearGradient>
 
       <ScrollView style={DefaultTheme.scrollContainer}>

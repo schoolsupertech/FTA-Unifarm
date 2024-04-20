@@ -79,7 +79,11 @@ function HomeScreen() {
     const fetchingUserLocation = async () => {
       const response = await getLocation(authState?.token);
 
-      if (response.response && response.response.status === 400) {
+      if (
+        response &&
+        response.statusCode >= 400 &&
+        response.statusCode <= 500
+      ) {
         Alert.alert(
           "Lần đầu đăng nhập?",
           "Bạn cần phải chọn vị trí của bạn để chúng tôi giao hàng cho bạn.",
@@ -217,8 +221,8 @@ function HomeScreen() {
         <ImageBackground
           source={require("../assets/images/backgrounds/Logo.png")}
           resizeMode="stretch"
-          style={{ wight: "100%", height: "auto", margin: 0, padding: 0 }}
-          imageStyle={styles.bgImg}
+          style={DefaultTheme.imgBg}
+          imageStyle={DefaultTheme.bgImg}
         >
           {authState?.authenticated ? (
             <TopHeader
@@ -265,7 +269,9 @@ function HomeScreen() {
                   color={Colors.primaryGreen800}
                 />
                 <Text style={styles.headerText}>
-                  {currentLocation && currentLocation?.station?.name}{" "}
+                  {currentLocation
+                    ? currentLocation?.station?.name
+                    : "Lần đầu đăng nhập? Chọn vị trí giao hàng..."}{" "}
                 </Text>
                 <Ionicons
                   name="arrow-forward-circle-outline"
@@ -368,11 +374,6 @@ function HomeScreen() {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  bgImg: {
-    margin: 0,
-    padding: 0,
-    opacity: 0.5,
-  },
   headerContent: {
     width: "auto",
     padding: 12,

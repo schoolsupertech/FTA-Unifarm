@@ -22,9 +22,12 @@ function CardProdItem(props) {
   // const [prodItemImgsInfo, setProdItemImgsInfo] = useState(null);
   const { authState } = useContext(AuthContext);
 
+  console.log("Product detail: " + JSON.stringify(props, null, 2));
+
   function selectedProductDetailHandler() {
     navigation.navigate("ProductDetail", {
       prodItemId: props.productItem.id,
+      menuId: props.menuId,
       businessDayId: props.businessDayId,
     });
   }

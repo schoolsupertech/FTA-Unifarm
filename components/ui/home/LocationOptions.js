@@ -78,14 +78,14 @@ function LocationOptions(props) {
     function onSelectApartmentHandler() {
       setIsApartmentSearching(false);
       setApartmentInfo(item);
-      setSearchingApartment(item.address);
+      setSearchingApartment(item.name);
       console.log("Apartment address: " + JSON.stringify(item, null, 2));
     }
 
     function onSelectStationHandler() {
       setIsStationSearching(false);
       setStationInfo(item);
-      setSearchingStation(item.address);
+      setSearchingStation(item.name);
       console.log("Station address: " + JSON.stringify(item, null, 2));
     }
 
@@ -100,7 +100,7 @@ function LocationOptions(props) {
       >
         <View style={styles.dropdownSearching}>
           <Text style={styles.dropdownText} numberOfLines={2}>
-            {item.address}
+            {item.name}
           </Text>
         </View>
       </TouchableOpacity>
@@ -372,8 +372,8 @@ const styles = StyleSheet.create({
     padding: 14,
     flexWrap: "wrap",
     justifyContent: "center",
-    alignItems: "center",
-    alignContent: "center",
+    alignItems: "flex-start",
+    alignContent: "flex-start",
   },
   dropdownContainer: {
     position: "relative",

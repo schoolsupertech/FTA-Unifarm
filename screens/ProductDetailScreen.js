@@ -27,6 +27,7 @@ let defaultCount = 1;
 
 function ProductDetailScreen({ route, navigation }) {
   const prodItemId = route.params.prodItemId;
+  const menuId = route.params.menuId;
   const businessDayId = route.params.businessDayId;
   const [selectedProd, setSelectedProd] = useState(null);
   const [count, setCount] = useState(defaultCount);
@@ -36,7 +37,9 @@ function ProductDetailScreen({ route, navigation }) {
 
   useEffect(() => {
     const fetchProdItemData = async () => {
-      const response = await API.get("/product-item/" + prodItemId);
+      const response = await API.get(
+        "/product-item/" + prodItemId + "/menu/" + menuId,
+      );
       response && setSelectedProd(response.payload);
     };
 

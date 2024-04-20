@@ -53,13 +53,7 @@ function AppStackNav() {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="AuthScreen"
-        component={AuthStack}
-        options={{
-          title: "Đăng nhập",
-        }}
-      />
+      <Stack.Screen name="AuthScreen" component={AuthStack} />
       <Stack.Screen
         name="Notification"
         component={NotificationScreen}

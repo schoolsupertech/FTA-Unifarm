@@ -70,23 +70,44 @@ export const AuthProvider = ({ children }) => {
 
       const userInfoRes = await getProfile(response.token);
       const qtyInCartRes = await getCartQuantity(response.token);
-      const userLocationRes = await getLocation(response.token);
 
-      if (userInfoRes && userLocationRes && qtyInCartRes !== null) {
-        const location = userLocationRes.payload.find((item) => item.isDefault);
-        setUserInfo({
-          info: userInfoRes,
-          qtyInCart: qtyInCartRes,
-          location: location,
-        });
-        await AsyncStorage.setItem(
-          "userInfo",
-          JSON.stringify({
+      if (userInfoRes && qtyInCartRes !== null) {
+        const userLocationRes = await getLocation(response.token);
+
+        if (
+          userLocationRes &&
+          userLocationRes.statusCode !== 404 &&
+          userLocationRes.statusCode <= 500
+        ) {
+          const location = userLocationRes.payload.find(
+            (item) => item.isDefault,
+          );
+          setUserInfo({
             info: userInfoRes,
             qtyInCart: qtyInCartRes,
             location: location,
-          }),
-        );
+          });
+          await AsyncStorage.setItem(
+            "userInfo",
+            JSON.stringify({
+              info: userInfoRes,
+              qtyInCart: qtyInCartRes,
+              location: location,
+            }),
+          );
+        } else {
+          setUserInfo({
+            info: userInfoRes,
+            qtyInCart: qtyInCartRes,
+          });
+          await AsyncStorage.setItem(
+            "userInfo",
+            JSON.stringify({
+              info: userInfoRes,
+              qtyInCart: qtyInCartRes,
+            }),
+          );
+        }
       }
     }
     setIsLoading(false);
@@ -280,11 +301,14 @@ export const AuthProvider = ({ children }) => {
   // };
 
   useEffect(() => {
-    isLoggedIn();
     if (authState?.authenticated) {
       updateCartQty(authState?.token);
       updateProfile(authState?.token);
     }
+  }, [authState]);
+
+  useEffect(() => {
+    isLoggedIn();
   }, []);
 
   const value = {

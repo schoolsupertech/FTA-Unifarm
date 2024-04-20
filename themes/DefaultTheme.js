@@ -28,6 +28,19 @@ export const DefaultTheme = {
     borderBottomRightRadius: 4,
   },
 
+  // ImageBackground
+  imgBg: {
+    wight: "100%",
+    height: "auto",
+    margin: 0,
+    padding: 0,
+  },
+  bgImg: {
+    margin: 0,
+    padding: 0,
+    opacity: 0.5,
+  },
+
   // Text
   txtColor: "black",
 

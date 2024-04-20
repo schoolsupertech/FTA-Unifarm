@@ -7,7 +7,7 @@ import Title from "./text/Title";
 import { Ionicons } from "@expo/vector-icons";
 import { DefaultTheme } from "../../themes/DefaultTheme";
 
-function GroupItemsOrder({ order }) {
+function GroupOrderItems({ order }) {
   return (
     <View style={DefaultTheme.root}>
       {
@@ -43,7 +43,7 @@ function GroupItemsOrder({ order }) {
   );
 }
 
-export default GroupItemsOrder;
+export default GroupOrderItems;
 
 const styles = StyleSheet.create({
   groupContainer: {

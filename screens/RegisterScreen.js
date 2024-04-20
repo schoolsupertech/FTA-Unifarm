@@ -13,9 +13,12 @@ import { Ionicons } from "@expo/vector-icons";
 
 import InputField from "../components/common/text/InputField";
 import MainButton from "../components/common/button/MainButton";
+import createFormatUtil from "../utils/FormatUtility";
 import { Colors } from "../constants/colors";
 import { DefaultTheme } from "../themes/DefaultTheme";
 import { AuthContext } from "../context/AuthContext";
+
+const FORMAT = createFormatUtil();
 
 const RegisterScreen = ({ navigation }) => {
   const { register } = useContext(AuthContext);
@@ -92,7 +95,7 @@ const RegisterScreen = ({ navigation }) => {
         </View>
 
         <InputField
-          label={"User name"}
+          label={"Username"}
           icon={
             <Ionicons
               name="person-circle-outline"
@@ -164,7 +167,7 @@ const RegisterScreen = ({ navigation }) => {
         />
 
         <InputField
-          label={"Password"}
+          label={"Mật khẩu"}
           icon={
             <Ionicons
               name="key-outline"
@@ -181,7 +184,7 @@ const RegisterScreen = ({ navigation }) => {
         />
 
         <InputField
-          label={"Confirm Password"}
+          label={"Xác nhận mật khẩu"}
           icon={
             <Ionicons
               name="key-outline"
@@ -229,7 +232,7 @@ const RegisterScreen = ({ navigation }) => {
           onConfirm={(date) => {
             setOpen(false);
             setDate(date);
-            setDobLabel(date.toDateString());
+            setDobLabel(FORMAT.dateFormat(date));
           }}
           onCancel={() => {
             setOpen(false);
