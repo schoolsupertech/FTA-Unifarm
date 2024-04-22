@@ -71,6 +71,17 @@ export const DefaultTheme = {
     overflow: "visible",
   },
 
+  // Modal
+  bottomModal: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 4,
+  },
+
   // Progress Bar
   pgBarColor: Colors.brandingError,
 };

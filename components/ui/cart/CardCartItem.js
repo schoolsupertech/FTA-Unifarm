@@ -55,33 +55,33 @@ function CardCartItem({
       },
     };
 
-    if (
-      Array.isArray(toggleCheckbox) &&
-      toggleCheckbox.length > 0 &&
-      toggleCheckbox.filter(
-        (orders) => orders.orderId === itemData.item.orderId,
-      )
-    ) {
-      return (
-        <CardCartProdItems
-          key={itemData.item.id}
-          {...props}
-          authState={authState}
-          stationId={stationId}
-          toggleCheckbox={true}
-        />
-      );
-    } else {
-      return (
-        <CardCartProdItems
-          key={itemData.item.id}
-          {...props}
-          authState={authState}
-          stationId={stationId}
-          toggleCheckbox={false}
-        />
-      );
-    }
+    // if (
+    //   Array.isArray(toggleCheckbox) &&
+    //   toggleCheckbox.length > 0 &&
+    //   toggleCheckbox.filter(
+    //     (orders) => orders.orderId === itemData.item.orderId,
+    //   )
+    // ) {
+    //   return (
+    //     <CardCartProdItems
+    //       key={itemData.item.id}
+    //       {...props}
+    //       authState={authState}
+    //       stationId={stationId}
+    //       toggleCheckbox={true}
+    //     />
+    //   );
+    // } else {
+    return (
+      <CardCartProdItems
+        key={itemData.item.id}
+        {...props}
+        authState={authState}
+        stationId={stationId}
+        toggleCheckbox={false}
+      />
+    );
+    // }
   }
 
   function renderHiddenItem(itemData, rowMap) {

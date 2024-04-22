@@ -7,8 +7,8 @@ import {
   Button,
 } from "react-native";
 import { Text as PaperText } from "react-native-paper";
-import Modal from "react-native-modal";
 import { Ionicons } from "@expo/vector-icons";
+import Modal from "react-native-modal";
 
 import GridTileModal from "../components/ui/profile/GridTileModal";
 import InputField from "../components/common/text/InputField";
@@ -103,6 +103,7 @@ function UserInfoScreen() {
             onPress={() => onChangingPasswordHandler("Mật khẩu")}
             label="Mật khẩu"
           />
+
           <Modal
             isVisible={visible}
             onBackdropPress={() => {
@@ -110,9 +111,9 @@ function UserInfoScreen() {
               setChangingPassword(false);
               setUser(initialUser);
             }}
-            style={styles.bottomModal}
+            style={DefaultTheme.bottomModal}
           >
-            <View style={styles.modalContent}>
+            <View style={DefaultTheme.modalContent}>
               {changingPassword ? (
                 <>
                   <View style={{ marginBottom: 20 }}>
@@ -225,19 +226,10 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 6,
   },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 4,
-  },
   modalBtn: {
     flexDirection: "row",
     justifyContent: "space-around",
     paddingBottom: 12,
-  },
-  bottomModal: {
-    justifyContent: "flex-end",
-    margin: 0,
   },
   footer: {
     marginHorizontal: 20,

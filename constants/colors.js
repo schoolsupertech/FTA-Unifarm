@@ -19,7 +19,7 @@ export const Colors = {
   primaryGreen900: "#009900",
 
   // Accent colors
-  brandingSuccess50: "90EE90",
+  brandingSuccess50: "#90EE90",
   brandingSuccess100: "#84d187",
   brandingSuccess500: "#00b307",
   brandingSuccess800: "#2c742f",

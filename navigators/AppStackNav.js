@@ -107,7 +107,7 @@ function AppStackNav() {
         name="HistoryOrderScreen"
         component={HistoryOrderScreen}
         options={{
-          title: "Lịch sử đơn hàng",
+          title: "Lịch sử mua hàng",
         }}
       />
     </Stack.Navigator>

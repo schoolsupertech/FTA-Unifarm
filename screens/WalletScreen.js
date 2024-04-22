@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,15 +6,23 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  Linking,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import Modal from "react-native-modal";
 
+import Title from "../components/common/text/Title";
+import InputField from "../components/common/text/InputField";
+import { TwoButtonBottom } from "../components/common/button/Buttons";
+import createAxios from "../utils/AxiosUtility";
 import createFormatUtil from "../utils/FormatUtility";
 import { Colors } from "../constants/colors";
 import { AuthContext } from "../context/AuthContext";
 import { DefaultTheme } from "../themes/DefaultTheme";
 
+const API = createAxios();
 const FORMAT = createFormatUtil();
 
 const dataHistory = [
@@ -33,7 +41,37 @@ const dataHistory = [
 ];
 
 function WalletScreen() {
-  const { userInfo } = useContext(AuthContext);
+  const { authState, userInfo } = useContext(AuthContext);
+  const [visible, setVisible] = useState(false);
+  const [amount, setAmount] = useState(0);
+  const [date, setDate] = useState(new Date());
+
+  console.log("Date: " + date);
+
+  async function onPaymentHandler() {
+    const response = await API.customRequest(
+      "post",
+      "/create-payment-url",
+      {
+        walletId: userInfo.info.wallet.id,
+        amount: amount,
+      },
+      authState?.token,
+    );
+
+    console.log("Payment response: " + JSON.stringify(response, null, 2));
+
+    // if (response) {
+    //   const handlePress = useCallback(async () => {
+    //     const supported = await Linking.canOpenURL(response);
+    //     if (supported) {
+    //       await Linking.openURL(response);
+    //     } else {
+    //       Alert.alert(`Không thể mở liên kết URL: ${response}`);
+    //     }
+    //   }, [response]);
+    // }
+  }
 
   return (
     <SafeAreaView style={DefaultTheme.root}>
@@ -88,6 +126,7 @@ function WalletScreen() {
                 backgroundColor: "white",
                 borderRadius: 5,
               }}
+              onPress={() => setVisible(true)}
             >
               <Text
                 style={{
@@ -159,6 +198,55 @@ function WalletScreen() {
           )}
         />
       </View>
+      <Modal
+        isVisible={visible}
+        onBackdropPress={() => setVisible(false)}
+        style={DefaultTheme.bottomModal}
+      >
+        <View style={DefaultTheme.modalContent}>
+          <View style={{ marginBottom: 12 }}>
+            <Title
+              color={Colors.primaryGreen700}
+              icon={
+                <Ionicons
+                  name="cash-sharp"
+                  size={28}
+                  color={Colors.primaryGreen700}
+                  style={{ marginRight: 4 }}
+                />
+              }
+            >
+              Nạp tiền
+            </Title>
+          </View>
+          <InputField
+            label="Nhập số tiền bạn muốn nạp..."
+            icon={
+              <Ionicons
+                name="cash"
+                size={20}
+                color="gray"
+                style={{ marginRight: 4 }}
+              />
+            }
+            maxLength={8}
+            keyboardType={"number-pad"}
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={(value) => setAmount(value)}
+          />
+          <TwoButtonBottom
+            titleLeft="Huỷ bỏ"
+            textColorLeft="white"
+            buttonColorLeft="gray"
+            onPressLeft={() => setVisible(false)}
+            titleRight="Nạp tiền"
+            textColorRight="white"
+            buttonColorRight={Colors.primaryGreen700}
+            onPressRight={onPaymentHandler}
+          />
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

@@ -62,6 +62,6 @@ const styles = StyleSheet.create({
     color: Colors.primaryGreen50,
   },
   btnTextDisabled: {
-    color: Colors.primaryGreen100,
+    color: "white",
   },
 });

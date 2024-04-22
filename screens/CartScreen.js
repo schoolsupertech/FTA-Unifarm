@@ -31,6 +31,7 @@ function CartScreen() {
   const [totalPrice, setTotalPrice] = useState(0);
   const { authState } = useContext(AuthContext);
   const [toggleCart, setToggleCart] = useState([]);
+  const [isChecked, setIsChecked] = useState(null);
 
   console.log("Toggle cart: " + JSON.stringify(toggleCart, null, 2));
 
@@ -47,7 +48,10 @@ function CartScreen() {
       authState.token,
     );
 
-    response && setCart(response.payload);
+    if (response && response.statusCode === 200) {
+      setCart(response.payload);
+      // setIsChecked(new Array(response.payload.length).fill(false));
+    }
     setIsLoading(false);
   };
 
@@ -62,26 +66,58 @@ function CartScreen() {
   }, [cart]);
 
   function onToggleGroupCartHandler(id) {
-    if (
-      toggleCart.length > 0 &&
-      toggleCart.map((orders) => orders.orderId === id)
-    ) {
-      setToggleCart(toggleCart.filter((orders) => orders.orderId !== id));
+    const getOrderDetailResponse = cart.find((orders) => {
+      return orders.id === id;
+    }).orderDetailResponse;
+
+    // const updatedChecked = isChecked.map((item, index) =>
+    //   index === position ? !item : item,
+    // );
+
+    // setIsChecked(updatedChecked);
+
+    // const addToggleCart = updatedChecked.map((item, index) => {
+    //   if (index === position) {
+    //     if (item) {
+    //       console.log("Toggle cart is true at " + index);
+    //       return {
+    //         orderId: cart[index].id,
+    //         orderDetailIds: cart[index].orderDetailResponse.map(
+    //           (orderDetail) => orderDetail.id,
+    //         ),
+    //       };
+    //     } else {
+    //       return toggleCart.filter(
+    //         (orders) =>
+    //           orders && orders.orderId && orders.orderId !== cart[index].id,
+    //       );
+    //     }
+    //   }
+    // });
+
+    // setToggleCart([...toggleCart, addToggleCart]);
+
+    if (toggleCart.length > 0) {
+      if (toggleCart.map((orders) => orders.orderId === id)) {
+        setToggleCart(toggleCart.filter((orders) => orders.orderId !== id));
+      } else {
+        setToggleCart([
+          ...toggleCart,
+          ...{
+            orderId: id,
+            orderDetailIds: getOrderDetailResponse.map(
+              (orderDetail) => orderDetail.id,
+            ),
+          },
+        ]);
+      }
     } else {
       setToggleCart([
         ...toggleCart,
         {
           orderId: id,
-          // orderDetailIds: toggleCart.map((orderDetailId) => [
-          //   ...orderDetailId.orderDetailIds,
-          //   cart.map((item) => item.orderDetailResponse.id),
-          // ]),
-          orderDetailIds: cart.map(
-            (item) =>
-              item.id === id &&
-              item.orderDetailResponse
-                .map((orderDetail) => orderDetail.id)
-                .join(""),
+          orderDetailIds: getOrderDetailResponse.map(
+            (orderDetail) => orderDetail.id,
           ),
         },
       ]);
@@ -150,26 +186,22 @@ function CartScreen() {
             style={DefaultTheme.scrollContainer}
             contentContainerStyle={{ paddingBottom: 80 }}
           >
-            {cart.map((farmhub) => (
+            {cart.map((farmhub, index) => (
               <View key={farmhub.farmHubId} style={styles.groupContainer}>
                 <View style={styles.groupItems}>
                   <View style={styles.checkbox}>
-                    {toggleCart.length > 0 &&
-                    toggleCart.map((orders) =>
-                      orders.orderId.includes(farmhub.id),
-                    ) ? (
-                      <Checkbox
-                        status={"checked"}
-                        onPress={() => onToggleGroupCartHandler(farmhub.id)}
-                        color="black"
-                      />
-                    ) : (
-                      <Checkbox
-                        status={"unchecked"}
-                        onPress={() => onToggleGroupCartHandler(farmhub.id)}
-                        color="black"
-                      />
-                    )}
+                    <Checkbox
+                      status={
+                        toggleCart.map(
+                          (item) =>
+                            item.orderId === cart.map((item) => item.id),
+                        )
+                          ? "unchecked"
+                          : "checked"
+                      }
+                      onPress={() => onToggleGroupCartHandler(farmhub.id)}
+                      color="black"
+                    />
                   </View>
                   <View style={styles.groupTitle}>
                     <Ionicons
