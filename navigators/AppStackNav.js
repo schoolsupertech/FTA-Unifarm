@@ -101,6 +101,7 @@ function AppStackNav() {
         component={ReceiveInfoScreen}
         options={{
           title: "Thanh toán",
+          headerLeft: () => null,
         }}
       />
       <Stack.Screen

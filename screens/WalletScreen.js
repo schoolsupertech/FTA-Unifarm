@@ -201,7 +201,7 @@ function WalletScreen() {
       <Modal
         isVisible={visible}
         onBackdropPress={() => setVisible(false)}
-        style={DefaultTheme.bottomModal}
+        style={styles.modalContainer}
       >
         <View style={DefaultTheme.modalContent}>
           <View style={{ marginBottom: 12 }}>
@@ -256,6 +256,9 @@ export default WalletScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  modalContainer: {
+    justifyContent: "center",
   },
   topHeader: {
     flexDirection: "row",

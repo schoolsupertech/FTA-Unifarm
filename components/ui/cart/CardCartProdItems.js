@@ -20,11 +20,12 @@ const API = createAxios();
 const FORMAT = createFormatUtil();
 
 let defaultCount = 1;
-let maxQuantity = 10;
 
 function CardCartProdItems(props) {
   const navigation = useNavigation();
+  const maxQuantity = props.quantityInStock;
   const [count, setCount] = useState(props.quantity);
+  const [totalPrice, setTotalPrice] = useState(props.totalPrice);
   const limitQuantity = useState(5);
   const [isMaxed, setIsMaxed] = useState(false);
   const [isChecked, setIsChecked] = useState(props.toggleCheckbox);
@@ -54,7 +55,12 @@ function CardCartProdItems(props) {
     if (count < maxQuantity) {
       const res = await fetchUpdateQuantity(count + 1);
       if (res.statusCode && res.statusCode === 200) {
-        res.payload.orderDetailResponse.map((item) => setCount(item.quantity));
+        res.payload.orderDetailResponse?.map((item) => {
+          if (item.id === props.id) {
+            setCount(item.quantity);
+            setTotalPrice(item.totalPrice);
+          }
+        });
       } else {
         console.log(
           "Fetch error at fetchUpdateQuantity: " + JSON.stringify(res, null, 2),
@@ -74,9 +80,12 @@ function CardCartProdItems(props) {
     if (countAfterMinus >= defaultCount) {
       const res = await fetchUpdateQuantity(countAfterMinus);
       if (res.statusCode && res.statusCode === 200) {
-        res.payload.orderDetailResponse.map(
-          (item) => item.id === props.id && setCount(item.quantity),
-        );
+        res.payload.orderDetailResponse.map((item) => {
+          if (item.id === props.id) {
+            setCount(item.quantity);
+            setTotalPrice(item.totalPrice);
+          }
+        });
       } else {
         console.log(
           "Fetch error at fetchUpdateQuantity: " + JSON.stringify(res, null, 2),
@@ -177,8 +186,8 @@ function CardCartProdItems(props) {
               </TouchableOpacity>
             </View>
             <Text style={styles.quantity}>
-              <Text style={{ fontSize: 14, color: "gray" }}>Tạm tính: </Text>
-              {FORMAT.currencyFormat(props.totalPrice)}
+              <Text style={{ color: "gray" }}>Tạm tính: </Text>
+              {FORMAT.currencyFormat(totalPrice)}
             </Text>
           </View>
         </View>
@@ -249,6 +258,6 @@ const styles = StyleSheet.create({
   quantity: {
     color: Colors.primaryGreen700,
     fontWeight: "700",
-    fontSize: 18,
+    fontSize: 13,
   },
 });

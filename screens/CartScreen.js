@@ -70,6 +70,13 @@ function CartScreen() {
       return orders.id === id;
     }).orderDetailResponse;
 
+    const order = {
+      orderId: id,
+      orderDetailIds: getOrderDetailResponse.map(
+        (orderDetail) => orderDetail.id,
+      ),
+    };
+
     // const updatedChecked = isChecked.map((item, index) =>
     //   index === position ? !item : item,
     // );
@@ -98,29 +105,13 @@ function CartScreen() {
     // setToggleCart([...toggleCart, addToggleCart]);
 
     if (toggleCart.length > 0) {
-      if (toggleCart.map((orders) => orders.orderId === id)) {
-        setToggleCart(toggleCart.filter((orders) => orders.orderId !== id));
-      } else {
-        setToggleCart([
-          ...toggleCart,
-          ...{
-            orderId: id,
-            orderDetailIds: getOrderDetailResponse.map(
-              (orderDetail) => orderDetail.id,
-            ),
-          },
-        ]);
-      }
+      toggleCart.map((orders) =>
+        orders.orderId === id
+          ? setToggleCart(toggleCart.filter((orders) => orders.orderId !== id))
+          : setToggleCart((prevToggleCart) => [...prevToggleCart, order]),
+      );
     } else {
-      setToggleCart([
-        ...toggleCart,
-        {
-          orderId: id,
-          orderDetailIds: getOrderDetailResponse.map(
-            (orderDetail) => orderDetail.id,
-          ),
-        },
-      ]);
+      setToggleCart([...toggleCart, order]);
     }
   }
 
@@ -186,22 +177,26 @@ function CartScreen() {
             style={DefaultTheme.scrollContainer}
             contentContainerStyle={{ paddingBottom: 80 }}
           >
-            {cart.map((farmhub, index) => (
+            {cart.map((farmhub) => (
               <View key={farmhub.farmHubId} style={styles.groupContainer}>
                 <View style={styles.groupItems}>
                   <View style={styles.checkbox}>
-                    <Checkbox
-                      status={
-                        toggleCart.map(
-                          (item) =>
-                            item.orderId === cart.map((item) => item.id),
-                        )
-                          ? "unchecked"
-                          : "checked"
-                      }
-                      onPress={() => onToggleGroupCartHandler(farmhub.id)}
-                      color="black"
-                    />
+                    {toggleCart.length > 0 &&
+                    toggleCart.find(
+                      (orders) => orders.orderId === farmhub.id,
+                    ) ? (
+                      <Checkbox
+                        status="checked"
+                        onPress={() => onToggleGroupCartHandler(farmhub.id)}
+                        color="black"
+                      />
+                    ) : (
+                      <Checkbox
+                        status="unchecked"
+                        onPress={() => onToggleGroupCartHandler(farmhub.id)}
+                        color="black"
+                      />
+                    )}
                   </View>
                   <View style={styles.groupTitle}>
                     <Ionicons

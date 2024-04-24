@@ -26,6 +26,7 @@ const dataAddress = [
     description: "Đường Võ Văn Kiệt, P. Bến Nghé, Quận 12, TP. Hồ Chí Minh",
   },
 ];
+
 const AddressScreen = () => {
   return (
     <View style={styles.container}>
