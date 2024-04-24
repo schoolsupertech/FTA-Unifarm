@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -10,6 +10,7 @@ import {
   Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { SegmentedButtons } from "react-native-paper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Modal from "react-native-modal";
 
@@ -25,28 +26,46 @@ import { DefaultTheme } from "../themes/DefaultTheme";
 const API = createAxios();
 const FORMAT = createFormatUtil();
 
-const dataHistory = [
-  {
-    id: 1,
-    title: "Thanh toán hóa đơn 32F32AFCGDF thành công",
-    price: "50.000 đ",
-    dateTime: "12:02 01/04/2024",
-  },
-  {
-    id: 2,
-    title: "Thanh toán hóa đơn XD23V3SFV thành công nè",
-    price: "45.000 đ",
-    dateTime: "01:02 01/04/2024",
-  },
-];
-
 function WalletScreen() {
   const { authState, userInfo } = useContext(AuthContext);
   const [visible, setVisible] = useState(false);
   const [amount, setAmount] = useState(0);
-  const [date, setDate] = useState(new Date());
+  const [paymentData, setPaymentData] = useState([]);
+  const [transactionData, setTransactionData] = useState([]);
+  const [value, setValue] = useState(0);
 
-  console.log("Date: " + date);
+  useEffect(() => {
+    const fetchData = async () => {
+      const paymentResponse = await API.customRequest(
+        "get",
+        "/payments/user",
+        null,
+        authState?.token,
+      );
+      if (paymentResponse.statusCode === 200) {
+        console.log(
+          "Payment response: " + JSON.stringify(paymentResponse, null, 2),
+        );
+        setPaymentData(paymentResponse.payload);
+      }
+
+      const transactionResponse = await API.customRequest(
+        "get",
+        "/transactions",
+        null,
+        authState?.token,
+      );
+      if (transactionResponse.statusCode === 200) {
+        console.log(
+          "Transaction response: " +
+            JSON.stringify(transactionResponse, null, 2),
+        );
+        setTransactionData(transactionResponse.payload);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   async function onPaymentHandler() {
     const response = await API.customRequest(
@@ -71,6 +90,92 @@ function WalletScreen() {
     //     }
     //   }, [response]);
     // }
+  }
+
+  function renderPaymentHistoryHandler() {
+    return (
+      <FlatList
+        data={paymentData}
+        keyExtractor={(item) => item.id}
+        renderItem={(itemData) => (
+          <TouchableOpacity
+            style={{
+              marginTop: 12,
+              flexDirection: "row",
+              padding: 20,
+              backgroundColor: "#EEEEEE",
+              borderRadius: 8,
+            }}
+          >
+            <Ionicons name="cash" size={40} color={Colors.primaryGreen700} />
+            <View style={{ marginLeft: 8, flex: 1 }}>
+              <Text style={{ fontWeight: 700 }}>Nạp tiền thành công.</Text>
+              <Text style={{ fontWeight: 600 }}>
+                Mã giao dịch: {itemData.item.code}
+              </Text>
+              <Text style={{ fontSize: 12, marginTop: 4 }}>
+                {FORMAT.dateFormat(new Date(itemData.item.paymentDay))}
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "bold",
+                color: Colors.primaryGreen600,
+                alignSelf: "center",
+              }}
+            >
+              + {FORMAT.currencyFormat(itemData.item.transferAmount)}
+            </Text>
+          </TouchableOpacity>
+        )}
+      />
+    );
+  }
+
+  function renderTransactionHistoryHandler() {
+    return (
+      <FlatList
+        data={transactionData}
+        keyExtractor={(item) => item.id}
+        renderItem={(itemData) => (
+          <TouchableOpacity
+            style={{
+              marginTop: 12,
+              flexDirection: "row",
+              padding: 20,
+              backgroundColor: "#EEEEEE",
+              borderRadius: 8,
+            }}
+          >
+            <Ionicons
+              name="reader-sharp"
+              size={40}
+              color={Colors.primaryGreen700}
+            />
+            <View style={{ marginLeft: 8, flex: 1 }}>
+              <Text style={{ fontWeight: 700 }}>Thanh toán thành công.</Text>
+              <Text style={{ fontWeight: 600 }}>
+                Mã đơn hàng: {itemData.item.orderId}
+              </Text>
+              <Text style={{ fontSize: 12, marginTop: 4 }}>
+                {FORMAT.dateFormat(new Date(itemData.item.paymentDate))}
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "bold",
+                color: "red",
+                alignSelf: "center",
+              }}
+            >
+              - {FORMAT.currencyFormat(itemData.item.amount)}
+            </Text>
+          </TouchableOpacity>
+        )}
+      />
+    );
   }
 
   return (
@@ -162,41 +267,46 @@ function WalletScreen() {
         </View>
       </LinearGradient>
       <View style={{ flex: 1, padding: 20 }}>
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-          Hoạt động gần đây
-        </Text>
-        <FlatList
-          data={dataHistory}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={{
-                marginTop: 12,
-                flexDirection: "row",
-                padding: 20,
-                backgroundColor: "#EEEEEE",
-                borderRadius: 8,
-              }}
-            >
-              <Ionicons name="cash" size={40} color={Colors.primaryGreen700} />
-              <View style={{ marginLeft: 8, flex: 1 }}>
-                <Text style={{ fontWeight: "600" }}>{item.title}</Text>
-                <Text style={{ fontSize: 12, marginTop: 4 }}>
-                  {item.dateTime}
-                </Text>
-              </View>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: "bold",
-                  color: "red",
-                  alignSelf: "center",
-                }}
-              >
-                - {item.price}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
+        <View style={{ paddingBottom: 12 }}>
+          <Title
+            icon={<Ionicons name="reload-sharp" size={20} color="gray" />}
+            color="gray"
+          >
+            {" "}
+            Hoạt động gần đây
+          </Title>
+          <SegmentedButtons
+            style={{ marginTop: 12 }}
+            value={value}
+            onValueChange={setValue}
+            theme={{
+              colors: {
+                secondaryContainer: Colors.primaryGreen100,
+              },
+            }}
+            buttons={[
+              {
+                value: 0,
+                label: "Lịch sử nạp tiền",
+                labelStyle: {
+                  fontWeight: 500,
+                },
+                icon: "bank-check",
+              },
+              {
+                value: 1,
+                label: "Lịch sử thanh toán",
+                labelStyle: {
+                  fontWeight: 500,
+                },
+                icon: "ballot",
+              },
+            ]}
+          />
+        </View>
+        {value === 0
+          ? renderPaymentHistoryHandler()
+          : renderTransactionHistoryHandler()}
       </View>
       <Modal
         isVisible={visible}
