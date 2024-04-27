@@ -16,6 +16,7 @@ import TransferScreen from "./screens/Transfer";
 import ProfileScreen from "./screens/Profile";
 import DetailTransfer from "./screens/DetailTransfer";
 import DetailOrder from "./screens/DetailOrder";
+import NotificationScreen from "./screens/Notification";
 import { Colors } from "./constants/colors";
 
 const TabRoute = () => {
@@ -115,6 +116,16 @@ export default function App() {
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="DetailTransfer" component={DetailTransfer} />
           <Stack.Screen name="DetailOrder" component={DetailOrder} />
+          <Stack.Screen
+            name="Notification"
+            component={NotificationScreen}
+            options={{
+              headerShown: true,
+              title: "Thông báo",
+              headerTintColor: Colors.accentBlue,
+              headerBackTitle: "",
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </>

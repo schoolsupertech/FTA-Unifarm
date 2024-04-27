@@ -23,13 +23,9 @@ function TopHeader({ label, userInfo, onNotiIconPress }) {
       >
         {label}
       </PaperText>
-      {userInfo ? (
+      {userInfo && userInfo?.noti !== 0 ? (
         <TouchableOpacity style={{ marginEnd: 4 }} onPress={onNotiIconPress}>
-          <Ionicons
-            name="notifications"
-            color={Colors.primaryGreen700}
-            size={24}
-          />
+          <Ionicons name="notifications" color={Colors.accentBlue} size={24} />
           <Badge
             style={{
               position: "absolute",
@@ -37,7 +33,7 @@ function TopHeader({ label, userInfo, onNotiIconPress }) {
               right: -12,
             }}
           >
-            10{/* userInfo.qtyInCart */}
+            {userInfo.noti}
           </Badge>
         </TouchableOpacity>
       ) : (
