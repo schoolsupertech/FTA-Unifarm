@@ -12,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import createAxios from "../utils/axios";
 import { ButtonFlex } from "../components/Buttons";
+import { DefaultTheme } from "../themes/DefaultTheme";
 
 const API = createAxios();
 
@@ -58,10 +59,19 @@ function Login({ navigation }) {
     <SafeAreaView style={styles.container}>
       <Image
         source={require("../assets/images/backgrounds/LogoWithTitle.png")}
-        style={{ width: 80, height: 80, marginRight: 5 }}
+        style={{ width: 150, height: 150, marginRight: 5 }}
       />
       <View style={{ marginBottom: 20 }}>
-        <Text style={{ fontSize: 50, fontWeight: "bold" }}>UniFarm</Text>
+        <Text
+          style={{
+            fontSize: 40,
+            fontWeight: "bold",
+            fontStyle: "italic",
+            color: "dodgerblue",
+          }}
+        >
+          FTA-Station
+        </Text>
       </View>
       <TextInput
         style={{
@@ -108,7 +118,7 @@ function Login({ navigation }) {
         style={{
           fontWeight: 500,
           fontSize: 12,
-          color: "#16A80A",
+          color: "blue",
           marginBottom: 20,
           marginTop: 20,
         }}
@@ -118,13 +128,7 @@ function Login({ navigation }) {
       <ButtonFlex
         title="Đăng nhập"
         onPress={handleLogin}
-        stylesButton={{
-          borderRadius: 20,
-          paddingHorizontal: 30,
-          paddingVertical: 10,
-          marginBottom: 20,
-          elevation: 5,
-        }}
+        stylesButton={DefaultTheme.btnFlex}
         stylesText={{ fontSize: 16 }}
       />
       <TouchableOpacity

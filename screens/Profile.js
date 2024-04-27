@@ -13,6 +13,8 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 
 import createAxios from "../utils/axios";
+import { DefaultTheme } from "../themes/DefaultTheme";
+import TopHeader from "../components/headers/TopHeader";
 
 const API = createAxios();
 
@@ -107,37 +109,8 @@ function Profile({ navigation }) {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <SafeAreaView>
-        <View style={styles.top}>
-          <Pressable onPress={() => navigation.goBack()}>
-            <View
-              style={{
-                height: 40,
-                width: 40,
-                marginLeft: 20,
-                justifyContent: "center",
-              }}
-            >
-              <Icon name="person-outline" size={28} color={"black"} />
-            </View>
-          </Pressable>
-          <View style={{ justifyContent: "center" }}>
-            <Text style={{ fontSize: 22, fontWeight: "bold" }}>Tài khoản</Text>
-          </View>
-          <Pressable
-            style={{
-              marginRight: 20,
-              height: 40,
-              width: 40,
-              justifyContent: "center",
-            }}
-            onPress={getDataAboutMe}
-          >
-            <Icon name="ellipsis-vertical" size={25} color={"black"} />
-          </Pressable>
-        </View>
-      </SafeAreaView>
+    <SafeAreaView style={DefaultTheme.root}>
+      <TopHeader label="Tài khoản" />
       <ScrollView
         style={{ flex: 1, backgroundColor: "white" }}
         contentContainerStyle={{ paddingBottom: 80 }}

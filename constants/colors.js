@@ -6,23 +6,20 @@ export const Colors = {
   grayScaleGray400: "#999",
   grenGrayScale900: "#002603",
 
-  // Primary Green Colors
+  // Primary Blue Colors
   primaryGreen50: "#E5FFE5",
   primaryGreen100: "#CCFFCC",
   primaryGreen200: "#99FF99",
   primaryGreen300: "#66FF66",
   primaryGreen400: "#32FF32",
-  primaryGreen500: "#00FF00",
+  primaryBlue500: "blue",
   primaryGreen600: "#00CC00",
   primaryGreen700: "#009900",
   primaryGreen800: "#006600",
-  primaryGreen900: "#009900",
+  primaryBlue900: "darkblue",
 
   // Accent colors
-  brandingSuccess50: "90EE90",
-  brandingSuccess100: "#84d187",
-  brandingSuccess500: "#00b307",
-  brandingSuccess800: "#2c742f",
+  accentBlue: "dodgerblue",
   brandingWarning: "#ff8a00",
   brandingError: "#ea4b48",
   realEstateDark: "#2b395f",

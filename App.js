@@ -16,12 +16,13 @@ import TransferScreen from "./screens/Transfer";
 import ProfileScreen from "./screens/Profile";
 import DetailTransfer from "./screens/DetailTransfer";
 import DetailOrder from "./screens/DetailOrder";
+import { Colors } from "./constants/colors";
 
 const TabRoute = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: "#16A80A",
+        tabBarActiveTintColor: Colors.primaryBlue500,
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
           fontWeight: "bold",

@@ -15,6 +15,8 @@ import SegmentedControl from "@react-native-segmented-control/segmented-control"
 import MainHeader from "../components/MainHeader";
 import createAxios from "../utils/axios";
 import { ButtonFlex } from "../components/Buttons";
+import { DefaultTheme } from "../themes/DefaultTheme";
+import TopHeader from "../components/headers/TopHeader";
 
 const API = createAxios();
 
@@ -142,8 +144,8 @@ function Transfer({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <MainHeader iconHeader={"file-tray-outline"} navigation={navigation} />
+    <SafeAreaView style={DefaultTheme.root}>
+      <TopHeader label="Vận chuyển" />
       <View style={{ flex: 1, backgroundColor: "white" }}>
         <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
           <SegmentedControl
@@ -441,8 +443,4 @@ function Transfer({ navigation }) {
 
 export default Transfer;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+const styles = StyleSheet.create({});

@@ -1,7 +1,8 @@
 import React from "react";
 import { SafeAreaView, Text, StyleSheet, View, FlatList } from "react-native";
 
-import MainHeader from "../components/MainHeader";
+import TopHeader from "../components/headers/TopHeader";
+import { DefaultTheme } from "../themes/DefaultTheme";
 
 const dataDashboard = [
   {
@@ -32,8 +33,8 @@ const dataDashboard = [
 
 function Home({ navigation }) {
   return (
-    <SafeAreaView style={styles.container}>
-      <MainHeader iconHeader={"home-outline"} navigation={navigation} />
+    <SafeAreaView style={DefaultTheme.root}>
+      <TopHeader label="Trạm - FTA" />
       <View style={{ flex: 1, backgroundColor: "white" }}>
         <FlatList
           data={dataDashboard}
@@ -67,8 +68,4 @@ function Home({ navigation }) {
 
 export default Home;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+const styles = StyleSheet.create({});
