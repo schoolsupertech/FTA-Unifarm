@@ -1,13 +1,10 @@
-# ![alt text](https://github.com/schoolsupertech/FTA-Unifarm/blob/main/assets/images/plant_logo.png?raw=true) FTA-Unifarm
+![alt text](https://github.com/schoolsupertech/FTA-Unifarm/blob/main/assets/images/backgrounds/LogoWithTitle.png?raw=true)
 
-Farm To Apartment - Customer Mobile app
+# Farm To Apartment - Customer Mobile app
 
-**_Stack Navigator is the main_**
+## Download [here](https://github.com/schoolsupertech/FTA-Unifarm/releases/tag/v1.0.0)
 
-- [x] Project_Base created.
-- [x] HomeScreen added.
-- [x] CategoryScreen added.
-- [x] CategoryDetailScreen added.
-- [x] ProductDetailScreen added.
-- [x] CartScreen added.
-- [x] NotificationScreen added.
+Install node and expo-cli
+
+- Run `npm install`
+- Then run `npx expo run:ios or npx expo run:android`

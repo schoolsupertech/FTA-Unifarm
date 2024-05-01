@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  Linking,
   Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { SegmentedButtons } from "react-native-paper";
+import { ActivityIndicator, SegmentedButtons } from "react-native-paper";
+import * as WebBrowser from "expo-web-browser";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Modal from "react-native-modal";
 
@@ -28,6 +28,7 @@ const FORMAT = createFormatUtil();
 
 function WalletScreen() {
   const { authState, userInfo } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [amount, setAmount] = useState(0);
   const [paymentData, setPaymentData] = useState([]);
@@ -35,42 +36,44 @@ function WalletScreen() {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const paymentResponse = await API.customRequest(
-        "get",
-        "/payments/user",
-        null,
-        authState?.token,
-      );
-      if (paymentResponse.statusCode === 200) {
-        console.log(
-          "Payment response: " + JSON.stringify(paymentResponse, null, 2),
-        );
-        setPaymentData(paymentResponse.payload);
-      }
-
-      const transactionResponse = await API.customRequest(
-        "get",
-        "/transactions",
-        null,
-        authState?.token,
-      );
-      if (transactionResponse.statusCode === 200) {
-        console.log(
-          "Transaction response: " +
-            JSON.stringify(transactionResponse, null, 2),
-        );
-        setTransactionData(transactionResponse.payload);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    const paymentResponse = await API.customRequest(
+      "get",
+      "/payments/user",
+      null,
+      authState?.token,
+    );
+    if (paymentResponse.statusCode === 200) {
+      console.log(
+        "Payment response: " + JSON.stringify(paymentResponse, null, 2),
+      );
+      setPaymentData(paymentResponse.payload);
+    }
+
+    const transactionResponse = await API.customRequest(
+      "get",
+      "/transactions",
+      null,
+      authState?.token,
+    );
+    if (transactionResponse.statusCode === 200) {
+      console.log(
+        "Transaction response: " + JSON.stringify(transactionResponse, null, 2),
+      );
+      setTransactionData(transactionResponse.payload);
+    }
+
+    setIsLoading(false);
+  };
 
   async function onPaymentHandler() {
     const response = await API.customRequest(
       "post",
-      "/create-payment-url",
+      "/payment/create-payment-url",
       {
         walletId: userInfo.info.wallet.id,
         amount: amount,
@@ -78,18 +81,12 @@ function WalletScreen() {
       authState?.token,
     );
 
-    console.log("Payment response: " + JSON.stringify(response, null, 2));
-
-    // if (response) {
-    //   const handlePress = useCallback(async () => {
-    //     const supported = await Linking.canOpenURL(response);
-    //     if (supported) {
-    //       await Linking.openURL(response);
-    //     } else {
-    //       Alert.alert(`Không thể mở liên kết URL: ${response}`);
-    //     }
-    //   }, [response]);
-    // }
+    if (response) {
+      let result = WebBrowser.openBrowserAsync(response);
+      console.log("Result: " + JSON.stringify(result, null, 2));
+    } else {
+      Alert.alert("Oops! Something went wrong");
+    }
   }
 
   function renderPaymentHistoryHandler() {
@@ -178,73 +175,82 @@ function WalletScreen() {
     );
   }
 
-  return (
-    <SafeAreaView style={DefaultTheme.root}>
-      <LinearGradient
-        colors={[Colors.primaryGreen700, Colors.primaryGreen200]}
-        locations={[0.8, 1]}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 1 }}
-        style={{
-          height: "auto",
-          borderBottomLeftRadius: 4,
-          borderBottomRightRadius: 4,
-        }}
-      >
-        <View style={styles.topHeader}>
-          <Ionicons
-            name={"wallet-outline"}
-            size={28}
-            color={"white"}
-            style={{ marginRight: 4 }}
-          />
-          <Text style={styles.textHeader}>Ví Tiền</Text>
-        </View>
-        <View style={{ padding: 20, borderTopWidth: 1, borderColor: "white" }}>
-          <Text style={{ color: "white", fontWeight: "500" }}>
-            Số dư ví (đ)
-          </Text>
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color={Colors.primaryGreen700} />
+      </View>
+    );
+  } else {
+    return (
+      <SafeAreaView style={DefaultTheme.root}>
+        <LinearGradient
+          colors={[Colors.primaryGreen700, Colors.primaryGreen200]}
+          locations={[0.8, 1]}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={{
+            height: "auto",
+            borderBottomLeftRadius: 4,
+            borderBottomRightRadius: 4,
+          }}
+        >
+          <View style={styles.topHeader}>
+            <Ionicons
+              name={"wallet-outline"}
+              size={28}
+              color={"white"}
+              style={{ marginRight: 4 }}
+            />
+            <Text style={styles.textHeader}>Ví Tiền</Text>
+          </View>
           <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 4,
-              marginBottom: 12,
-              justifyContent: "space-between",
-            }}
+            style={{ padding: 20, borderTopWidth: 1, borderColor: "white" }}
           >
-            <Text
-              style={{
-                color: "white",
-                fontWeight: "bold",
-                fontSize: 40,
-              }}
-            >
-              {userInfo &&
-                userInfo.info &&
-                FORMAT.currencyFormat(userInfo.info.wallet.balance)}
+            <Text style={{ color: "white", fontWeight: "500" }}>
+              Số dư ví (đ)
             </Text>
-            <TouchableOpacity
+            <View
               style={{
-                paddingVertical: 10,
-                paddingHorizontal: 20,
-                backgroundColor: "white",
-                borderRadius: 5,
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 4,
+                marginBottom: 12,
+                justifyContent: "space-between",
               }}
-              onPress={() => setVisible(true)}
             >
               <Text
                 style={{
-                  color: Colors.primaryGreen700,
+                  color: "white",
                   fontWeight: "bold",
-                  fontSize: 16,
+                  fontSize: 40,
                 }}
               >
-                Nạp tiền
+                {userInfo &&
+                  userInfo.info &&
+                  FORMAT.currencyFormat(userInfo.info.wallet.balance)}
               </Text>
-            </TouchableOpacity>
-          </View>
-          {/*
+              <TouchableOpacity
+                style={{
+                  paddingVertical: 10,
+                  paddingHorizontal: 20,
+                  backgroundColor: "white",
+                  borderRadius: 5,
+                }}
+                onPress={() => setVisible(true)}
+              >
+                <Text
+                  style={{
+                    color: Colors.primaryGreen700,
+                    fontWeight: "bold",
+                    fontSize: 16,
+                  }}
+                >
+                  Nạp tiền
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {/*
           <TouchableOpacity
             style={{
               flexDirection: "row",
@@ -264,101 +270,90 @@ function WalletScreen() {
             <Ionicons name={"chevron-forward"} size={20} color={"white"} />
           </TouchableOpacity>
           */}
-        </View>
-      </LinearGradient>
-      <View style={{ flex: 1, padding: 20 }}>
-        <View style={{ paddingBottom: 12 }}>
-          <Title
-            icon={<Ionicons name="reload-sharp" size={20} color="gray" />}
-            color="gray"
-          >
-            {" "}
-            Hoạt động gần đây
-          </Title>
-          <SegmentedButtons
-            style={{ marginTop: 12 }}
-            value={value}
-            onValueChange={setValue}
-            theme={{
-              colors: {
-                secondaryContainer: Colors.primaryGreen100,
-              },
-            }}
-            buttons={[
-              {
-                value: 0,
-                label: "Lịch sử nạp tiền",
-                labelStyle: {
-                  fontWeight: 500,
-                },
-                icon: "bank-check",
-              },
-              {
-                value: 1,
-                label: "Lịch sử thanh toán",
-                labelStyle: {
-                  fontWeight: 500,
-                },
-                icon: "ballot",
-              },
-            ]}
-          />
-        </View>
-        {value === 0
-          ? renderPaymentHistoryHandler()
-          : renderTransactionHistoryHandler()}
-      </View>
-      <Modal
-        isVisible={visible}
-        onBackdropPress={() => setVisible(false)}
-        style={styles.modalContainer}
-      >
-        <View style={DefaultTheme.modalContent}>
-          <View style={{ marginBottom: 12 }}>
-            <Title
-              color={Colors.primaryGreen700}
-              icon={
-                <Ionicons
-                  name="cash-sharp"
-                  size={28}
-                  color={Colors.primaryGreen700}
-                  style={{ marginRight: 4 }}
-                />
-              }
-            >
-              Nạp tiền
-            </Title>
           </View>
-          <InputField
-            label="Nhập số tiền bạn muốn nạp..."
-            icon={
-              <Ionicons
-                name="cash"
-                size={20}
-                color="gray"
-                style={{ marginRight: 4 }}
-              />
-            }
-            maxLength={8}
-            keyboardType={"number-pad"}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(value) => setAmount(value)}
-          />
-          <TwoButtonBottom
-            titleLeft="Huỷ bỏ"
-            textColorLeft="white"
-            buttonColorLeft="gray"
-            onPressLeft={() => setVisible(false)}
-            titleRight="Nạp tiền"
-            textColorRight="white"
-            buttonColorRight={Colors.primaryGreen700}
-            onPressRight={onPaymentHandler}
-          />
+        </LinearGradient>
+        <View style={{ flex: 1, padding: 20 }}>
+          <View style={{ paddingBottom: 12 }}>
+            <Title
+              icon={<Ionicons name="reload-sharp" size={20} color="gray" />}
+              color="gray"
+            >
+              {" "}
+              Hoạt động gần đây
+            </Title>
+            <SegmentedButtons
+              style={{ marginTop: 12 }}
+              value={value}
+              onValueChange={setValue}
+              theme={DefaultTheme.segmentBtn}
+              buttons={[
+                {
+                  value: 0,
+                  label: "Lịch sử nạp tiền",
+                  labelStyle: {
+                    fontWeight: 500,
+                  },
+                  icon: "bank-check",
+                },
+                {
+                  value: 1,
+                  label: "Lịch sử thanh toán",
+                  labelStyle: {
+                    fontWeight: 500,
+                  },
+                  icon: "ballot",
+                },
+              ]}
+            />
+          </View>
+          {value === 0
+            ? renderPaymentHistoryHandler()
+            : renderTransactionHistoryHandler()}
         </View>
-      </Modal>
-    </SafeAreaView>
-  );
+        <Modal
+          isVisible={visible}
+          onBackdropPress={() => setVisible(false)}
+          style={styles.modalContainer}
+        >
+          <View style={DefaultTheme.modalContent}>
+            <View style={{ marginBottom: 12 }}>
+              <Title
+                color={Colors.primaryGreen700}
+                icon={
+                  <Ionicons
+                    name="cash-sharp"
+                    size={28}
+                    color={Colors.primaryGreen700}
+                    style={{ marginRight: 4 }}
+                  />
+                }
+              >
+                Nạp tiền
+              </Title>
+            </View>
+            <InputField
+              label="Nhập số tiền bạn muốn nạp..."
+              maxLength={8}
+              keyboardType={"number-pad"}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(value) => setAmount(value)}
+            />
+            <TwoButtonBottom
+              titleLeft="Huỷ bỏ"
+              textColorLeft="white"
+              buttonColorLeft="gray"
+              onPressLeft={() => setVisible(false)}
+              titleRight="Nạp tiền"
+              textColorRight="white"
+              buttonColorRight={Colors.primaryGreen700}
+              onPressRight={onPaymentHandler}
+            />
+          </View>
+        </Modal>
+      </SafeAreaView>
+    );
+  }
 }
 
 export default WalletScreen;

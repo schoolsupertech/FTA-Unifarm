@@ -15,8 +15,9 @@ import AddressScreen from "../screens/AddressScreen";
 import SearchScreen from "../screens/SearchScreen";
 import ReceiveInfoScreen from "../screens/ReceiveInfoScreen";
 import UserInfoScreen from "../screens/UserInfoScreen";
-import { DefaultTheme } from "../themes/DefaultTheme";
 import HistoryOrderScreen from "../screens/HistoryOrderScreen";
+import TrackingOrderScreen from "../screens/TrackingOrderScreen";
+import { DefaultTheme } from "../themes/DefaultTheme";
 
 const Stack = createNativeStackNavigator();
 
@@ -53,7 +54,13 @@ function AppStackNav() {
           headerShown: false,
         }}
       />
-      <Stack.Screen name="AuthScreen" component={AuthStack} />
+      <Stack.Screen
+        name="AuthScreen"
+        component={AuthStack}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name="Notification"
         component={NotificationScreen}
@@ -109,6 +116,13 @@ function AppStackNav() {
         component={HistoryOrderScreen}
         options={{
           title: "Lịch sử mua hàng",
+        }}
+      />
+      <Stack.Screen
+        name="TrackingOrderScreen"
+        component={TrackingOrderScreen}
+        options={{
+          title: "Theo dõi đơn",
         }}
       />
     </Stack.Navigator>

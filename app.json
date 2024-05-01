@@ -35,10 +35,19 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.googleusercontent.apps.FTAUnifarm"
+      "package": "com.googleusercontent.apps.FTAUnifarm",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6e27ac61-8341-43cb-b98c-bb2559177ad0"
+      }
     }
   }
 }

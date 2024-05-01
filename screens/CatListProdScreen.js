@@ -41,31 +41,12 @@ function CatListProdScreen({ route }) {
   useEffect(() => {
     const fetchListProdItems = async (prodItemId) => {
       const response = await API.get(
-        "/product/" + prodItemId + "/product-items",
+        "/product/" + prodItemId + "/product-items-in-ptoduct",
       );
       setProdItemsInfo((oldItemsInfo) => [
         ...oldItemsInfo,
         ...response.payload,
       ]);
-      // await axios
-      //   .get(BASE_URL + "/product/" + prodItemsId + "/product-items")
-      //   .then((res) => {
-      //     let getProdItemsInfo = res.data;
-      //     setProdItemsInfo((oldItemsInfo) => [
-      //       ...oldItemsInfo,
-      //       ...getProdItemsInfo.payload,
-      //     ]);
-      //     console.log(
-      //       "fetchListProdItems: " + JSON.stringify(getProdItemsInfo.payload),
-      //     );
-      //   })
-      //   .catch((e) => {
-      //     console.log(
-      //       "An error occurred while loading API-product/{id}/product-items: " +
-      //         e,
-      //     );
-      //     console.log("Message: " + e.response.message);
-      //   });
     };
 
     if (

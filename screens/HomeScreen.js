@@ -111,7 +111,7 @@ function HomeScreen() {
   async function updateLocationHandler(apartmentData, stationData, isDefault) {
     if (apartmentData && stationData) {
       const response = await API.customRequest(
-        "/post",
+        "post",
         "/apartment-station/upsert",
         {
           stationId: stationData.id,

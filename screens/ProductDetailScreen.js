@@ -153,15 +153,17 @@ function ProductDetailScreen({ route, navigation }) {
       },
       authState?.token,
     );
+    console.log(
+      "Response in product item detail: " + JSON.stringify(response, null, 2),
+    );
 
-    if (response.response && response.response.status === 400) {
-      console.log(
-        "Fetch error at fetchAddToCart: " +
-          JSON.stringify(response.response, null, 2),
-      );
-    } else {
+    if (response.statusCode === 201 || response.statusCode === 200) {
       updateCartQty(authState?.token);
       return response.payload;
+    } else {
+      console.log(
+        "Oops! Something went wrong\n" + JSON.stringify(response, null, 2),
+      );
     }
   }
 

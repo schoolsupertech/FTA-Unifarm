@@ -116,6 +116,7 @@ function CartScreen() {
   }
 
   async function onDeleteHandler(orderDetailId) {
+    setIsLoading(true);
     const response = await API.customRequest(
       "put",
       "/cart/update-quantity",
@@ -125,7 +126,10 @@ function CartScreen() {
       },
       authState?.token,
     );
-    response && fetchCart();
+    console.log("Delete response: " + JSON.stringify(response, null, 2));
+    setCart(null);
+    fetchCart();
+    setIsLoading(false);
   }
 
   async function onCheckoutHandler() {

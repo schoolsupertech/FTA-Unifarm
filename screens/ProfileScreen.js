@@ -110,24 +110,127 @@ function ProfileScreen() {
             </HeaderContent>
           </View>
 
-          <View style={styles.orderViewContent}>
-            <TouchableOpacity style={styles.orderView}>
-              <Ionicons name="file-tray-outline" size={30} color="gray" />
-              <Text style={styles.orderTextView}>Chờ vận{"\n"}chuyển</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.orderView}>
-              <Ionicons name="swap-horizontal" size={30} color="gray" />
-              <Text style={styles.orderTextView}>Đang vận{"\n"}chuyển</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.orderView}>
-              <Ionicons name="bag-check-outline" size={30} color="gray" />
-              <Text style={styles.orderTextView}>Đã nhận{"\n"}hàng</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.orderView}>
-              <Ionicons name="refresh" size={30} color="gray" />
-              <Text style={styles.orderTextView}>Đổi trả{"\n"}hàng</Text>
-            </TouchableOpacity>
-          </View>
+          <ScrollView
+            style={{ width: "100%", flex: 1 }}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            <View style={styles.orderViewContent}>
+              <TouchableOpacity
+                style={styles.orderView}
+                onPress={() => {
+                  navigation.navigate("HistoryOrderScreen", {
+                    status: "Pending",
+                  });
+                }}
+              >
+                <Ionicons name="refresh" size={30} color="lightskyblue" />
+                <Text style={[styles.orderTextView, { color: "lightskyblue" }]}>
+                  Chờ xác{"\n"}nhận
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.orderView}
+                onPress={() => {
+                  navigation.navigate("HistoryOrderScreen", {
+                    status: "Confirmed",
+                  });
+                }}
+              >
+                <Ionicons
+                  name="ellipsis-horizontal-outline"
+                  size={30}
+                  color="lightseagreen"
+                />
+                <Text
+                  style={[styles.orderTextView, { color: "lightseagreen" }]}
+                >
+                  Chờ vận{"\n"}chuyển
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.orderView}
+                onPress={() => {
+                  navigation.navigate("HistoryOrderScreen", {
+                    status: "OnDelivery",
+                  });
+                }}
+              >
+                <Ionicons name="swap-horizontal" size={30} color="seagreen" />
+                <Text style={[styles.orderTextView, { color: "seagreen" }]}>
+                  Đang vận{"\n"}chuyển
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.orderView}
+                onPress={() => {
+                  navigation.navigate("HistoryOrderScreen", {
+                    status: "ReadyForPickUp",
+                  });
+                }}
+              >
+                <Ionicons
+                  name="file-tray-outline"
+                  size={30}
+                  color="dodgerblue"
+                />
+                <Text style={[styles.orderTextView, { color: "dodgerblue" }]}>
+                  Chờ nhận{"\n"}hàng
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.orderView}
+                onPress={() => {
+                  navigation.navigate("HistoryOrderScreen", {
+                    status: "PickedUp",
+                  });
+                }}
+              >
+                <Ionicons
+                  name="bag-check-outline"
+                  size={30}
+                  color="limegreen"
+                />
+                <Text style={[styles.orderTextView, { color: "limegreen" }]}>
+                  Đã nhận{"\n"}hàng
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.orderView}
+                onPress={() => {
+                  navigation.navigate("HistoryOrderScreen", {
+                    status: "Cancelled",
+                  });
+                }}
+              >
+                <Ionicons
+                  name="close-circle-outline"
+                  size={30}
+                  color="orangered"
+                />
+                <Text style={[styles.orderTextView, { color: "orangered" }]}>
+                  Đơn huỷ
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.orderView}
+                onPress={() => {
+                  navigation.navigate("HistoryOrderScreen", {
+                    status: "Expired",
+                  });
+                }}
+              >
+                <Ionicons
+                  name="alert-circle-outline"
+                  size={30}
+                  color="crimson"
+                />
+                <Text style={[styles.orderTextView, { color: "crimson" }]}>
+                  Hết hạn
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
 
           <GrayLine />
 
@@ -258,14 +361,13 @@ const styles = StyleSheet.create({
   },
   orderViewContent: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
     backgroundColor: "#f9f9f9",
     borderRadius: 5,
   },
   orderView: {
-    width: "25%",
     padding: 14,
     alignItems: "center",
     justifyContent: "center",

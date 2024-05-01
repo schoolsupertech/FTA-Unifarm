@@ -53,6 +53,13 @@ export const DefaultTheme = {
     },
   },
 
+  // Segmented Buttons
+  segmentBtn: {
+    colors: {
+      secondaryContainer: Colors.primaryGreen100,
+    },
+  },
+
   // Button
   btnBgColor800: Colors.primaryGreen800,
   btnColor700: Colors.primaryGreen700,

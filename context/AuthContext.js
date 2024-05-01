@@ -30,12 +30,15 @@ export const AuthProvider = ({ children }) => {
   const register = async (user) => {
     setIsLoading(true);
     const response = await API.post("/auth/register", user);
-    response &&
+    if (response.statusCode === 200) {
       Alert.alert(
         "Đăng ký thành công",
         "Chúc mừng quý khách vừa tạo tài khoản thành công, quý khách đã có thể đăng nhập vào hệ thống",
         [{ text: "OK" }],
       );
+    } else {
+      console.log("Oops! Something went wrong!\n" + JSON.stringify(response, null, 2));
+    }
     setIsLoading(false);
   };
 

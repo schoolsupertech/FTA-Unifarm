@@ -6,9 +6,12 @@ import {
   SafeAreaView,
   Alert,
   ImageBackground,
+  TouchableOpacity,
+  Text,
 } from "react-native";
 import { Searchbar, Snackbar } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import TopHeader from "../components/common/headers/TopHeader";
@@ -142,7 +145,25 @@ function TodayScreen() {
             }
           />
 
+          <TouchableOpacity style={styles.headerContent}>
+            <Ionicons
+              name="calendar"
+              size={20}
+              color={Colors.primaryGreen800}
+            />
+            <Text style={styles.headerText}>
+              {FORMAT.dateFormat(new Date())}{" "}
+            </Text>
+            <Ionicons
+              name="arrow-forward-circle-outline"
+              size={16}
+              color={Colors.primaryGreen800}
+            />
+          </TouchableOpacity>
+
+          {/*
           <Calendar onSelectDate={setSelectedDate} selected={selectedDate} />
+          */}
         </ImageBackground>
       </LinearGradient>
 
