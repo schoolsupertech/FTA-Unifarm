@@ -13,23 +13,26 @@ const API = createAxios();
 function Home({ navigation }) {
   const [transferData, setTransferData] = useState([
     {
+      percent: 0,
       value: 0,
-      text: "",
+      text: "Đã xử lý",
       color: "#006DFF",
       gradientCenterColor: "#006DFF",
+      focused: true,
     },
     {
+      percent: 0,
       value: 0,
-      text: "",
-      color: "#3BE9DE",
-      gradientCenterColor: "#3BE9DE",
-    },
-    {
-      value: 0,
-      text: "",
+      text: "Sự cố",
       color: "#FF7F97",
       gradientCenterColor: "#FF7F97",
-      focused: true,
+    },
+    {
+      //   percent: 0,
+      value: 0,
+      //   text: "Hôm nay còn",
+      color: "#3BE9DE",
+      gradientCenterColor: "#3BE9DE",
     },
   ]);
   const [orderData, setOrderData] = useState([
@@ -51,20 +54,30 @@ function Home({ navigation }) {
 
   const fetchData = async (dayBack) => {
     const response = await API.get("/station/dashboards?dayBack=" + dayBack);
+
     if (response.statusCode === 200) {
       const newTransferData = [...transferData];
 
+      const total =
+        // response.payload.totalTransferPending +
+        response.payload.totalTransferReceived +
+        response.payload.totalTransferNotReceived;
+      const receivedPercent =
+        (response.payload.totalTransferReceived / total) * 100;
+      const notReceivedPercent =
+        (response.payload.totalTransferNotReceived / total) * 100;
+      // const pendingPercent =
+      //   (response.payload.totalTransferPending / total) * 100;
+
       // [0] Transfer received
-      (newTransferData[0].value = response.payload.totalTransferReceived),
-        (newTransferData[0].text =
-          response.payload.totalTransferReceived + "%"),
+      (newTransferData[0].percent = parseInt(receivedPercent)),
+        (newTransferData[0].value = response.payload.totalTransferReceived),
         // [1] Transfer not received
+        (newTransferData[1].percent = parseInt(notReceivedPercent)),
         (newTransferData[1].value = response.payload.totalTransferNotReceived),
-        (newTransferData[1].text =
-          response.payload.totalTransferNotReceived + "%"),
         // [2] Transfer pending
+        // (newTransferData[2].percent = parseInt(pendingPercent)),
         (newTransferData[2].value = response.payload.totalTransferPending),
-        (newTransferData[2].text = response.payload.totalTransferPending + "%"),
         setTransferData(newTransferData);
     }
   };
@@ -107,11 +120,15 @@ function Home({ navigation }) {
           }}
         >
           <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-            Tỉ lệ vận chuyển - Hôm nay còn{" "}
-            {transferData[0].value === 0 ? 0 : transferData[0].value} chuyển
-            hàng
+            Tỉ lệ vận chuyển -{" "}
+            <Text style={{ color: "cyan" }}>
+              Còn {transferData[2].value === 0 ? 0 : transferData[2].value}{" "}
+              chuyển hàng
+            </Text>
           </Text>
-          <View style={{ padding: 20, alignItems: "center" }}>
+          <View
+            style={{ marginVertical: 20, padding: 20, alignItems: "center" }}
+          >
             <PieChart
               data={transferData}
               donut
@@ -132,22 +149,32 @@ function Home({ navigation }) {
                         fontWeight: "bold",
                       }}
                     >
-                      {transferData[0].text}
+                      {transferData[0].percent + "%"}
                     </Text>
                     <Text style={{ fontSize: 14, color: "white" }}>
-                      Đã xử lý
+                      {transferData[0].text}
                     </Text>
                   </View>
                 );
               }}
             />
           </View>
-          <LegendTransfers
-            value1={transferData[0].text}
-            value2={transferData[1].text}
-            value3={transferData[2].text}
-          />
+          <View style={styles.rowContainer}>
+            {transferData.map(
+              (item, index) =>
+                item.value !== 0 && (
+                  <LegendTransfers
+                    key={index}
+                    style={index % 2 === 0 ? styles.row : styles.doubleRow}
+                    percent={item.percent}
+                    label={item.text}
+                    dotColor={item.color}
+                  />
+                ),
+            )}
+          </View>
         </View>
+        {/*
         <View
           style={{
             marginHorizontal: 20,
@@ -197,6 +224,7 @@ function Home({ navigation }) {
             value4={orderData[3].value}
           />
         </View>
+        */}
       </View>
     </SafeAreaView>
   );
@@ -207,6 +235,21 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#EEEEEE",
+  },
+  rowContainer: {
+    flexWrap: "wrap",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  row: {
+    width: "50%",
+  },
+  doubleRow: {
+    width: "50%",
+    marginBottom: 10,
   },
 });
