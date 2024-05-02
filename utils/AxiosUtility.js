@@ -4,7 +4,7 @@ import { BASE_URL } from "../api/config";
 const createAxios = () => {
   const api = axios.create({
     baseURL: BASE_URL,
-    // timeout: 5000, // (ms)
+    // timeout: 5000, // Default is 0/ms (no timeout)
     headers: {
       "Content-Type": "application/json",
     },

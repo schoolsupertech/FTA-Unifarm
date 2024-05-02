@@ -108,7 +108,7 @@ function AppStackNav() {
         component={ReceiveInfoScreen}
         options={{
           title: "Thanh toán",
-          headerLeft: () => null,
+          headerBackVisible: false,
         }}
       />
       <Stack.Screen
@@ -122,7 +122,7 @@ function AppStackNav() {
         name="TrackingOrderScreen"
         component={TrackingOrderScreen}
         options={{
-          title: "Theo dõi đơn",
+          title: "Theo dõi đơn hàng",
         }}
       />
     </Stack.Navigator>

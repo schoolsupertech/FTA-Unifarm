@@ -25,7 +25,7 @@ const LogoImage = LogoTheme();
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, onBtnGoogleLoginHandler } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
@@ -97,9 +97,9 @@ const LoginScreen = ({ navigation }) => {
           >
             <TouchableOpacity
               onPress={() => {
-                onBtnGoogleLoginHandler().then(() =>
-                  console.log("Signed in with Google!"),
-                );
+                // onBtnGoogleLoginHandler().then(() =>
+                //   console.log("Signed in with Google!"),
+                // );
               }}
               style={{
                 borderWidth: 1,

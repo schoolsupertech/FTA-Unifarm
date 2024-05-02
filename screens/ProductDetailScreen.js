@@ -33,6 +33,7 @@ function ProductDetailScreen({ route, navigation }) {
   const [count, setCount] = useState(defaultCount);
   const [visible, setVisible] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState("");
+  const [outOfStock, setOutOfStock] = useState(false);
   const { authState, userInfo, updateCartQty } = useContext(AuthContext);
 
   useEffect(() => {
@@ -157,13 +158,20 @@ function ProductDetailScreen({ route, navigation }) {
       "Response in product item detail: " + JSON.stringify(response, null, 2),
     );
 
-    if (response.statusCode === 201 || response.statusCode === 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       updateCartQty(authState?.token);
       return response.payload;
     } else {
       console.log(
         "Oops! Something went wrong\n" + JSON.stringify(response, null, 2),
       );
+      if (response.statusCode === 400) {
+        Alert.alert(
+          "Vượt quá số lượng cho phép",
+          "Số lượng trong kho không đủ với số lượng bạn muốn thêm vào giỏ",
+          [{ text: "OK" }],
+        );
+      }
     }
   }
 

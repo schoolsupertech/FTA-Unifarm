@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -43,21 +44,31 @@ function ReceiveInfoScreen({ route }) {
         authState?.token,
       );
 
-      if (res.statusCode === 200 || res.statusCode === 201) {
+      if (res.statusCode >= 200 && res.statusCode < 300) {
         setProcessed({
           ...processed,
           isSuccess: true,
           message: "Thanh toán thành công",
         });
-        setPaidItem(res);
+        setPaidItem(res.payload);
         updateCartQty(authState?.token);
       } else {
+        console.log(
+          "Oops! Something went wrong\n" + JSON.stringify(res, null, 2),
+        );
         setProcessed({
           ...processed,
           isSuccess: false,
           message: "Thanh toán thất bại",
         });
-        setPaidItem("Ví không đủ tiền. Vui lòng nạp thêm tiền vào ví!");
+        if (res.statusCode >= 400 && res.statusCode < 500) {
+          if (res.statusCode === 404) {
+            Alert.alert("Lỗi rồi!", res.message, [
+              { text: "OK", onPress: () => navigation.goBack() },
+            ]);
+          }
+          setPaidItem(res);
+        }
       }
 
       setIsLoading(false);
@@ -65,12 +76,6 @@ function ReceiveInfoScreen({ route }) {
 
     fetchCheckoutHandler();
   }, []);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => null,
-    });
-  }, [navigation]);
 
   return (
     <SafeAreaView style={DefaultTheme.root}>
@@ -81,7 +86,7 @@ function ReceiveInfoScreen({ route }) {
           <HeaderProcessPayment processing={isLoading} processed={processed} />
         )}
       </View>
-      <Divider />
+      <Divider style={{ marginVertical: 20 }} />
       {Array.isArray(paidItem) ? (
         <ScrollView style={DefaultTheme.scrollContainer}>
           {paidItem.length > 0 &&
@@ -91,18 +96,22 @@ function ReceiveInfoScreen({ route }) {
         </ScrollView>
       ) : (
         <View style={styles.container}>
-          <PaperText
-            variant="titleLarge"
-            style={{ fontWeight: "500", color: Colors.brandingError }}
-          >
-            {paidItem}
-          </PaperText>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => navigation.navigate("Wallet")}
-          >
-            <Text style={styles.btnText}>Nạp tiền</Text>
-          </TouchableOpacity>
+          {paidItem && paidItem.statusCode && paidItem.statusCode === 400 && (
+            <>
+              <PaperText
+                variant="titleLarge"
+                style={{ fontWeight: "500", color: Colors.brandingError }}
+              >
+                {paidItem}
+              </PaperText>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => navigation.navigate("Wallet")}
+              >
+                <Text style={styles.btnText}>Nạp tiền</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       )}
       <Divider />
@@ -121,7 +130,6 @@ export default ReceiveInfoScreen;
 
 const styles = StyleSheet.create({
   headerContainer: {
-    marginBottom: 12,
     alignItems: "center",
     justifyContent: "flex-start",
   },

@@ -1,10 +1,10 @@
 import React, { createContext, useState, useEffect } from "react";
 import { Alert } from "react-native";
 import * as Location from "expo-location";
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
+// import {
+//   GoogleSignin,
+//   statusCodes,
+// } from "@react-native-google-signin/google-signin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import createAxios from "../utils/AxiosUtility";
@@ -21,11 +21,13 @@ export const AuthProvider = ({ children }) => {
     authenticated: false,
   });
 
-  GoogleSignin.configure({
-    // webClientId: '<FROM DEVELOPER CONSOLE>', // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
-    iosClientId:
-      "611874810536-ea5432vg9er0nb16i4drj14tv5rv6i8v.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
-  });
+  console.log("User info: " + JSON.stringify(userInfo, null, 2));
+
+  // GoogleSignin.configure({
+  //   // webClientId: '<FROM DEVELOPER CONSOLE>', // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
+  //   iosClientId:
+  //     "611874810536-ea5432vg9er0nb16i4drj14tv5rv6i8v.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+  // });
 
   const register = async (user) => {
     setIsLoading(true);
@@ -37,7 +39,9 @@ export const AuthProvider = ({ children }) => {
         [{ text: "OK" }],
       );
     } else {
-      console.log("Oops! Something went wrong!\n" + JSON.stringify(response, null, 2));
+      console.log(
+        "Oops! Something went wrong!\n" + JSON.stringify(response, null, 2),
+      );
     }
     setIsLoading(false);
   };
@@ -48,6 +52,8 @@ export const AuthProvider = ({ children }) => {
       email: email,
       password: password,
     });
+
+    console.log("Token: " + JSON.stringify(response, null, 2));
 
     if (response && response.response) {
       if (
@@ -116,54 +122,54 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
-  const onBtnGoogleLoginHandler = async () => {
-    setIsLoading(true);
-    try {
-      await GoogleSignin.hasPlayServices({
-        showPlayServicesUpdateDialog: true,
-      });
-      const userInfo = await GoogleSignin.signIn();
-
-      setUserInfo(userInfo.user);
-      setAuthState({
-        token: userInfo.idToken,
-        authenticated: true,
-      });
-      await AsyncStorage.setItem(
-        "TOKEN_KEY",
-        JSON.stringify({ token: userInfo.idToken, loggedIn: "google" }),
-      );
-      await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo.user));
-      // switch(account.role) {
-      //   case "unknown":
-      //     const signUp_Response = API.post("/signup", {
-      //       role: "customer",
-      //       address: loggedUser?.address || "",
-      //       user: {
-      //         photo: userInfo.user.photo,
-      //         name: userInfo.user.name,
-      //         phone: loggedUser?.phoneNumber || "",
-      //         email: userInfo.user.email,
-      //       },
-      //     });
-      //     await navigation.navigate("Profile");
-      //     break;
-      //   case "customer":
-      //     break;
-      // }
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        // some other error happened
-      }
-    }
-    setIsLoading(false);
-  };
+  // const onBtnGoogleLoginHandler = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     await GoogleSignin.hasPlayServices({
+  //       showPlayServicesUpdateDialog: true,
+  //     });
+  //     const userInfo = await GoogleSignin.signIn();
+  //
+  //     setUserInfo(userInfo.user);
+  //     setAuthState({
+  //       token: userInfo.idToken,
+  //       authenticated: true,
+  //     });
+  //     await AsyncStorage.setItem(
+  //       "TOKEN_KEY",
+  //       JSON.stringify({ token: userInfo.idToken, loggedIn: "google" }),
+  //     );
+  //     await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo.user));
+  //     // switch(account.role) {
+  //     //   case "unknown":
+  //     //     const signUp_Response = API.post("/signup", {
+  //     //       role: "customer",
+  //     //       address: loggedUser?.address || "",
+  //     //       user: {
+  //     //         photo: userInfo.user.photo,
+  //     //         name: userInfo.user.name,
+  //     //         phone: loggedUser?.phoneNumber || "",
+  //     //         email: userInfo.user.email,
+  //     //       },
+  //     //     });
+  //     //     await navigation.navigate("Profile");
+  //     //     break;
+  //     //   case "customer":
+  //     //     break;
+  //     // }
+  //   } catch (error) {
+  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+  //       // user cancelled the login flow
+  //     } else if (error.code === statusCodes.IN_PROGRESS) {
+  //       // operation (e.g. sign in) is in progress already
+  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+  //       // play services not available or outdated
+  //     } else {
+  //       // some other error happened
+  //     }
+  //   }
+  //   setIsLoading(false);
+  // };
 
   const logout = () => {
     setIsLoading(true);
@@ -181,18 +187,16 @@ export const AuthProvider = ({ children }) => {
 
       if (tokenStorage !== null) {
         const data = JSON.parse(tokenStorage);
-        const userInfo = await AsyncStorage.getItem("userInfo");
-        const userInfoJsonParse = JSON.parse(userInfo);
 
         console.log("Token storage: " + JSON.stringify(data, null, 2));
-        console.log("User info: " + JSON.stringify(userInfoJsonParse, null, 2));
 
         setAuthState({
           token: data.token,
           authenticated: true,
         });
-        setUserInfo(userInfoJsonParse);
+
         updateCartQty(data.token);
+        updateProfile(null, data.token);
       }
     } catch (e) {
       console.log(`Error occurred at: isLoggedIn error: ${e}`);
@@ -203,7 +207,7 @@ export const AuthProvider = ({ children }) => {
   const getCartQuantity = async (token) => {
     const response = await API.customRequest("get", "/carts", null, token);
     let qtyInCart = response.payload ? response.payload.length : 0;
-    console.log("get cart qty: " + JSON.stringify(qtyInCart, null, 2));
+
     return qtyInCart;
   };
 
@@ -211,15 +215,9 @@ export const AuthProvider = ({ children }) => {
     const qtyRes = await getCartQuantity(token);
     const userInfo = await AsyncStorage.getItem("userInfo");
 
-    if (qtyRes && userInfo !== null) {
+    if (userInfo !== null) {
       const userInfoJsonParse = JSON.parse(userInfo);
-
       userInfoJsonParse.qtyInCart = qtyRes;
-
-      console.log(
-        "Qty after updating: " + JSON.stringify(userInfoJsonParse, null, 2),
-      );
-
       setUserInfo(userInfoJsonParse);
       await AsyncStorage.setItem("userInfo", JSON.stringify(userInfoJsonParse));
     }
@@ -230,33 +228,42 @@ export const AuthProvider = ({ children }) => {
     return response;
   };
 
-  const updateProfile = async (user) => {
-    const response = await API.customRequest(
-      "put",
-      "/update-profile",
-      user,
-      authState?.token,
-    );
+  const updateProfile = async (user, token) => {
+    if (user !== null) {
+      const response = await API.customRequest(
+        "put",
+        "/update-profile",
+        user,
+        token,
+      );
 
-    if (response) {
-      const getInfoRes = await getProfile(authState?.token);
-      const userInfo = await AsyncStorage.getItem("userInfo");
+      if (response) {
+        const getInfoRes = await getProfile(authState?.token);
+        const userInfo = await AsyncStorage.getItem("userInfo");
 
-      if (getInfoRes && userInfo !== null) {
-        const userInfoJsonParse = JSON.parse(userInfo);
-
-        userInfoJsonParse.info = getInfoRes;
-
-        console.log(
-          "User info after updating: " +
-            JSON.stringify(userInfoJsonParse, null, 2),
-        );
-
-        setUserInfo(userInfoJsonParse);
-        await AsyncStorage.setItem(
-          "userInfo",
-          JSON.stringify(userInfoJsonParse),
-        );
+        if (getInfoRes && userInfo !== null) {
+          const userInfoJsonParse = JSON.parse(userInfo);
+          userInfoJsonParse.info = getInfoRes;
+          setUserInfo(userInfoJsonParse);
+          await AsyncStorage.setItem(
+            "userInfo",
+            JSON.stringify(userInfoJsonParse),
+          );
+        }
+      }
+    } else {
+      const userInfoRes = await getProfile(token);
+      if (userInfoRes) {
+        const userInfo = await AsyncStorage.getItem("userInfo");
+        if (userInfo !== null) {
+          const userInfoJsonParse = JSON.parse(userInfo);
+          userInfoJsonParse.info = userInfoRes;
+          setUserInfo(userInfoJsonParse);
+          await AsyncStorage.setItem(
+            "userInfo",
+            JSON.stringify(userInfoJsonParse),
+          );
+        }
       }
     }
   };
@@ -304,18 +311,10 @@ export const AuthProvider = ({ children }) => {
   // };
 
   useEffect(() => {
-    if (authState?.authenticated) {
-      updateCartQty(authState?.token);
-      updateProfile(authState?.token);
-    }
-  }, [authState]);
-
-  useEffect(() => {
     isLoggedIn();
   }, []);
 
   const value = {
-    onBtnGoogleLoginHandler,
     register,
     login,
     logout,

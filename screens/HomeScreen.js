@@ -62,12 +62,6 @@ function HomeScreen() {
       const prodItemsInfoResponse = await API.get(
         "/product-items/all-in-businessday",
       );
-      // const isDuplicate = prodItemsInfo.some(
-      //   (items) =>
-      //     items.id === prodItemsInfoResponse.payload.map((prodId) => prodId.id),
-      // );
-
-      // !isDuplicate &&
       setProdItemsInfo(prodItemsInfoResponse.payload);
     };
 

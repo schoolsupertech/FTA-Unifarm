@@ -27,7 +27,7 @@ const API = createAxios();
 const FORMAT = createFormatUtil();
 
 function WalletScreen() {
-  const { authState, userInfo } = useContext(AuthContext);
+  const { authState, userInfo, updateProfile } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [amount, setAmount] = useState(0);
@@ -70,6 +70,11 @@ function WalletScreen() {
     setIsLoading(false);
   };
 
+  async function onBrowsingHandler(url) {
+    let result = await WebBrowser.openBrowserAsync(url);
+    return result;
+  }
+
   async function onPaymentHandler() {
     const response = await API.customRequest(
       "post",
@@ -82,8 +87,13 @@ function WalletScreen() {
     );
 
     if (response) {
-      let result = WebBrowser.openBrowserAsync(response);
-      console.log("Result: " + JSON.stringify(result, null, 2));
+      console.log("VNPay HTTPS URL: " + response);
+      let result = await onBrowsingHandler(response);
+      if (result.type === "cancel") {
+        setVisible(false);
+        updateProfile(null);
+        fetchData();
+      }
     } else {
       Alert.alert("Oops! Something went wrong");
     }

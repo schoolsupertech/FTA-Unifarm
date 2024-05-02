@@ -9,7 +9,12 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { ActivityIndicator, Divider } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Button,
+  Divider,
+  Text as PaperText,
+} from "react-native-paper";
 
 import CardHeaderInfo from "../components/common/card/CardHeaderInfo";
 import CardFooter from "../components/common/card/CardFooter";
@@ -26,6 +31,7 @@ function OrderScreen({ route }) {
   const selectedCheckoutProdItems = route.params.payload;
   const [isLoading, setIsLoading] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [toggleBaner, setToggleBanner] = useState(false);
   const { authState, userInfo } = useContext(AuthContext);
 
   // useEffect(() => {
@@ -85,10 +91,31 @@ function OrderScreen({ route }) {
   } else {
     return (
       <SafeAreaView style={DefaultTheme.root}>
-        <CardHeaderInfo navigation={navigation} />
+        <View style={{ backgroundColor: "#EEEEEE" }}>
+          <View style={styles.headerContent}>
+            <View style={{ flex: 1 }}>
+              <PaperText variant="titleLarge" style={{ fontWeight: "bold" }}>
+                Thông tin chi tiết
+              </PaperText>
+            </View>
+            <Button
+              icon="account-arrow-down-outline"
+              mode="contained"
+              theme={{
+                colors: {
+                  primary: Colors.primaryGreen700,
+                },
+              }}
+              onPress={() => setToggleBanner(!toggleBaner)}
+            >
+              Mở rộng
+            </Button>
+          </View>
+          <CardHeaderInfo visible={toggleBaner} navigation={navigation} />
+        </View>
 
         <ScrollView
-          style={DefaultTheme.scrollContainer}
+          style={[DefaultTheme.scrollContainer, { paddingTop: 8 }]}
           contentContainerStyle={{ paddingBottom: 80 }}
           showsVerticalScrollIndicator={false}
         >
@@ -113,6 +140,12 @@ function OrderScreen({ route }) {
 export default OrderScreen;
 
 const styles = StyleSheet.create({
+  headerContent: {
+    margin: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   bodyContent: {},
   textContent: {},
 });
