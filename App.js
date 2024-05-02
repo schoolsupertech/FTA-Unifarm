@@ -123,7 +123,7 @@ export default function App() {
               headerShown: true,
               title: "Thông báo",
               headerTintColor: Colors.accentBlue,
-              headerBackTitle: "",
+              headerBackTitleVisible: false,
             }}
           />
         </Stack.Navigator>

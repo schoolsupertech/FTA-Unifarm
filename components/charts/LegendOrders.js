@@ -11,23 +11,21 @@ function LegendOrders({ value1, value2, value3, value4 }) {
       <View style={[styles.rowContainer, { marginBottom: 10 }]}>
         <View style={[styles.row, { marginRight: 20 }]}>
           {renderDot("#006DFF")}
-          <Text style={{ color: "white" }}>Đã xử lý: {value1}%</Text>
+          <Text style={{ color: "white" }}>Hoàn tất: {value1}%</Text>
         </View>
         <View style={styles.row}>
           {renderDot("#3BE9DE")}
-          <Text style={{ color: "white" }}>Đã nhận: {value2}%</Text>
+          <Text style={{ color: "white" }}>Đơn bị huỷ: {value2}%</Text>
         </View>
       </View>
       <View style={styles.rowContainer}>
         <View style={[styles.row, { marginRight: 20 }]}>
           {renderDot("#8F80F3")}
-          <Text style={{ color: "white" }}>Đã nhận: {value3}%</Text>
+          <Text style={{ color: "white" }}>Hết hạn: {value3}%</Text>
         </View>
         <View style={styles.row}>
           {renderDot("#FF7F97")}
-          <Text style={{ color: "white" }}>
-            Không nhận được hàng: {value4}%
-          </Text>
+          <Text style={{ color: "white" }}>Không nhận được: {value4}%</Text>
         </View>
       </View>
     </>

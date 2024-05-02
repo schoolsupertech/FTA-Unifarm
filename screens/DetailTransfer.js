@@ -7,25 +7,53 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 
 import Header from "../components/Header";
 import createAxios from "../utils/axios";
+import { ButtonFlex } from "../components/Buttons";
 
 const API = createAxios();
 
 function DetailTransfer({ navigation, route }) {
-  const transferId = route.params.transferId;
-  console.log(transferId);
+  const transfer = route.params?.transfer;
   const [dataOrder, setDataOrder] = useState([]);
+
+  console.log(
+    "Detail transfer get route: " + JSON.stringify(transfer, null, 2),
+  );
+
+  const status = {
+    Resend: {
+      name: "Gửi lại",
+      color: "orange",
+    },
+    Received: {
+      name: "Đã đến",
+      color: "#32b768",
+    },
+    none: {
+      name: "Đã hủy",
+      color: "red",
+    },
+    Pending: {
+      name: "Đang vận chuyển",
+      color: "#00B2FF",
+    },
+    NotReceived: {
+      name: "Không nhận được",
+      color: "#FF0040",
+    },
+  };
 
   async function fetchDataOrderOfTransfer() {
     try {
-      const response = await API.get(`/orders/${transferId}`);
-      if (response) {
+      const response = await API.get(`/orders/${transfer.id}`);
+      if (response.statusCode === 200) {
         console.log("Success get dataOrder");
-        console.log(response.payload);
+        console.log(JSON.stringify(response.payload, null, 2));
         setDataOrder(response.payload);
       }
     } catch (error) {
@@ -33,9 +61,29 @@ function DetailTransfer({ navigation, route }) {
     }
   }
 
+  async function changeOrderStatus(id, orderId, stationId) {
+    try {
+      const response = await API.put("/station/orders/update-status", {
+        transferId: id,
+        orderIds: [orderId],
+        stationId: stationId,
+        deliveryStatus: "AtStation",
+      });
+      if (response.statusCode === 200) {
+        console.log("Update order status successed!");
+        Alert.alert("Thông báo", "Xác nhận đơn hàng thành công!");
+        fetchDataOrderOfTransfer();
+      } else {
+        Alert.alert("Thông báo 😀", "Có gì đó sai sai!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
-    if (transferId) fetchDataOrderOfTransfer();
-  }, [transferId]);
+    if (transfer) fetchDataOrderOfTransfer();
+  }, [transfer]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -59,10 +107,10 @@ function DetailTransfer({ navigation, route }) {
               marginBottom: 20,
               fontSize: 18,
               fontWeight: "bold",
-              color: "#00B2FF",
+              color: status[transfer.status].color,
             }}
           >
-            Đang vận chuyển
+            {status[transfer.status].name}
           </Text>
         </View>
         <View style={{ padding: 20 }}>
@@ -73,8 +121,8 @@ function DetailTransfer({ navigation, route }) {
               marginVertical: 5,
             }}
           >
-            <Text style={styles.textTitle}>Thời gian tạo</Text>
-            <Text style={styles.textInfo}>11:59, 21/03/2024</Text>
+            <Text style={styles.textTitle}>Người tạo</Text>
+            <Text style={styles.textInfo}>{transfer.collected.name}</Text>
           </View>
           <View
             style={{
@@ -83,8 +131,8 @@ function DetailTransfer({ navigation, route }) {
               marginVertical: 5,
             }}
           >
-            <Text style={styles.textTitle}>Người tạo</Text>
-            <Text style={styles.textInfo}>Nguyễn Lê Hữu</Text>
+            <Text style={styles.textTitle}>Thời gian tạo</Text>
+            <Text style={styles.textInfo}>{transfer.createdAt}</Text>
           </View>
           <View
             style={{
@@ -94,7 +142,7 @@ function DetailTransfer({ navigation, route }) {
             }}
           >
             <Text style={styles.textTitle}>Ghi chú gửi</Text>
-            <Text style={styles.textInfo}>Gửi hàng từ về station</Text>
+            <Text style={styles.textInfo}>{transfer.noteSend}</Text>
           </View>
           <View
             style={{
@@ -104,7 +152,7 @@ function DetailTransfer({ navigation, route }) {
             }}
           >
             <Text style={styles.textTitle}>Ngày nhận</Text>
-            <Text style={styles.textInfo}>11:59, 30/03/2024</Text>
+            <Text style={styles.textInfo}>{transfer.updatedAt}</Text>
           </View>
           <View
             style={{
@@ -114,7 +162,7 @@ function DetailTransfer({ navigation, route }) {
             }}
           >
             <Text style={styles.textTitle}>Ghi chú nhận</Text>
-            <Text style={styles.textInfo}>Đã nhận đủ hàng</Text>
+            <Text style={styles.textInfo}>{transfer.noteReceived}</Text>
           </View>
         </View>
 
@@ -128,7 +176,7 @@ function DetailTransfer({ navigation, route }) {
           <View style={{ alignItems: "center" }}>
             <Icon name="warehouse" size={80} color={"grey"} />
             <Text style={[styles.textTitle, { textAlign: "center" }]}>
-              Kho tổng Vinhomes Grand Park
+              {transfer.collected.name}
             </Text>
           </View>
         </View>
@@ -154,7 +202,7 @@ function DetailTransfer({ navigation, route }) {
           <View style={{ alignItems: "center" }}>
             <Icon name="store-marker-outline" size={80} color={"grey"} />
             <Text style={[styles.textTitle, { textAlign: "center" }]}>
-              Trạm Vinhomes Grand Park Masterise
+              {transfer.station.name}
             </Text>
           </View>
         </View>
@@ -204,6 +252,37 @@ function DetailTransfer({ navigation, route }) {
                   {item.totalAmount} đ
                 </Text>
               </View>
+              {item.transferResponse?.status === "Received" &&
+                item.deliveryStatus === "OnTheWayToStation" && (
+                  <View style={{ alignSelf: "flex-end", marginTop: 8 }}>
+                    <ButtonFlex
+                      title="Xác nhận"
+                      stylesButton={{
+                        paddingHorizontal: 24,
+                        paddingVertical: 8,
+                      }}
+                      stylesText={{ fontWeight: "bold", fontSize: 12 }}
+                      onPress={() => {
+                        Alert.alert("Xác nhận", "Đơn hàng này đã đến?", [
+                          {
+                            text: "Huỷ",
+                            onPress: () => console.log("Cancel pressed"),
+                            style: "cancel",
+                          },
+                          {
+                            text: "Ok",
+                            onPress: () =>
+                              changeOrderStatus(
+                                item.transferResponse.id,
+                                item.id,
+                                item.stationResponse.id,
+                              ),
+                          },
+                        ]);
+                      }}
+                    />
+                  </View>
+                )}
             </TouchableOpacity>
           ))}
         </View>

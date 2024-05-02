@@ -45,14 +45,16 @@ function Order({ navigation }) {
   const fetchDataOrder = async () => {
     try {
       const response = await API.get(
-        `/station/orders-contain-transfer?stationId=${aboutMe.station.id}`,
+        `/station/orders?stationId=${aboutMe.station.id}`,
       );
-      if (response) {
+      if (response.statusCode === 200) {
         console.log("DataOrder", response.payload);
         const filterData = response.payload.filter((e) => {
-          return e.deliveryStatus !== "PickedUp";
+          return e.deliveryStatus === "AtStation";
         });
         setDataOrder(filterData);
+      } else {
+        console.log("Oops! Something is wrong\n" + response);
       }
     } catch (error) {
       console.log(error);
@@ -62,7 +64,7 @@ function Order({ navigation }) {
   const fetchDataOrderDone = async () => {
     try {
       const response = await API.get(
-        `/station/orders?stationId=${aboutMe.station.id}&deliveryStatus=PickedUp&orderBy=CreatedAt&isAscending=false&pageIndex=0&pageSize=100`,
+        `/station/orders?stationId=${aboutMe.station.id}&deliveryStatus=PickedUp`,
       );
       if (response) {
         console.log("DataOrderDone", response.payload);
@@ -73,16 +75,15 @@ function Order({ navigation }) {
     }
   };
 
-  const changOrderStatus = async (id, stationId, transferId) => {
-    console.log("id", id);
-    console.log("stationId", stationId);
-
-    console.log("transferId", transferId);
+  const changeOrderStatus = async (id, orderId, stationId) => {
+    console.log("Transfer id: " + id);
+    console.log("Order id: " + orderId);
+    console.log("Station id: " + stationId);
 
     try {
       const response = await API.put("/station/orders/update-status", {
-        transferId: transferId,
-        orderIds: id,
+        transferId: id,
+        orderIds: [orderId],
         stationId: stationId,
         deliveryStatus: "PickedUp",
       });
@@ -91,6 +92,8 @@ function Order({ navigation }) {
         Alert.alert("Thông báo", `Xác nhận đơn hàng thành công!`);
         fetchDataOrder();
         fetchDataOrderDone();
+      } else {
+        Alert.alert("Thông báo 😀", `Có gì đó sai sai!`);
       }
     } catch (error) {
       console.log(error);
@@ -189,10 +192,10 @@ function Order({ navigation }) {
                                 {
                                   text: "OK",
                                   onPress: () =>
-                                    changOrderStatus(
+                                    changeOrderStatus(
+                                      item.transferResponse.id,
                                       item.id,
                                       item.stationId,
-                                      item.transferResponse.id,
                                     ),
                                 },
                               ],

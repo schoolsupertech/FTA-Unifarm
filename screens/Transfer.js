@@ -67,12 +67,14 @@ function Transfer({ navigation }) {
   const fetchDataAll = async () => {
     try {
       const response = await API.get(
-        `/transfers/getall?stationId=${aboutMe.station.id}&page=0&pageSize=10`,
+        `/transfers/getall?stationId=${aboutMe.station.id}`,
       );
-      if (response) {
+      if (response.statusCode === 200) {
         console.log("Success get dataAll");
-        console.log("DataAll", response);
-        setDataAll(response);
+        console.log("DataAll", response.payload);
+        setDataAll(response.payload);
+      } else {
+        console.log("Oops! Something is wrong\n" + response);
       }
     } catch (error) {
       console.log(error);
@@ -84,10 +86,12 @@ function Transfer({ navigation }) {
       const response = await API.get(
         `/transfers/getall?stationId=${aboutMe.station.id}&status=Pending&page=0&pageSize=10`,
       );
-      if (response) {
+      if (response.statusCode === 200) {
         console.log("Success get dataTransfer");
-        console.log("Datatransfer", response);
-        setDataTransfer(response);
+        console.log("Datatransfer", response.payload);
+        setDataTransfer(response.payload);
+      } else {
+        console.log("Oops! Something is wrong\n" + response);
       }
     } catch (error) {
       console.log(error);
@@ -101,15 +105,15 @@ function Transfer({ navigation }) {
       );
       if (response) {
         console.log("Success get dataTransferDone");
-        console.log("DatatransferDone", response);
-        setDataTransferDone(response);
+        console.log("DatatransferDone", response.payload);
+        setDataTransferDone(response.payload);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const changTransferStatus = async (id) => {
+  const changeTransferStatus = async (id) => {
     try {
       const response = await API.put("/transfer/update", {
         id: id,
@@ -167,7 +171,7 @@ function Transfer({ navigation }) {
                     activeOpacity={0.8}
                     onPress={() =>
                       navigation.navigate("DetailTransfer", {
-                        transferId: item.id,
+                        transfer: item,
                       })
                     }
                     style={{
@@ -263,7 +267,7 @@ function Transfer({ navigation }) {
                   <TouchableOpacity
                     onPress={() =>
                       navigation.navigate("DetailTransfer", {
-                        transferId: item.id,
+                        transfer: item,
                       })
                     }
                     activeOpacity={0.8}
@@ -325,7 +329,7 @@ function Transfer({ navigation }) {
                                 },
                                 {
                                   text: "OK",
-                                  onPress: () => changTransferStatus(item.id),
+                                  onPress: () => changeTransferStatus(item.id),
                                 },
                               ],
                             );
@@ -369,7 +373,7 @@ function Transfer({ navigation }) {
                   <TouchableOpacity
                     onPress={() =>
                       navigation.navigate("DetailTransfer", {
-                        transferId: item.id,
+                        transfer: item,
                       })
                     }
                     activeOpacity={0.8}

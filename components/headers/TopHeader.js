@@ -33,7 +33,7 @@ function TopHeader({ label, userInfo, onNotiIconPress }) {
               right: -12,
             }}
           >
-            {userInfo.noti}
+            {/* userInfo.noti */}
           </Badge>
         </TouchableOpacity>
       ) : (

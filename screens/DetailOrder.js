@@ -125,7 +125,7 @@ function DetailOrder({ navigation, route }) {
               <Image
                 source={{
                   uri:
-                    item.image ||
+                    item.productImage ||
                     "https://static.vecteezy.com/system/resources/previews/022/984/730/non_2x/vegetable-transparent-free-png.png",
                 }}
                 style={{ height: 80, width: 80, borderRadius: 5 }}

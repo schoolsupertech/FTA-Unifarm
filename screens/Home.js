@@ -17,7 +17,6 @@ function Home({ navigation }) {
       text: "",
       color: "#006DFF",
       gradientCenterColor: "#006DFF",
-      focused: true,
     },
     {
       value: 0,
@@ -30,6 +29,7 @@ function Home({ navigation }) {
       text: "",
       color: "#FF7F97",
       gradientCenterColor: "#FF7F97",
+      focused: true,
     },
   ]);
   const [orderData, setOrderData] = useState([
@@ -43,38 +43,28 @@ function Home({ navigation }) {
     { value: 16, color: "#BDB2FA", gradientCenterColor: "#8F80F3" },
     { value: 3, color: "#FFA5BA", gradientCenterColor: "#FF7F97" },
   ]);
-  const [dayBack, setDayBack] = useState(7);
+  const [dayBack, setDayBack] = useState(9999);
   const [userInfo, setUserInfo] = useState({
     noti: 0,
     data: null,
   });
 
   const fetchData = async (dayBack) => {
-    console.log("dayBack: " + dayBack);
     const response = await API.get("/station/dashboards?dayBack=" + dayBack);
     if (response.statusCode === 200) {
       const newTransferData = [...transferData];
-      // (newTransferData[0].value = response.payload.totalTransferPending),
-      //   (newTransferData[0].text = response.payload.totalTransferPending + "%"),
-      //   (newTransferData[1].value = response.payload.totalTransferReceived),
-      //   (newTransferData[1].text =
-      //     response.payload.totalTransferReceived + "%"),
-      //   (newTransferData[2].value = response.payload.totalTransferNotReceived),
-      //   (newTransferData[2].text =
-      //     response.payload.totalTransferNotReceived + "%"),
-      //   (newTransferData[3].value = response.payload.totalTransferProcessed),
-      //   (newTransferData[3].text =
-      //     response.payload.totalTransferProcessed + "%"),
 
-      // [0] Transfer processed
-      (newTransferData[0].value = 60),
-        (newTransferData[0].text = "60%"),
-        // [1] Transfer received
-        (newTransferData[1].value = 30),
-        (newTransferData[1].text = "30%"),
-        // [2] Transfer not received
-        (newTransferData[2].value = 10),
-        (newTransferData[2].text = "10%"),
+      // [0] Transfer received
+      (newTransferData[0].value = response.payload.totalTransferReceived),
+        (newTransferData[0].text =
+          response.payload.totalTransferReceived + "%"),
+        // [1] Transfer not received
+        (newTransferData[1].value = response.payload.totalTransferNotReceived),
+        (newTransferData[1].text =
+          response.payload.totalTransferNotReceived + "%"),
+        // [2] Transfer pending
+        (newTransferData[2].value = response.payload.totalTransferPending),
+        (newTransferData[2].text = response.payload.totalTransferPending + "%"),
         setTransferData(newTransferData);
     }
   };
@@ -109,14 +99,17 @@ function Home({ navigation }) {
       <View style={styles.container}>
         <View
           style={{
-            margin: 20,
+            marginVertical: 8,
+            marginHorizontal: 20,
             padding: 16,
             borderRadius: 20,
             backgroundColor: "#232B5D",
           }}
         >
           <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-            Tỉ lệ vận chuyển
+            Tỉ lệ vận chuyển - Hôm nay còn{" "}
+            {transferData[0].value === 0 ? 0 : transferData[0].value} chuyển
+            hàng
           </Text>
           <View style={{ padding: 20, alignItems: "center" }}>
             <PieChart
@@ -214,6 +207,6 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "powderblue",
+    backgroundColor: "#EEEEEE",
   },
 });

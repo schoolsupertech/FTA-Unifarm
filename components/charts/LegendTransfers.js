@@ -15,12 +15,12 @@ function LegendTransfers({ value1, value2, value3 }) {
         </View>
         <View style={styles.row}>
           {renderDot("#3BE9DE")}
-          <Text style={{ color: "white" }}>Đã nhận: {value2}</Text>
+          <Text style={{ color: "white" }}>Không nhận được: {value2}</Text>
         </View>
       </View>
       <View style={styles.rowContainer}>
         {renderDot("#FF7F97")}
-        <Text style={{ color: "white" }}>Không nhận được hàng: {value3}</Text>
+        <Text style={{ color: "white" }}>Còn: {value3}</Text>
       </View>
     </>
   );

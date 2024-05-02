@@ -59,7 +59,7 @@ function NotificationScreen({ navigation, route }) {
             <View style={{ marginRight: 14 }}>
               <Ionicons name="notifications-outline" size={28} color={"grey"} />
             </View>
-            <View style={{ width: "100%" }}>
+            <View style={{ width: "90%" }}>
               <Text
                 style={{ fontWeight: "bold", fontSize: 15, color: "#444444" }}
               >
@@ -71,7 +71,7 @@ function NotificationScreen({ navigation, route }) {
                   justifyContent: "space-between",
                 }}
               >
-                <View style={{ flex: 1 }}>
+                <View>
                   <Text style={{ marginTop: 5, color: "grey" }}>
                     Mã vận chuyển: {item.code}
                   </Text>
@@ -79,9 +79,7 @@ function NotificationScreen({ navigation, route }) {
                     Trạng thái: {item.title}
                   </Text>
                 </View>
-                <View>
-                  <Ionicons name="chevron-forward" size={28} color={"grey"} />
-                </View>
+                <Ionicons name="chevron-forward" size={28} color={"grey"} />
               </View>
             </View>
           </TouchableOpacity>
