@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   View,
   Button,
+  Alert,
 } from "react-native";
 import { Text as PaperText } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,24 +29,23 @@ const initialUser = {
 
 function UserInfoScreen() {
   const [user, setUser] = useState(initialUser);
-  const { userInfo, updateProfile } = useContext(AuthContext);
+  const { authState, userInfo, updateProfile } = useContext(AuthContext);
   const formattedDate = new Date(
     userInfo?.info?.createdAt,
   ).toLocaleDateString();
   const [visible, setVisible] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [modalLabel, setModalLabel] = useState("");
   const [currentInputField, setCurrentInputField] = useState("");
 
-  function onChangingInfoHandler(label, field) {
+  function onChangingInfoHandler(label, field, changePass) {
+    if (changePass) {
+      setChangingPassword(true);
+    }
     setVisible(true);
     setModalLabel(label);
     setCurrentInputField(field);
-  }
-
-  function onChangingPasswordHandler() {
-    setVisible(true);
-    setChangingPassword(true);
   }
 
   function inputChangingHandler(value, userField) {
@@ -56,8 +56,25 @@ function UserInfoScreen() {
   }
 
   async function onSavedHandler() {
-    const res = await updateProfile(user);
+    if (changingPassword) {
+      if (user.password !== confirmPassword) {
+        Alert.alert(
+          "Cập nhật thông tin thất bại!",
+          "Mật khẩu mới và nhập lại mật khẩu không trùng nhau",
+          [{ text: "OK" }],
+        );
+      }
+      setChangingPassword(false);
+    }
+    const res = await updateProfile(user, authState?.token);
     console.log("Response: " + JSON.stringify(res, null, 2));
+    if (res.statusCode === 200) {
+      Alert.alert("Cập nhật thông tin thành công!", [{ text: "OK" }]);
+    } else {
+      console.log(
+        "Oops! Something went wrong:\n" + JSON.stringify(res, null, 2),
+      );
+    }
     setVisible(false);
     setChangingPassword(false);
     setUser(initialUser);
@@ -68,39 +85,39 @@ function UserInfoScreen() {
       <ScrollView style={[DefaultTheme.scrollContainer, { paddingTop: 8 }]}>
         <View style={styles.container}>
           <GridTileModal
-            onPress={() => onChangingInfoHandler("Họ", "lastName")}
+            onPress={() => onChangingInfoHandler("Họ", "lastName", false)}
             label="Họ"
           >
             {userInfo.info.lastName}
           </GridTileModal>
           <GridTileModal
-            onPress={() => onChangingInfoHandler("Tên", "firstName")}
+            onPress={() => onChangingInfoHandler("Tên", "firstName", false)}
             label="Tên"
           >
             {userInfo.info.firstName}
           </GridTileModal>
           <GridTileModal
-            onPress={() => onChangingInfoHandler("Email", "email")}
+            onPress={() => onChangingInfoHandler("Email", "email", false)}
             label="Email"
           >
             {userInfo.info.email}
           </GridTileModal>
           <GridTileModal
             onPress={() =>
-              onChangingInfoHandler("Số địen thoại", "phoneNumber")
+              onChangingInfoHandler("Số địen thoại", "phoneNumber", false)
             }
             label="Số điện thoại"
           >
             {userInfo.info.phoneNumber}
           </GridTileModal>
           <GridTileModal
-            onPress={() => onChangingInfoHandler("Địa chỉ", "address")}
+            onPress={() => onChangingInfoHandler("Địa chỉ", "address", false)}
             label="Địa chỉ"
           >
             {userInfo.info.address}
           </GridTileModal>
           <GridTileModal
-            onPress={() => onChangingPasswordHandler("Mật khẩu")}
+            onPress={() => onChangingInfoHandler("Mật khẩu", "password", true)}
             label="Mật khẩu"
           />
 
@@ -142,6 +159,9 @@ function UserInfoScreen() {
                     maxLength={100}
                     autoCapitalize="none"
                     autoCorrect={false}
+                    onChangeText={(value) =>
+                      inputChangingHandler(value, currentInputField)
+                    }
                   />
                   <InputField
                     label="Nhập lại mật khẩu mới"
@@ -149,6 +169,7 @@ function UserInfoScreen() {
                     maxLength={100}
                     autoCapitalize="none"
                     autoCorrect={false}
+                    onChangeText={(value) => setConfirmPassword(value)}
                   />
                 </>
               ) : (

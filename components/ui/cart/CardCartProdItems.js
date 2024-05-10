@@ -28,14 +28,22 @@ function CardCartProdItems(props) {
   const [totalPrice, setTotalPrice] = useState(props.totalPrice);
   const limitQuantity = useState(5);
   const [isMaxed, setIsMaxed] = useState(false);
-  const [isChecked, setIsChecked] = useState(props.toggleCheckbox);
+  const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
     setIsMaxed(count > limitQuantity);
   }, []);
 
   useEffect(() => {
-    setIsChecked(props.toggleCheckbox);
+    props.prodItemPrice(totalPrice);
+  }, [totalPrice]);
+
+  useEffect(() => {
+    if (props.toggleCheckbox === props.id) {
+      setIsChecked(true);
+    } else {
+      setIsChecked(false);
+    }
   }, [props.toggleCheckbox]);
 
   async function fetchUpdateQuantity(updateQuantity) {
@@ -59,6 +67,7 @@ function CardCartProdItems(props) {
           if (item.id === props.id) {
             setCount(item.quantity);
             setTotalPrice(item.totalPrice);
+            return props.prodItemPrice(totalPrice);
           }
         });
       } else {
@@ -84,6 +93,7 @@ function CardCartProdItems(props) {
           if (item.id === props.id) {
             setCount(item.quantity);
             setTotalPrice(item.totalPrice);
+            return props.prodItemPrice(totalPrice);
           }
         });
       } else {
@@ -113,6 +123,7 @@ function CardCartProdItems(props) {
 
   function onToggleCheckboxHandler() {
     setIsChecked(!isChecked);
+    return props.onSelectedProdItem(!isChecked, props.id);
   }
 
   return (

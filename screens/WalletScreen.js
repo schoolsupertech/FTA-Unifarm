@@ -91,7 +91,7 @@ function WalletScreen() {
       let result = await onBrowsingHandler(response);
       if (result.type === "cancel") {
         setVisible(false);
-        updateProfile(null);
+        updateProfile(null, authState?.token);
         fetchData();
       }
     } else {
@@ -160,8 +160,13 @@ function WalletScreen() {
               size={40}
               color={Colors.primaryGreen700}
             />
-            <View style={{ marginLeft: 8, flex: 1 }}>
-              <Text style={{ fontWeight: 700 }}>Thanh toán thành công.</Text>
+            <View style={{ marginLeft: 8, flex: 1, marginRight: 12 }}>
+              <Text style={{ fontWeight: 700 }}>
+                {itemData.item.transactionType === "Refund"
+                  ? "Thanh toán "
+                  : "Hoàn tiền "}
+                thành công
+              </Text>
               <Text style={{ fontWeight: 600 }}>
                 Mã đơn hàng: {itemData.item.orderId}
               </Text>
@@ -169,16 +174,29 @@ function WalletScreen() {
                 {FORMAT.dateFormat(new Date(itemData.item.paymentDate))}
               </Text>
             </View>
-            <Text
-              style={{
-                fontSize: 14,
-                fontWeight: "bold",
-                color: "red",
-                alignSelf: "center",
-              }}
-            >
-              - {FORMAT.currencyFormat(itemData.item.amount)}
-            </Text>
+            {itemData.item.transactionType === "Refund" ? (
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "bold",
+                  color: "red",
+                  alignSelf: "center",
+                }}
+              >
+                - {FORMAT.currencyFormat(itemData.item.amount)}
+              </Text>
+            ) : (
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "bold",
+                  color: Colors.primaryGreen600,
+                  alignSelf: "center",
+                }}
+              >
+                + {FORMAT.currencyFormat(itemData.item.amount)}
+              </Text>
+            )}
           </TouchableOpacity>
         )}
       />

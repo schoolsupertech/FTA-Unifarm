@@ -90,22 +90,24 @@ function GroupOrderItems({ order, onCancel, onTracking }) {
             </View>
           </>
         ) : (
-          <>
-            <Divider style={{ marginVertical: 8 }} />
-            <TouchableOpacity style={styles.trackingBtn} onPress={onTracking}>
-              <Title
-                icon={
-                  <Ionicons
-                    name="arrow-forward-sharp"
-                    size={20}
-                    style={{ marginRight: 8 }}
-                  />
-                }
-              >
-                Theo dõi đơn hàng
-              </Title>
-            </TouchableOpacity>
-          </>
+          order.customerStatus !== null && (
+            <>
+              <Divider style={{ marginVertical: 8 }} />
+              <TouchableOpacity style={styles.trackingBtn} onPress={onTracking}>
+                <Title
+                  icon={
+                    <Ionicons
+                      name="arrow-forward-sharp"
+                      size={20}
+                      style={{ marginRight: 8 }}
+                    />
+                  }
+                >
+                  Theo dõi đơn hàng
+                </Title>
+              </TouchableOpacity>
+            </>
+          )
         )}
       </View>
       <Divider style={{ marginVertical: 8 }} />

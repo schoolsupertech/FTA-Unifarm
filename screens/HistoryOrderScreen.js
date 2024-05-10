@@ -140,6 +140,7 @@ function HistoryOrderScreen({ navigation, route }) {
   }
 
   async function onCancelHandler(orderId) {
+    console.log("Order id: " + orderId);
     const response = await API.customRequest(
       "PUT",
       "/order/cancel/" + orderId,
@@ -174,8 +175,8 @@ function HistoryOrderScreen({ navigation, route }) {
 
       console.log("Payload: " + JSON.stringify(payload, null, 2));
 
-      setModalVisible(true);
       setModalData(payload);
+      setModalVisible(true);
     }
   }
 

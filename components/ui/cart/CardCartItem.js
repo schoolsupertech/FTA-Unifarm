@@ -19,6 +19,8 @@ function CardCartItem({
   authState,
   stationId,
   toggleCheckbox,
+  onSelectedProdItem,
+  onSettingPrice,
   onDelete,
 }) {
   const [prodItemsInfo, setProdItemsInfo] = useState(data);
@@ -59,7 +61,13 @@ function CardCartItem({
     if (
       Array.isArray(toggleCheckbox) &&
       toggleCheckbox.length > 0 &&
-      toggleCheckbox.find((orders) => orders.orderId === itemData.item.orderId)
+      toggleCheckbox.find(
+        (orders) =>
+          orders.orderId === itemData.item.orderId &&
+          orders.orderDetailIds.find(
+            (orderDetail) => orderDetail === itemData.item.id,
+          ),
+      )
     ) {
       return (
         <CardCartProdItems
@@ -67,7 +75,9 @@ function CardCartItem({
           {...props}
           authState={authState}
           stationId={stationId}
-          toggleCheckbox={true}
+          prodItemPrice={onSettingPrice}
+          onSelectedProdItem={onSelectedProdItem}
+          toggleCheckbox={itemData.item.id}
         />
       );
     } else {
@@ -77,7 +87,9 @@ function CardCartItem({
           {...props}
           authState={authState}
           stationId={stationId}
-          toggleCheckbox={false}
+          prodItemPrice={onSettingPrice}
+          onSelectedProdItem={onSelectedProdItem}
+          toggleCheckbox={0}
         />
       );
     }

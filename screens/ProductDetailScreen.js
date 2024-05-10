@@ -243,13 +243,13 @@ function ProductDetailScreen({ route, navigation }) {
                 </View>
                 <GrayLine />
                 <PaperText variant="titleSmall">
-                  Đã bán: 199 {/* prodItem.sold */}
+                  Đã bán: {selectedProd.sold}
+                </PaperText>
+                <PaperText variant="titleSmall" style={{ marginTop: 4 }}>
+                  Còn lại: {selectedProd.quantity - selectedProd.sold}
                 </PaperText>
                 <PaperText variant="titleSmall">
                   Nguồn gốc: {selectedProd.productOrigin}
-                </PaperText>
-                <PaperText variant="titleSmall" style={{ marginTop: 4 }}>
-                  Ngày mở bán: 01/12/2024{/* prodItem.openDate */}
                 </PaperText>
               </View>
             </View>

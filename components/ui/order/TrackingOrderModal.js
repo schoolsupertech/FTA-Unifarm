@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Text as PaperText } from "react-native-paper";
 import StepIndicator from "react-native-step-indicator";
@@ -7,7 +7,9 @@ import Modal from "react-native-modal";
 import { Colors } from "../../../constants/colors";
 
 function TrackingOrderModal({ data, isVisible, onVisible }) {
-  console.log("Tracking order modal data: " + JSON.stringify(data, null, 2));
+  const titles = data.data?.map((item) => item.title);
+
+  console.log("Tracking order data: " + JSON.stringify(data, null, 2));
 
   return (
     <Modal
@@ -23,7 +25,7 @@ function TrackingOrderModal({ data, isVisible, onVisible }) {
           stepCount={data.currentPosition}
           customStyles={styles.stepIndicator}
           currentPosition={data.currentPosition}
-          labels={data.map((item) => [...item.title])}
+          labels={titles}
           direction="vertical"
         />
       </View>
@@ -35,12 +37,14 @@ export default TrackingOrderModal;
 
 const styles = StyleSheet.create({
   modalContainer: {
+    flex: 1,
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
   },
   container: {
-    margin: 40,
+    flex: 1,
+    padding: 40,
   },
   headerContent: {
     marginTop: 20,

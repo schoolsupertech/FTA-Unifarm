@@ -34,6 +34,7 @@ function CartScreen() {
   const [isChecked, setIsChecked] = useState(null);
 
   console.log("Toggle cart: " + JSON.stringify(toggleCart, null, 2));
+  console.log("Totle price in cart: " + totalPrice);
 
   useEffect(() => {
     fetchCart();
@@ -50,20 +51,26 @@ function CartScreen() {
 
     if (response && response.statusCode === 200) {
       setCart(response.payload);
+
+      // let totalCartPrice = 0;
+      // response.payload.forEach((element) => {
+      //   totalCartPrice += element.totalAmount;
+      // });
+      // setTotalPrice(totalCartPrice);
+
       // setIsChecked(new Array(response.payload.length).fill(false));
     }
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    const onPlusTotalPriceHanler = () => {
-      let price = 0;
-      cart.forEach((order) => (price += order.totalAmount));
-      setTotalPrice(price);
-    };
+  function onSettingPriceHandler(prodItemPrice) {
+    let totalCartPrice = 0;
+    totalCartPrice = totalPrice + prodItemPrice;
+    console.log("Product item total price: " + prodItemPrice);
+    console.log("Total cart price: " + totalCartPrice);
 
-    cart && onPlusTotalPriceHanler();
-  }, [cart]);
+    setTotalPrice(totalCartPrice);
+  }
 
   function onToggleGroupCartHandler(id) {
     const getOrderDetailResponse = cart.find((orders) => {
@@ -143,6 +150,53 @@ function CartScreen() {
       navigation.navigate("OrderScreen", { payload: response.payload });
   }
 
+  function onSelectedProdItemHandler(isChecked, orderDetailId, orderId) {
+    const order = {
+      orderId: orderId,
+      orderDetailIds: [orderDetailId],
+    };
+
+    if (isChecked) {
+      if (toggleCart.length > 0) {
+        toggleCart.map((orders) => {
+          if (orders.orderId === orderId) {
+            setToggleCart(
+              toggleCart.map(
+                (items) =>
+                  items.orderId === orderId && {
+                    ...orders,
+                    orderDetailIds: [...items.orderDetailIds, orderDetailId],
+                  },
+              ),
+            );
+          } else {
+            setToggleCart([...toggleCart, order]);
+          }
+        });
+      } else {
+        setToggleCart([...toggleCart, order]);
+      }
+    } else {
+      toggleCart.map((orders) =>
+        orders.orderId === orderId && orders.orderDetailIds.length > 1
+          ? setToggleCart(
+              toggleCart.map(
+                (items) =>
+                  items.orderId === orderId && {
+                    ...items,
+                    orderDetailIds: items.orderDetailIds.filter(
+                      (item) => item !== orderDetailId,
+                    ),
+                  },
+              ),
+            )
+          : setToggleCart(
+              toggleCart.filter((orders) => orders.orderId !== orderId),
+            ),
+      );
+    }
+  }
+
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -215,7 +269,17 @@ function CartScreen() {
                   data={farmhub.orderDetailResponse}
                   authState={authState}
                   stationId={farmhub.stationResponse.id}
+                  onSettingPrice={(priceValue) =>
+                    onSettingPriceHandler(priceValue)
+                  }
                   toggleCheckbox={toggleCart}
+                  onSelectedProdItem={(isChecked, orderDetailId) =>
+                    onSelectedProdItemHandler(
+                      isChecked,
+                      orderDetailId,
+                      farmhub.id,
+                    )
+                  }
                   onDelete={onDeleteHandler}
                 />
               </View>

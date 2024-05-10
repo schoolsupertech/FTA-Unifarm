@@ -99,7 +99,7 @@ function CardProdItem(props) {
             <View style={styles.titleContent}>
               <View style={DefaultTheme.flex_1}>
                 <PaperText variant="bodySmall" style={styles.listedPrice}>
-                  {FORMAT.currencyFormat(props.salePrice * 9)}
+                  {FORMAT.currencyFormat(props.salePrice * 2)}
                 </PaperText>
                 <PaperText
                   variant="titleLarge"
@@ -109,7 +109,10 @@ function CardProdItem(props) {
                 </PaperText>
                 <View style={styles.progressBarContent}>
                   <PaperText variant="bodySmall">Đã bán {props.sold}</PaperText>
-                  <ProgressBar progress={0.5} color={DefaultTheme.pgBarColor} />
+                  <ProgressBar
+                    progress={props.sold / props.quantity}
+                    color="gray"
+                  />
                 </View>
               </View>
               <CartBtn onCartAdded={isCartAdded} onPress={onToggleSnackBar} />
